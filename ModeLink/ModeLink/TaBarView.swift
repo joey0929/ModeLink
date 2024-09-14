@@ -15,17 +15,17 @@ struct TaBarView: View {
 //            View().tabItem()
             ArticleView().tabItem {
                 Label("article",systemImage: "character")
-            }
-            ARview().tabItem {
-                Label("scanner",systemImage:"scanner")
             }.tag(1)
+            ARview().tabItem {
+                Label("scanner",systemImage:"camera.viewfinder")
+            }.tag(2)
             
             IntroView().tabItem {
                 Label("Intro",systemImage:"bold")
-            }.tag(1)
+            }.tag(3)
             MapView().tabItem {
                 Label("map",systemImage:"map")
-            }.tag(1)
+            }.tag(4)
             
         }
         

@@ -8,8 +8,15 @@
 import SwiftUI
 import RealityKit
 
+//var a = ObjectCaptureSession()
 
 struct ARview: View {
+    
+//    @State private var session: ObjectCaptureSession?
+    //@State private var session: ObjectCaptureSession?
+//    var session = ObjectCaptureSession()
+    
+    
     var body: some View {
         ARViewContainer()
     }
