@@ -12,9 +12,8 @@ struct TaBarView: View {
         
         TabView {
             
-//            View().tabItem()
             ArticleView().tabItem {
-                Label("article",systemImage: "character")
+                Label("article",systemImage: "house")
             }.tag(1)
             ARview().tabItem {
                 Label("scanner",systemImage:"camera.viewfinder")
