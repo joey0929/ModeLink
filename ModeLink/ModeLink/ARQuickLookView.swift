@@ -33,7 +33,7 @@ struct ARQuickLookView: UIViewControllerRepresentable {
             self.parent = parent
         }
         
-        func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        func numberOfPreviewItems(in controller: QLPreviewController) -> Int {  //要顯示多少個文件，這裡只顯示一個 3D 模型
             return 1
         }
         
@@ -42,7 +42,7 @@ struct ARQuickLookView: UIViewControllerRepresentable {
         }
         
         func previewControllerWillDismiss(_ controller: QLPreviewController) {
-            parent.endCaptureCallback()
+            parent.endCaptureCallback()  // 關閉此頁面時，會調用此閉包的function
         }
     }
 }

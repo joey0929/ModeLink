@@ -19,6 +19,7 @@
 		D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB982C967234000B9745 /* CreateButton.swift */; };
 		D4A2BB9B2C967277000B9745 /* ARQuickLookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */; };
 		D4A2BB9D2C967335000B9745 /* CaptureStateExtend.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9C2C967335000B9745 /* CaptureStateExtend.swift */; };
+		D4A2BB9F2C9735F9000B9745 /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9E2C9735F9000B9745 /* PostView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		D4A2BB982C967234000B9745 /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
 		D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARQuickLookView.swift; sourceTree = "<group>"; };
 		D4A2BB9C2C967335000B9745 /* CaptureStateExtend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureStateExtend.swift; sourceTree = "<group>"; };
+		D4A2BB9E2C9735F9000B9745 /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				D41344152C92ED4D003400B9 /* ContentView.swift */,
 				D41344212C92EF16003400B9 /* TaBarView.swift */,
 				D41344252C93EA10003400B9 /* ArticleView.swift */,
+				D4A2BB9E2C9735F9000B9745 /* PostView.swift */,
 				D41344232C92EFEB003400B9 /* ARview.swift */,
 				D4A2BB982C967234000B9745 /* CreateButton.swift */,
 				D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */,
@@ -171,6 +174,7 @@
 				D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */,
 				D41344142C92ED4D003400B9 /* ModeLinkApp.swift in Sources */,
 				D41344282C93EAF4003400B9 /* IntroView.swift in Sources */,
+				D4A2BB9F2C9735F9000B9745 /* PostView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
