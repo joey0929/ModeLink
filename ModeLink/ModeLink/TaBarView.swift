@@ -9,26 +9,20 @@ import SwiftUI
 
 struct TaBarView: View {
     var body: some View {
-        
         TabView {
-            
             ArticleView().tabItem {
-                Label("article",systemImage: "house")
+                Label("article", systemImage:"house")
             }.tag(1)
             ARview().tabItem {
-                Label("scanner",systemImage:"camera.viewfinder")
+                Label("scanner", systemImage: "camera.viewfinder")
             }.tag(2)
-            
             IntroView().tabItem {
-                Label("Intro",systemImage:"bold")
+                Label("Intro", systemImage: "bold")
             }.tag(3)
             MapView().tabItem {
-                Label("map",systemImage:"map")
+                Label("map", systemImage: "map")
             }.tag(4)
-            
         }
-        
-        
     }
 }
 
