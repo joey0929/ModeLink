@@ -10,69 +10,15 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 
-
-
-
-//struct PostView: View {
-//    @Environment(\.presentationMode) var presentationMode
-//    @State private var title = ""
-//    @State private var wcontry = ""
-//    @State private var content = ""
-//    
-//    var body: some View {
-//        
-//        
-//        ScrollView {
-//            
-//            
-//            
-//            VStack {
-//                TextField("標題", text: $title)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .padding()
-//                TextField("縣市", text: $wcontry)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .padding()
-//                
-//                
-//                TextEditor(text: $content)
-//                    .frame(height: 200)
-//                    .border(Color.gray, width: 1)
-//                    .padding()
-//                
-//                Button(action: {
-//                    // 這裡可以添加貼文的提交邏輯
-//                    presentationMode.wrappedValue.dismiss()
-//                }) {
-//                    Text("提交")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.blue)
-//                        .cornerRadius(10)
-//                }
-//                .padding()
-//                
-//                Spacer()
-//            }
-//            .navigationTitle("新貼文")
-//            .padding()
-//        }
-//        
-//        
-//        
-//    }
-//}
-
 struct PostView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var title = ""
     @State private var content = ""
-    @State private var wcontry = ""
+    @State private var county = "" // 所在縣市
     @State private var selectedImage: UIImage? = nil
     @State private var isImagePickerPresented = false
     var body: some View {
-        
+        //  swiftlint:disable trailing_whitespace
         ScrollView(showsIndicators: false) {
             
             VStack {
@@ -80,7 +26,7 @@ struct PostView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
-                TextField("縣市", text: $wcontry)
+                TextField("縣市", text: $county)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
@@ -115,7 +61,7 @@ struct PostView: View {
                 }
                 Button(action: {
                     //uploadPost()
-                    uploadPost(title: title, content: content, wcontry: wcontry, image: selectedImage)
+                    uploadPost(title: title, content: content, county: county, image: selectedImage)
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("提交")
@@ -133,7 +79,7 @@ struct PostView: View {
         .padding()
     }
     // 上傳貼文到 Firestore 的邏輯
-    func uploadPost(title: String, content: String, wcontry: String, image: UIImage?) {
+    func uploadPost(title: String, content: String, county: String, image: UIImage?) {
         let db = Firestore.firestore()
         // 如果有選擇圖片，先上傳圖片到 Firebase Storage
         if let image = image {
@@ -141,9 +87,10 @@ struct PostView: View {
                 if let imageURL = imageURL {
                     // 將文章數據與圖片 URL 一起上傳到 Firestore
                     let postData: [String: Any] = [
+                        "user_id": "roger2486",  // 目前先寫死，有登入會有真正id 可用
                         "title": title,
                         "content": content,
-                        "wcontry": wcontry,
+                        "County": county,
                         "imageURL": imageURL.absoluteString, // 圖片的下載 URL
                         "timestamp": Timestamp(date: Date())
                     ]
@@ -161,9 +108,10 @@ struct PostView: View {
         } else {
             // 如果沒有圖片，僅上傳文章數據
             let postData: [String: Any] = [
+                "user_id": "roger2486",
                 "title": title,
                 "content": content,
-                "wcontry": wcontry,
+                "County": county,
                 "timestamp": Timestamp(date: Date())
             ]
             db.collection("articles").addDocument(data: postData) { error in
@@ -200,11 +148,7 @@ struct PostView: View {
         } else {
             completion(nil) // 如果圖片轉換失敗
         }
-    }
-    func uploadTestPost() {
-        
-    }
-    
+    }    
 }
 #Preview {
     PostView()
