@@ -9,6 +9,7 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 import FirebaseStorage
+import PhotosUI
 
 struct PostView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -16,7 +17,13 @@ struct PostView: View {
     @State private var content = ""
     @State private var county = "" // 所在縣市
     @State private var selectedImage: UIImage? = nil
+    @State private var selectedItem: PhotosPickerItem? = nil // 用於存儲選擇的圖片
     @State private var isImagePickerPresented = false
+    var canSubmit: Bool {
+        // 當所有欄位都有填寫時返回 true，否則返回 false
+        return !title.isEmpty && !content.isEmpty && !county.isEmpty
+    }
+
     var body: some View {
         //  swiftlint:disable trailing_whitespace
         ScrollView(showsIndicators: false) {
@@ -30,12 +37,13 @@ struct PostView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
-                
-                TextEditor(text: $content)
-                    .frame(height: 200)
-                    .border(Color.gray, width: 1)
-                    .padding()
-                
+                VStack(alignment:.leading) {
+                    Text("請輸入內文:").padding(.leading,15)
+                    TextEditor(text: $content)
+                        .frame(height: 200)
+                        .border(Color.gray, width: 1)
+                        .padding()
+                }
                 // 顯示選擇的圖片
                 if let selectedImage = selectedImage {
                     Image(uiImage: selectedImage)
@@ -44,21 +52,43 @@ struct PostView: View {
                         .frame(height: 200)
                         .padding()
                 }
-                // 按鈕來選擇圖片
-                Button(action: {
-                    isImagePickerPresented.toggle()
-                }) {
+//                // 按鈕來選擇圖片
+//                Button(action: {
+//                    isImagePickerPresented.toggle()
+//                }) {
+//                    Text("選擇圖片")
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .padding()
+//                        .background(Color.blue)
+//                        .cornerRadius(10)
+//                }
+//                .padding()
+//                .sheet(isPresented: $isImagePickerPresented) {
+//                    ImagePicker(selectedImage: $selectedImage)
+//                }
+                // 使用 PhotosPicker 來選擇圖片
+                PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
                     Text("選擇圖片")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.blue)
+                        .background(.blue)
                         .cornerRadius(10)
                 }
-                .padding()
-                .sheet(isPresented: $isImagePickerPresented) {
-                    ImagePicker(selectedImage: $selectedImage)
+                .onChange(of: selectedItem) { newItem in
+                    if let newItem = newItem {
+                        Task {
+                            // 當選擇項變更時，將圖片加載為 UIImage
+                            if let data = try? await newItem.loadTransferable(type: Data.self), 
+                                // 圖片加載為 Data 格式 再轉乘 UIImage
+                               let uiImage = UIImage(data: data) {
+                                selectedImage = uiImage
+                            }
+                        }
+                    }
                 }
+                
                 Button(action: {
                     //uploadPost()
                     uploadPost(title: title, content: content, county: county, image: selectedImage)
@@ -68,9 +98,10 @@ struct PostView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.blue)
+                        .background(canSubmit ? Color.blue : Color.gray) // 根據狀態變色
                         .cornerRadius(10)
                 }
+                .disabled(!canSubmit)
                 .padding()
                 Spacer()
             }
