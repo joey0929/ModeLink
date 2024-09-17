@@ -57,7 +57,6 @@ struct ArticleView: View {
                         .padding(.vertical, 5)
                         .frame(height: 400)
                     }
-               // }
                     .navigationTitle("文章列表")
                     .onAppear {
                         UIScrollView.appearance().showsVerticalScrollIndicator = false //進到畫面就將滑動條隱藏
