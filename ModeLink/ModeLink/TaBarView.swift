@@ -22,6 +22,9 @@ struct TaBarView: View {
             MapView().tabItem {
                 Label("map", systemImage: "map")
             }.tag(4)
+            ModelListView().tabItem {
+                Label("Model", systemImage: "bold")
+            }.tag(5)
         }
     }
 }

@@ -16,7 +16,7 @@ struct MapView: View {
             Map(coordinateRegion: $viewModel.region,showsUserLocation: true,annotationItems: viewModel.locations) { location in
                 MapMarker(coordinate: location.coordinate, tint: .blue)
             }
-            .ignoresSafeArea()
+//            .ignoresSafeArea()
             .tint(.pink)
             LocationButton(.currentLocation) {
                 viewModel.requestAllowOnceLocationPermission()

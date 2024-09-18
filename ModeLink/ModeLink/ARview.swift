@@ -5,9 +5,11 @@
 //  Created by 池昀哲 on 2024/9/12.
 //
 
-
 import SwiftUI
 import RealityKit
+import Firebase
+import FirebaseStorage
+
 
 struct ARview: View {
     
@@ -123,6 +125,7 @@ struct ARview: View {
                     quickLookIsPresented = false
                     restartObjectCapture()  // Quick Look 預覽結束後重新開始捕捉
                 }
+                
                 // or 這種寫法
 //                ARQuickLookView(modelFile: modelPath, endCaptureCallback: {
 //                    quickLookIsPresented = false
@@ -197,6 +200,7 @@ extension ARview {
                 case .processingComplete:
                     isProgressing = false
                     quickLookIsPresented = true
+                    uploadModelToFirebase() // 在模型處理完成後上傳到 Firebase
                 default:
                     break
                 }
@@ -205,6 +209,50 @@ extension ARview {
             print("error", error)
         }
     }
+      
+    
+    // MARK: - 上傳到 Firebase Storage 並存儲 URL 到 Firestore
+    func uploadModelToFirebase() {
+        guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else { return }
+        
+        // 使用 UUID 生成 Storage 路徑和模型名稱
+        let uniqueID = UUID().uuidString
+        let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
+        
+        if let modelData = try? Data(contentsOf: modelPath) {
+            let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
+                if let error = error {
+                    print("Error uploading model: \(error.localizedDescription)")
+                    return
+                }
+                
+                storageRef.downloadURL { url, error in
+                    if let error = error {
+                        print("Error getting download URL: \(error.localizedDescription)")
+                    } else if let downloadURL = url {
+                        print("Model uploaded successfully: \(downloadURL.absoluteString)")
+                        
+                        saveDownloadURLToFirestore(downloadURL,name: uniqueID)
+                    }
+                }
+            }
+        }
+    }
+    // 將下載 URL 儲存到 Firestore
+    func saveDownloadURLToFirestore(_ downloadURL: URL,name: String) {
+        let db = Firestore.firestore()
+        let modelData: [String: Any] = [
+            "modelURL": downloadURL.absoluteString,
+            "name": name,  // 使用與 Storage 同樣的 UUID 作為名稱
+            "timestamp": Timestamp(date: Date())
+        ]
+        
+        db.collection("3DModels").addDocument(data: modelData) { error in
+            if let error = error {
+                print("Error saving model URL to Firestore: \(error.localizedDescription)")
+            } else {
+                print("Model URL saved to Firestore!")
+            }
+        }
+    }
 }
-
-
