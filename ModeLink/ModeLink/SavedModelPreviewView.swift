@@ -11,6 +11,8 @@ import FirebaseStorage
 
 struct SavedModelPreviewView: View {
     let modelURL: URL  // 傳遞進來的模型 URL
+    
+    @Environment(\.presentationMode) var presentationMode  // 獲取 SwiftUI 的頁面控制環境
     @State private var localFileURL: URL?  // 下載後的本地文件 URL
     @State private var isDownloading = true  // 顯示是否在下載中
     @State private var downloadError: String?
@@ -29,7 +31,9 @@ struct SavedModelPreviewView: View {
                        .padding()
                } else if let localFileURL = localFileURL {
                    // 當模型下載完成後，顯示 ARView
-                   ARModelViewContainer(modelURL: localFileURL, endCaptureCallback: {})
+                   ARModelViewContainer(modelURL: localFileURL, endCaptureCallback: {
+                       self.presentationMode.wrappedValue.dismiss()
+                   })
                        .edgesIgnoringSafeArea(.all)
                } else {
                    Text("無法加載模型")

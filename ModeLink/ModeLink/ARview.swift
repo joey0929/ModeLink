@@ -22,6 +22,10 @@ struct ARview: View {
     @State private var scanPassCount = 0  // 控制掃描次數
     @State private var showContinueScanAlert = false  // 是否繼續掃描提示
     
+    @State private var showNameInputSheet = false  // 控制是否顯示名稱輸入的 sheet
+    @State private var inputModelName = ""  // 儲存用戶輸入的模型名稱
+    
+    
     var modelPath: URL? {
         return modelFolderPath?.appending(path: "model.usdz")
     }
@@ -119,11 +123,57 @@ struct ARview: View {
                 }
             }
         }
+        .sheet(isPresented: $showNameInputSheet) {
+            VStack {
+                Text("輸入模型名稱")
+                    .font(.headline)
+                    .padding()
+                
+                TextField("輸入名稱", text: $inputModelName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+
+                Button("保存") {
+                    guard !inputModelName.isEmpty else { return }
+                    
+                    showNameInputSheet = false  // 關閉輸入框
+                    print("==Model name entered: \(inputModelName)")
+                    // 使用 DispatchQueue 確保上傳操作不會阻塞 UI
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                    uploadModelToFirebase()
+//                    scanPassCount = 0
+//                    inputModelName = ""
+//                    restartObjectCapture()
+                    // 上傳文件並在完成後清空輸入框
+                    uploadModelToFirebase() {
+                        // 成功上傳後再清空輸入框
+                        scanPassCount = 0
+                        inputModelName = ""
+                        restartObjectCapture()  // 確保在上傳成功後再重新開始捕捉
+                    }
+                    
+                    
+                    
+                    print("==== Already upload the usdz File!!!!======")
+//                    }
+                    
+                }
+                .padding()
+
+                Button("取消") {
+                    showNameInputSheet = false  // 關閉輸入框
+                    
+                }
+                .padding()
+            }
+            .padding()
+        }
         .sheet(isPresented: $quickLookIsPresented) {
             if let modelPath {
                 ARQuickLookView(modelFile: modelPath) {    //use trailing closure
                     quickLookIsPresented = false
-                    restartObjectCapture()  // Quick Look 預覽結束後重新開始捕捉
+                    showNameInputSheet = true  // 顯示名稱輸入 sheet
+                   // restartObjectCapture()  // Quick Look 預覽結束後重新開始捕捉
                 }
                 
                 // or 這種寫法
@@ -157,7 +207,7 @@ struct ARview: View {
 
 extension ARview {
     //MARK: - Restart Function Setting
-    @MainActor func restartObjectCapture() {   //重新啟用掃描的
+    @MainActor func restartObjectCapture() {   //重新啟用掃描的function
         guard let directory = createNewScanDirectory() else { return }
         session = ObjectCaptureSession()
 
@@ -200,7 +250,13 @@ extension ARview {
                 case .processingComplete:
                     isProgressing = false
                     quickLookIsPresented = true
-                    uploadModelToFirebase() // 在模型處理完成後上傳到 Firebase
+                   // uploadModelToFirebase() // 在模型處理完成後上傳到 Firebase
+                   
+                    
+//                    showNameInputSheet = true  // 顯示名稱輸入 sheet
+//                    uploadModelToFirebase() // 在模型處理完成後上傳到 Firebase
+//                    scanPassCount = 0
+//                    inputModelName = ""
                 default:
                     break
                 }
@@ -212,32 +268,135 @@ extension ARview {
       
     
     // MARK: - 上傳到 Firebase Storage 並存儲 URL 到 Firestore
-    func uploadModelToFirebase() {
-        guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else { return }
+//    func uploadModelToFirebase() {
+//        guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else { return }
+//        
+//        // 使用 UUID 生成 Storage 路徑和模型名稱
+//        let uniqueID = UUID().uuidString
+//        let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
+//        
+//        if let modelData = try? Data(contentsOf: modelPath) {
+//            let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
+//                if let error = error {
+//                    print("Error uploading model: \(error.localizedDescription)")
+//                    return
+//                }
+//                
+//                storageRef.downloadURL { url, error in
+//                    if let error = error {
+//                        print("Error getting download URL: \(error.localizedDescription)")
+//                    } else if let downloadURL = url {
+//                        print("Model uploaded successfully: \(downloadURL.absoluteString)")
+//                        
+////                        saveDownloadURLToFirestore(downloadURL,name: uniqueID)
+//                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
+//                        
+//                        restartObjectCapture()
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    func uploadModelToFirebase() {
+//        guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else {
+//            print("Error: Model path not found.")
+//            return
+//        }
+//        
+//        // 檢查模型文件是否存在並且可以讀取
+//        do {
+//            let modelData = try Data(contentsOf: modelPath)
+//            print("Model data size: \(modelData.count) bytes")  // 打印模型文件大小
+//            
+//            // 使用 UUID 生成 Storage 路徑和模型名稱
+//            let uniqueID = UUID().uuidString
+//            let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
+//            
+//            print("Starting upload to Firebase Storage...")
+//            
+//            // 上傳模型文件到 Firebase Storage
+//            let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
+//                if let error = error {
+//                    print("Error uploading model: \(error.localizedDescription)")
+//                    return
+//                }
+//                
+//                print("Model uploaded to Firebase Storage, fetching download URL...")
+//                
+//                // 獲取下載 URL
+//                storageRef.downloadURL { url, error in
+//                    if let error = error {
+//                        print("Error getting download URL: \(error.localizedDescription)")
+//                    } else if let downloadURL = url {
+//                        print("Model uploaded successfully to Firebase Storage: \(downloadURL.absoluteString)")
+//                        
+//                        // 使用用戶輸入的名稱來保存到 Firestore
+//                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
+//                    }
+//                }
+//            }
+//            
+//            uploadTask.observe(.progress) { snapshot in
+//                let percentComplete = 100.0 * Double(snapshot.progress?.completedUnitCount ?? 0) / Double(snapshot.progress?.totalUnitCount ?? 0)
+//                print("Upload is \(percentComplete)% complete")
+//            }
+//            
+//        } catch {
+//            print("Error reading model data: \(error.localizedDescription)")
+//        }
+//    }
+    func uploadModelToFirebase(completion: @escaping () -> Void) {
+        guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else {
+            print("Error: Model path not found.")
+            return
+        }
         
-        // 使用 UUID 生成 Storage 路徑和模型名稱
-        let uniqueID = UUID().uuidString
-        let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
-        
-        if let modelData = try? Data(contentsOf: modelPath) {
+        // 檢查模型文件是否存在並且可以讀取
+        do {
+            let modelData = try Data(contentsOf: modelPath)
+            print("Model data size: \(modelData.count) bytes")  // 打印模型文件大小
+            
+            // 使用 UUID 生成 Storage 路徑和模型名稱
+            let uniqueID = UUID().uuidString
+            let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
+            
+            print("Starting upload to Firebase Storage...")
+            
+            // 上傳模型文件到 Firebase Storage
             let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
                 if let error = error {
                     print("Error uploading model: \(error.localizedDescription)")
                     return
                 }
                 
+                print("Model uploaded to Firebase Storage, fetching download URL...")
+                
+                // 獲取下載 URL
                 storageRef.downloadURL { url, error in
                     if let error = error {
                         print("Error getting download URL: \(error.localizedDescription)")
                     } else if let downloadURL = url {
-                        print("Model uploaded successfully: \(downloadURL.absoluteString)")
+                        print("Model uploaded successfully to Firebase Storage: \(downloadURL.absoluteString)")
                         
-                        saveDownloadURLToFirestore(downloadURL,name: uniqueID)
+                        // 使用用戶輸入的名稱來保存到 Firestore
+                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
+                        
+                        // 在成功上傳後執行回調
+                        completion()
                     }
                 }
             }
+            
+            uploadTask.observe(.progress) { snapshot in
+                let percentComplete = 100.0 * Double(snapshot.progress?.completedUnitCount ?? 0) / Double(snapshot.progress?.totalUnitCount ?? 0)
+                print("Upload is \(percentComplete)% complete")
+            }
+            
+        } catch {
+            print("Error reading model data: \(error.localizedDescription)")
         }
     }
+    
     // 將下載 URL 儲存到 Firestore
     func saveDownloadURLToFirestore(_ downloadURL: URL,name: String) {
         let db = Firestore.firestore()

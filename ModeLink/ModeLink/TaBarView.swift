@@ -16,15 +16,16 @@ struct TaBarView: View {
             ARview().tabItem {
                 Label("scanner", systemImage: "camera.viewfinder")
             }.tag(2)
-            IntroView().tabItem {
-                Label("Intro", systemImage: "bold")
-            }.tag(3)
-            MapView().tabItem {
-                Label("map", systemImage: "map")
-            }.tag(4)
             ModelListView().tabItem {
                 Label("Model", systemImage: "bold")
+            }.tag(3)
+            IntroView().tabItem {
+                Label("Intro", systemImage: "bold")
+            }.tag(4)
+            MapView().tabItem {
+                Label("map", systemImage: "map")
             }.tag(5)
+            
         }
     }
 }
