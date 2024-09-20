@@ -36,6 +36,9 @@
 		D4A2BBC42C97FC47000B9745 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D4A2BBC32C97FC47000B9745 /* Kingfisher */; };
 		D4B14A512C9A7C6E00FD12E7 /* ModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A502C9A7C6E00FD12E7 /* ModelListView.swift */; };
 		D4B14A572C9A7E0800FD12E7 /* SavedModelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A562C9A7E0800FD12E7 /* SavedModelPreviewView.swift */; };
+		D4B14A5D2C9D248700FD12E7 /* IntroToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5C2C9D248700FD12E7 /* IntroToolView.swift */; };
+		D4B14A5F2C9D24C700FD12E7 /* IntroSkillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5E2C9D24C700FD12E7 /* IntroSkillView.swift */; };
+		D4B14A632C9D704D00FD12E7 /* UploadDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A622C9D704D00FD12E7 /* UploadDataView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +61,9 @@
 		D4A2BBA92C97EC84000B9745 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D4B14A502C9A7C6E00FD12E7 /* ModelListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelListView.swift; sourceTree = "<group>"; };
 		D4B14A562C9A7E0800FD12E7 /* SavedModelPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedModelPreviewView.swift; sourceTree = "<group>"; };
+		D4B14A5C2C9D248700FD12E7 /* IntroToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroToolView.swift; sourceTree = "<group>"; };
+		D4B14A5E2C9D24C700FD12E7 /* IntroSkillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroSkillView.swift; sourceTree = "<group>"; };
+		D4B14A622C9D704D00FD12E7 /* UploadDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDataView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,7 +122,10 @@
 				D4B14A502C9A7C6E00FD12E7 /* ModelListView.swift */,
 				D4B14A562C9A7E0800FD12E7 /* SavedModelPreviewView.swift */,
 				D41344272C93EAF4003400B9 /* IntroView.swift */,
+				D4B14A5C2C9D248700FD12E7 /* IntroToolView.swift */,
+				D4B14A5E2C9D24C700FD12E7 /* IntroSkillView.swift */,
 				D41344292C93EC13003400B9 /* MapView.swift */,
+				D4B14A622C9D704D00FD12E7 /* UploadDataView.swift */,
 				D4A2BBA92C97EC84000B9745 /* GoogleService-Info.plist */,
 				D41344172C92ED4E003400B9 /* Assets.xcassets */,
 				D41344192C92ED4E003400B9 /* Preview Content */,
@@ -245,9 +254,12 @@
 				D413442A2C93EC13003400B9 /* MapView.swift in Sources */,
 				D41344162C92ED4D003400B9 /* ContentView.swift in Sources */,
 				D4A2BB9D2C967335000B9745 /* CaptureStateExtend.swift in Sources */,
+				D4B14A5F2C9D24C700FD12E7 /* IntroSkillView.swift in Sources */,
+				D4B14A5D2C9D248700FD12E7 /* IntroToolView.swift in Sources */,
 				D41344242C92EFEB003400B9 /* ARview.swift in Sources */,
 				D41344262C93EA10003400B9 /* ArticleView.swift in Sources */,
 				D4B14A512C9A7C6E00FD12E7 /* ModelListView.swift in Sources */,
+				D4B14A632C9D704D00FD12E7 /* UploadDataView.swift in Sources */,
 				D4A2BB9B2C967277000B9745 /* ARQuickLookView.swift in Sources */,
 				D41344222C92EF16003400B9 /* TaBarView.swift in Sources */,
 				D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */,

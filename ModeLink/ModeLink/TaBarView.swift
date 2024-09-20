@@ -17,10 +17,10 @@ struct TaBarView: View {
                 Label("scanner", systemImage: "camera.viewfinder")
             }.tag(2)
             ModelListView().tabItem {
-                Label("Model", systemImage: "bold")
+                Label("Model", systemImage: "square.and.arrow.down")
             }.tag(3)
             IntroView().tabItem {
-                Label("Intro", systemImage: "bold")
+                Label("Intro", systemImage: "lightbulb.circle")
             }.tag(4)
             MapView().tabItem {
                 Label("map", systemImage: "map")
