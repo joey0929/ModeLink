@@ -10,9 +10,7 @@ import RealityKit
 import Firebase
 import FirebaseStorage
 
-
 struct ARview: View {
-    
     @State private var session: ObjectCaptureSession?  // 控制圖像捕捉
     @State private var imageFolderPath: URL?           //保存捕捉過程中的圖像
     @State private var modelFolderPath: URL?           // 保存生成的3D模型
@@ -21,26 +19,19 @@ struct ARview: View {
     @State private var quickLookIsPresented = false
     @State private var scanPassCount = 0  // 控制掃描次數
     @State private var showContinueScanAlert = false  // 是否繼續掃描提示
-    
     @State private var showNameInputSheet = false  // 控制是否顯示名稱輸入的 sheet
     @State private var inputModelName = ""  // 儲存用戶輸入的模型名稱
-    
-    
     var modelPath: URL? {
         return modelFolderPath?.appending(path: "model.usdz")
     }
-    
     var body: some View {
         ZStack(alignment: .bottom) {
-            
             if let session {
                 ObjectCaptureView(session: session)   // AR 相機介面
-                
                 VStack(spacing: 16) {
                     if session.state == .ready || session.state == .detecting {
                         CreateButton(session: session) // 偵測和捕捉按鈕
                     }
-                    
                     HStack {
                         Text(session.state.label)
                             .bold()
@@ -49,15 +40,7 @@ struct ARview: View {
                     }
                 }
             }
-            
             if isProgressing {
-//                Color.black.opacity(0.2)
-//                    .overlay {
-//                        VStack {
-//                            ProgressView()
-//                            Text("生成模型中請耐心等候～～～根據掃描次數會有不同等待時間")
-//                        }
-//                    }
                 Color.black.opacity(0.2) // 背景變得更亮
                     .edgesIgnoringSafeArea(.all)  // 確保背景覆蓋整個屏幕
                     .overlay {
@@ -67,18 +50,15 @@ struct ARview: View {
                                 ProgressView()  // 進度條
                                     .scaleEffect(1.5)  // 讓進度條更大些
                                     .padding(.top, 20)
-                                
                                 Text("生成模型中，請耐心等候...")
                                     .font(.headline)
                                     .foregroundColor(.primary)  // 讓文字更清晰
                                 Text("並請不要切換頁面！！！！！")
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                
                                 Text("根據掃描次數，等待時間會有所不同")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)  // 輔助文本
-                            
                             }
                             .frame(width: 300)  // 控制卡片寬度
                             .padding()
@@ -90,12 +70,10 @@ struct ARview: View {
                         }
                     }
             }
-            
         }
         .task {
             guard let directory = createNewScanDirectory() else { return }
             session = ObjectCaptureSession()
-            
             modelFolderPath = directory.appending(path: "Models/")
             imageFolderPath = directory.appending(path: "Images/")
             guard let imageFolderPath else { return }
@@ -104,7 +82,6 @@ struct ARview: View {
         .onChange(of: session?.userCompletedScanPass) { _, newValue in
             if let newValue, newValue {
                 scanPassCount += 1  // 每次完成掃描後增加計數
-                
                 // 如果已達到三次掃描，提示生成模型
                 if scanPassCount >= 3 {
                     showContinueScanAlert = true  // 顯示警告，並給用戶選擇是否完成
@@ -117,12 +94,12 @@ struct ARview: View {
         .onChange(of: session?.state) { _, newValue in
             if newValue == .completed {  // 如果已經到complete的狀態後 ， 就可以進行3D視圖的重建
                 session = nil
-                
                 Task {
                     await startReconstruction()
                 }
             }
         }
+        //MARK: - Input Filename Setting
         .sheet(isPresented: $showNameInputSheet) {
             VStack {
                 Text("輸入模型名稱")
@@ -139,21 +116,13 @@ struct ARview: View {
                     showNameInputSheet = false  // 關閉輸入框
                     print("==Model name entered: \(inputModelName)")
                     // 使用 DispatchQueue 確保上傳操作不會阻塞 UI
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                    uploadModelToFirebase()
-//                    scanPassCount = 0
-//                    inputModelName = ""
-//                    restartObjectCapture()
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { }
                     // 上傳文件並在完成後清空輸入框
                     uploadModelToFirebase() {
-                        // 成功上傳後再清空輸入框
                         scanPassCount = 0
                         inputModelName = ""
                         restartObjectCapture()  // 確保在上傳成功後再重新開始捕捉
                     }
-                    
-                    
-                    
                     print("==== Already upload the usdz File!!!!======")
 //                    }
                     
@@ -162,7 +131,6 @@ struct ARview: View {
 
                 Button("取消") {
                     showNameInputSheet = false  // 關閉輸入框
-                    
                 }
                 .padding()
             }
@@ -181,8 +149,6 @@ struct ARview: View {
 //                    quickLookIsPresented = false
 //                    restartObjectCapture()
 //                })
-                
-                
             }
         }
         //MARK: - Alert Setting
@@ -201,10 +167,8 @@ struct ARview: View {
                 })
             )
         }
-        
     }
 }
-
 extension ARview {
     //MARK: - Restart Function Setting
     @MainActor func restartObjectCapture() {   //重新啟用掃描的function
@@ -250,13 +214,6 @@ extension ARview {
                 case .processingComplete:
                     isProgressing = false
                     quickLookIsPresented = true
-                   // uploadModelToFirebase() // 在模型處理完成後上傳到 Firebase
-                   
-                    
-//                    showNameInputSheet = true  // 顯示名稱輸入 sheet
-//                    uploadModelToFirebase() // 在模型處理完成後上傳到 Firebase
-//                    scanPassCount = 0
-//                    inputModelName = ""
                 default:
                     break
                 }
@@ -265,92 +222,12 @@ extension ARview {
             print("error", error)
         }
     }
-      
-    
-    // MARK: - 上傳到 Firebase Storage 並存儲 URL 到 Firestore
-//    func uploadModelToFirebase() {
-//        guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else { return }
-//        
-//        // 使用 UUID 生成 Storage 路徑和模型名稱
-//        let uniqueID = UUID().uuidString
-//        let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
-//        
-//        if let modelData = try? Data(contentsOf: modelPath) {
-//            let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
-//                if let error = error {
-//                    print("Error uploading model: \(error.localizedDescription)")
-//                    return
-//                }
-//                
-//                storageRef.downloadURL { url, error in
-//                    if let error = error {
-//                        print("Error getting download URL: \(error.localizedDescription)")
-//                    } else if let downloadURL = url {
-//                        print("Model uploaded successfully: \(downloadURL.absoluteString)")
-//                        
-////                        saveDownloadURLToFirestore(downloadURL,name: uniqueID)
-//                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
-//                        
-//                        restartObjectCapture()
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    func uploadModelToFirebase() {
-//        guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else {
-//            print("Error: Model path not found.")
-//            return
-//        }
-//        
-//        // 檢查模型文件是否存在並且可以讀取
-//        do {
-//            let modelData = try Data(contentsOf: modelPath)
-//            print("Model data size: \(modelData.count) bytes")  // 打印模型文件大小
-//            
-//            // 使用 UUID 生成 Storage 路徑和模型名稱
-//            let uniqueID = UUID().uuidString
-//            let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
-//            
-//            print("Starting upload to Firebase Storage...")
-//            
-//            // 上傳模型文件到 Firebase Storage
-//            let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
-//                if let error = error {
-//                    print("Error uploading model: \(error.localizedDescription)")
-//                    return
-//                }
-//                
-//                print("Model uploaded to Firebase Storage, fetching download URL...")
-//                
-//                // 獲取下載 URL
-//                storageRef.downloadURL { url, error in
-//                    if let error = error {
-//                        print("Error getting download URL: \(error.localizedDescription)")
-//                    } else if let downloadURL = url {
-//                        print("Model uploaded successfully to Firebase Storage: \(downloadURL.absoluteString)")
-//                        
-//                        // 使用用戶輸入的名稱來保存到 Firestore
-//                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
-//                    }
-//                }
-//            }
-//            
-//            uploadTask.observe(.progress) { snapshot in
-//                let percentComplete = 100.0 * Double(snapshot.progress?.completedUnitCount ?? 0) / Double(snapshot.progress?.totalUnitCount ?? 0)
-//                print("Upload is \(percentComplete)% complete")
-//            }
-//            
-//        } catch {
-//            print("Error reading model data: \(error.localizedDescription)")
-//        }
-//    }
+    // MARK: - 上傳到 Firebase Storage 再存儲 URL 到 Firestore
     func uploadModelToFirebase(completion: @escaping () -> Void) {
         guard let modelPath = modelFolderPath?.appending(path: "model.usdz") else {
             print("Error: Model path not found.")
             return
         }
-        
         // 檢查模型文件是否存在並且可以讀取
         do {
             let modelData = try Data(contentsOf: modelPath)
@@ -370,7 +247,6 @@ extension ARview {
                 }
                 
                 print("Model uploaded to Firebase Storage, fetching download URL...")
-                
                 // 獲取下載 URL
                 storageRef.downloadURL { url, error in
                     if let error = error {
@@ -380,13 +256,11 @@ extension ARview {
                         
                         // 使用用戶輸入的名稱來保存到 Firestore
                         saveDownloadURLToFirestore(downloadURL, name: inputModelName)
-                        
                         // 在成功上傳後執行回調
                         completion()
                     }
                 }
             }
-            
             uploadTask.observe(.progress) { snapshot in
                 let percentComplete = 100.0 * Double(snapshot.progress?.completedUnitCount ?? 0) / Double(snapshot.progress?.totalUnitCount ?? 0)
                 print("Upload is \(percentComplete)% complete")
@@ -405,7 +279,6 @@ extension ARview {
             "name": name,  // 使用與 Storage 同樣的 UUID 作為名稱
             "timestamp": Timestamp(date: Date())
         ]
-        
         db.collection("3DModels").addDocument(data: modelData) { error in
             if let error = error {
                 print("Error saving model URL to Firestore: \(error.localizedDescription)")
