@@ -7,40 +7,19 @@
 import SwiftUI
 import FirebaseStorage
 import FirebaseFirestore
-//import CoreLocationUI
 import MapKit
-
-
 // 定義 LocationItem 來表示每個地點的資料
 struct LocationItem2: Identifiable {
     let id: String
     let coordinate: CLLocationCoordinate2D
 }
 
-
-
-
-
-
-
 struct UploadDataView: View {
-    
     @State var imageURL2: URL? = nil
-    
     var locations: [LocationItem] = [
-        
-        LocationItem(id: "玩具e哥(台北大道一店)", coordinate: CLLocationCoordinate2D(latitude: 25.048423, longitude: 121.517475)),
-        
-        LocationItem(id: "玩具e哥(大道二店)", coordinate: CLLocationCoordinate2D(latitude: 25.049819, longitude: 121.512638)),
-        LocationItem(id: "玩具e哥(站前地下街）", coordinate: CLLocationCoordinate2D(latitude:  25.046632, longitude: 121.515619)),
-        
-        LocationItem(id: "玩具e哥(北門店)", coordinate: CLLocationCoordinate2D(latitude: 25.049092, longitude: 121.509919)),
-        LocationItem(id: "玩具e哥（台北松山店）", coordinate: CLLocationCoordinate2D(latitude: 25.046895, longitude: 121.577958)),
-        LocationItem(id: "玩具e哥（文山忠順店)", coordinate: CLLocationCoordinate2D(latitude: 24.984611, longitude: 121.563138)),
-        LocationItem(id: "玩具e哥（台北康寧店）", coordinate: CLLocationCoordinate2D(latitude: 25.069698, longitude: 121.611720)),
-        LocationItem(id: "玩具e哥（內湖成功）", coordinate: CLLocationCoordinate2D(latitude: 25.082841, longitude: 121.591830))
+        LocationItem(id: "玩具e哥(板橋新埔店)", coordinate: CLLocationCoordinate2D(latitude: 25.023378, longitude: 121.468812)),
+        LocationItem(id: "玩具e哥（家福重新店）", coordinate: CLLocationCoordinate2D(latitude: 25.043240, longitude: 121.467328))
     ]
-    
     var body: some View {
         VStack {
             if let url = imageURL2 {
@@ -66,19 +45,15 @@ struct UploadDataView: View {
            // loadImageFromFirebase()
         }
     }
-    
     // 上傳 locations 到 Firestore
     func uploadLocationsToFirebase() {
-        
         let db = Firestore.firestore()
-        
         for location in locations {
             let data: [String: Any] = [
                 "id": location.id,
                 "latitude": location.coordinate.latitude,
                 "longitude": location.coordinate.longitude
             ]
-            
             // 上傳每個位置資料到 Firestore 的 "locations" collection
             db.collection("locations").addDocument(data: data) { error in
                 if let error = error {
@@ -89,14 +64,9 @@ struct UploadDataView: View {
             }
         }
     }
-    
-    
-    
-    
     // 從 Firebase Storage 取得圖片的下載 URL
     func loadImageFromFirebase() {
         let storageRef = Storage.storage().reference(withPath: "infoImages/IMG_0345.jpg")
-        
         // 獲取下載 URL
         storageRef.downloadURL { url, error in
             if let error = error {
@@ -107,13 +77,10 @@ struct UploadDataView: View {
                 self.imageURL2 = url  // 成功獲取 URL，設置為狀態變量
             }
         }
-        
     }
-    
     // 將資料和圖片 URL 一同上傳到 Firestore
     func uploadDataToFirestore(imageURL: URL) {
         let db = Firestore.firestore()
-        
         // 上傳的資料
         let toolData: [String: Any] = [
             "name": "筆刀",
@@ -124,7 +91,6 @@ struct UploadDataView: View {
             // 將 URL 轉換為字串並存入Firestore
             "position": 3
         ]
-        
         // 將資料存入 Firestore 的 "toolDatas" collection
         db.collection("toolDatas").addDocument(data: toolData) { error in
             if let error = error {
@@ -134,7 +100,6 @@ struct UploadDataView: View {
             }
         }
     }
-    
     func uploadDataToFirestore2() {
         let db = Firestore.firestore()
         
@@ -145,7 +110,6 @@ struct UploadDataView: View {
             "image_url": "",
             "position": 5
         ]
-        
         // 將資料存入 Firestore 的 "toolDatas" collection
         db.collection("skillDatas").addDocument(data: skillData) { error in
             if let error = error {
@@ -155,9 +119,6 @@ struct UploadDataView: View {
             }
         }
     }
-    
-    
-    
 }
 
 #Preview {

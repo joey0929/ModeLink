@@ -23,7 +23,6 @@ struct MapView: View {
                             .resizable()
                             .frame(width: 30, height: 30)
                             .foregroundColor(.blue)
-                        
                         // 也可以顯示文字或其他視覺元素
                         Text(location.id)
                             .font(.caption)
@@ -67,16 +66,7 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     // swiftlint:disable line_length
     @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 25.038611105581104, longitude: 121.53276716354785), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
     // swiftlint:enable line_length
-    
-//    @Published var locations: [LocationItem] = [
-//        LocationItem(id: "School", coordinate: CLLocationCoordinate2D(latitude: 25.03852848071074, longitude: 121.53235946779394)), // School (AppWorks 地址)
-//        LocationItem(id: "model1", coordinate: CLLocationCoordinate2D(latitude: 25.044233102290015, longitude: 121.53256036692702)), // 模型店 1
-//        LocationItem(id: "model2", coordinate: CLLocationCoordinate2D(latitude: 25.045633580459757, longitude: 121.53204103015189)), // 模型店 2
-//        LocationItem(id: "model3", coordinate: CLLocationCoordinate2D(latitude: 25.045683760233967, longitude: 121.53167265158353))  // 模型店 3
-//    ]
     @Published var locations: [LocationItem] = []
-
-    
     let locationManager = CLLocationManager()
     let db = Firestore.firestore()  // 初始化 Firestore
     
