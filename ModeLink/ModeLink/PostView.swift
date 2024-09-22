@@ -68,41 +68,44 @@ struct PostView: View {
 //                    ImagePicker(selectedImage: $selectedImage)
 //                }
                 // 使用 PhotosPicker 來選擇圖片
-                PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
-                    Text("選擇圖片")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(.blue)
-                        .cornerRadius(10)
-                }
-                .onChange(of: selectedItem) { newItem in
-                    if let newItem = newItem {
-                        Task {
-                            // 當選擇項變更時，將圖片加載為 UIImage
-                            if let data = try? await newItem.loadTransferable(type: Data.self), 
-                                // 圖片加載為 Data 格式 再轉乘 UIImage
-                               let uiImage = UIImage(data: data) {
-                                selectedImage = uiImage
+                HStack {
+                    PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
+                        Text("選擇圖片")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(.blue)
+                            .cornerRadius(10)
+                    }
+                    .onChange(of: selectedItem) { newItem in
+                        if let newItem = newItem {
+                            Task {
+                                // 當選擇項變更時，將圖片加載為 UIImage
+                                if let data = try? await newItem.loadTransferable(type: Data.self),
+                                    // 圖片加載為 Data 格式 再轉乘 UIImage
+                                   let uiImage = UIImage(data: data) {
+                                    selectedImage = uiImage
+                                }
                             }
                         }
                     }
+                    
+                    Button(action: {
+                        //uploadPost()
+                        uploadPost(title: title, content: content, county: county, image: selectedImage)
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Text("提交")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(canSubmit ? Color.blue : Color.gray) // 根據狀態變色
+                            .cornerRadius(10)
+                    }
+                    .disabled(!canSubmit)
+                    .padding()
+
                 }
-                
-                Button(action: {
-                    //uploadPost()
-                    uploadPost(title: title, content: content, county: county, image: selectedImage)
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Text("提交")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(canSubmit ? Color.blue : Color.gray) // 根據狀態變色
-                        .cornerRadius(10)
-                }
-                .disabled(!canSubmit)
-                .padding()
                 Spacer()
             }
         }

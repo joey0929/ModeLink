@@ -105,14 +105,12 @@ struct ARview: View {
                 Text("輸入模型名稱")
                     .font(.headline)
                     .padding()
-                
                 TextField("輸入名稱", text: $inputModelName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
 
                 Button("保存") {
                     guard !inputModelName.isEmpty else { return }
-                    
                     showNameInputSheet = false  // 關閉輸入框
                     print("==Model name entered: \(inputModelName)")
                     // 使用 DispatchQueue 確保上傳操作不會阻塞 UI
@@ -125,7 +123,6 @@ struct ARview: View {
                     }
                     print("==== Already upload the usdz File!!!!======")
 //                    }
-                    
                 }
                 .padding()
 
@@ -143,7 +140,6 @@ struct ARview: View {
                     showNameInputSheet = true  // 顯示名稱輸入 sheet
                    // restartObjectCapture()  // Quick Look 預覽結束後重新開始捕捉
                 }
-                
                 // or 這種寫法
 //                ARQuickLookView(modelFile: modelPath, endCaptureCallback: {
 //                    quickLookIsPresented = false
@@ -253,10 +249,9 @@ extension ARview {
                         print("Error getting download URL: \(error.localizedDescription)")
                     } else if let downloadURL = url {
                         print("Model uploaded successfully to Firebase Storage: \(downloadURL.absoluteString)")
-                        
                         // 使用用戶輸入的名稱來保存到 Firestore
                         saveDownloadURLToFirestore(downloadURL, name: inputModelName)
-                        // 在成功上傳後執行回調
+                        // 在成功上傳後執行閉包
                         completion()
                     }
                 }
@@ -265,12 +260,10 @@ extension ARview {
                 let percentComplete = 100.0 * Double(snapshot.progress?.completedUnitCount ?? 0) / Double(snapshot.progress?.totalUnitCount ?? 0)
                 print("Upload is \(percentComplete)% complete")
             }
-            
         } catch {
             print("Error reading model data: \(error.localizedDescription)")
         }
     }
-    
     // 將下載 URL 儲存到 Firestore
     func saveDownloadURLToFirestore(_ downloadURL: URL,name: String) {
         let db = Firestore.firestore()

@@ -25,44 +25,152 @@ struct ArticleView: View {
 
     @State private var posts: [Post] = []
     //  swiftlint:disable trailing_whitespace
+//    var body: some View {
+//        NavigationView {
+//            ZStack {
+//                    // 貼文列表 (底層)
+//                    List(posts) { post in
+//                        VStack(alignment: .leading) {
+//                            Text(post.title)
+//                                .font(.headline)
+//                            HStack {
+//                                Text(post.userId).padding(.trailing)
+//                                Text(basicFormattedDate(from: post.timestamp))
+//                            }
+//                            
+//                            Text(post.content)
+//                                .font(.subheadline)
+//                                .foregroundColor(.gray)
+//                            
+//                            if let imageURL = post.imageURL {
+//                                KFImage(URL(string: imageURL))
+//                                    .resizable()
+//                                    .scaledToFill() // 確保圖片填滿欄位
+//                                    .frame(maxWidth: .infinity, maxHeight: 300) // 限制圖片高度並佔滿寬度
+//                                    .clipped() // 防止圖片超出框架
+//                                    .cornerRadius(10)
+//                            } else {
+//                                
+//                            }
+//                            Spacer()
+//                        }
+//                        .padding(.vertical, 5)
+//                        .frame(height: 400)
+//                    }
+//                    .navigationTitle("文章列表")
+//                    .onAppear {
+//                        UIScrollView.appearance().showsVerticalScrollIndicator = false //進到畫面就將滑動條隱藏
+//                        startListeningForPosts()
+//                    }
+//                
+//                    // 右下角的 + 按鈕 (頂層)
+//                    VStack {
+//                        Spacer()
+//                        HStack {
+//                            Spacer()
+//                            NavigationLink(destination: PostView()) {
+//                                Image(systemName: "plus")
+//                                    .font(.system(size: 30))
+//                                    .foregroundColor(.white)
+//                                    .padding()
+//                                    .background(Color.blue)
+//                                    .clipShape(Circle())
+//                                    .shadow(radius: 10)
+//                            }
+//                            .padding()
+//                        }
+//                    }
+//                
+//            }
+//        }
+//    }
     var body: some View {
-        NavigationView {
-            ZStack {
+            NavigationView {
+                ZStack {
                     // 貼文列表 (底層)
                     List(posts) { post in
-                        VStack(alignment: .leading) {
-                            Text(post.title)
-                                .font(.headline)
+                        VStack(alignment: .leading, spacing: 16) {
+                            // 貼文頂部，包含用戶頭像、用戶名與時間
                             HStack {
-                                Text(post.userId).padding(.trailing)
-                                Text(basicFormattedDate(from: post.timestamp))
+                                Image(systemName: "person.circle.fill") // 用戶頭像
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                    .foregroundColor(.gray)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(post.userId) // 用戶名
+                                        .font(.headline)
+                                    Text(basicFormattedDate(from: post.timestamp)) // 發佈時間
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                                Spacer()
+                                // 禁止符號按鈕，用於封鎖作者文章
+                                Button(action: {
+                                    blockAuthor(post.userId) // 封鎖作者的文章
+                                }) {
+                                    Image(systemName: "nosign") // SF Symbol 禁止符號
+                                        .foregroundColor(.red)
+                                        .frame(width: 30, height: 30) // 固定按鈕大小
+                                        .contentShape(Rectangle()) // 增加可點擊範圍
+                                }
+                                .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
+                                
                             }
+                            
+                            // 貼文標題與內容
+                            Text(post.title)
+                                .font(.title2)
+                                .bold()
                             
                             Text(post.content)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             
+                            // 貼文圖片
                             if let imageURL = post.imageURL {
                                 KFImage(URL(string: imageURL))
                                     .resizable()
-                                    .scaledToFill() // 確保圖片填滿欄位
-                                    .frame(maxWidth: .infinity, maxHeight: 300) // 限制圖片高度並佔滿寬度
-                                    .clipped() // 防止圖片超出框架
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity, maxHeight: 300) // 圖片最大高度 300
+                                    .clipped()
                                     .cornerRadius(10)
-                            } else {
-                                
                             }
-                            Spacer()
+                            
+                            // 貼文互動按鈕
+//                            HStack {
+//                                Button(action: {
+//                                    // 喜歡動作
+//                                }) {
+//                                    HStack {
+//                                        Image(systemName: "heart")
+//                                        Text("喜歡")
+//                                    }
+//                                }
+//                                .buttonStyle(BorderlessButtonStyle())
+//                                .padding(.trailing, 16)
+//                                
+//                                Button(action: {
+//                                    // 評論動作
+//                                }) {
+//                                    HStack {
+//                                        Image(systemName: "bubble.right")
+//                                        Text("評論")
+//                                    }
+//                                }
+//                                .buttonStyle(BorderlessButtonStyle())
+//                                Spacer()
+//                            }
+//                            .padding(.top, 10)
                         }
-                        .padding(.vertical, 5)
-                        .frame(height: 400)
+                        .padding(.vertical, 10)
                     }
                     .navigationTitle("文章列表")
                     .onAppear {
-                        UIScrollView.appearance().showsVerticalScrollIndicator = false //進到畫面就將滑動條隱藏
+                        UIScrollView.appearance().showsVerticalScrollIndicator = false // 隱藏滾動條
                         startListeningForPosts()
                     }
-                
+                    
                     // 右下角的 + 按鈕 (頂層)
                     VStack {
                         Spacer()
@@ -80,9 +188,15 @@ struct ArticleView: View {
                             .padding()
                         }
                     }
-                
+                }
             }
         }
+    
+    //MARK: - 封鎖特定作者的文章
+    func blockAuthor(_ userId: String) {
+        // 封鎖功能的邏輯處理，比如在本地保存被封鎖的用戶，並過濾他們的文章
+        print("封鎖作者: \(userId)")
+        // 你可以在這裡實現封鎖作者文章的邏輯，比如過濾已封鎖的用戶
     }
     //MARK: - Trans TimeStamp to y/m/d/h-min
     func basicFormattedDate(from date: Date) -> String {
