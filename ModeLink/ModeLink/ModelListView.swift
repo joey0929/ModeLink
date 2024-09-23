@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Firebase
-
 struct ModelListView: View {
     @State private var models = [Model]()
     var body: some View {

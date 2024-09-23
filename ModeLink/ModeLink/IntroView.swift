@@ -9,6 +9,8 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseStorage
 import Kingfisher
+//import FirebaseRemoteConfig
+
 struct IntroView: View {
     @State private var tools: [Tool] = [] // 保存從 Firestore 抓取的工具資料
     @State private var skills: [Skill] = [] // 保存從 Firestore 抓取的工具資料
