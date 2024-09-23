@@ -16,6 +16,7 @@
 		D41344262C93EA10003400B9 /* ArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41344252C93EA10003400B9 /* ArticleView.swift */; };
 		D41344282C93EAF4003400B9 /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41344272C93EAF4003400B9 /* IntroView.swift */; };
 		D413442A2C93EC13003400B9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41344292C93EC13003400B9 /* MapView.swift */; };
+		D41B463D2CA12A850067D894 /* YouTubePlayerKit in Frameworks */ = {isa = PBXBuildFile; productRef = D41B463C2CA12A850067D894 /* YouTubePlayerKit */; };
 		D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB982C967234000B9745 /* CreateButton.swift */; };
 		D4A2BB9B2C967277000B9745 /* ARQuickLookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */; };
 		D4A2BB9D2C967335000B9745 /* CaptureStateExtend.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9C2C967335000B9745 /* CaptureStateExtend.swift */; };
@@ -73,6 +74,7 @@
 			files = (
 				D4A2BBC42C97FC47000B9745 /* Kingfisher in Frameworks */,
 				D4A2BBC12C97EE29000B9745 /* FirebaseStorageCombine-Community in Frameworks */,
+				D41B463D2CA12A850067D894 /* YouTubePlayerKit in Frameworks */,
 				D4A2BBB72C97EE29000B9745 /* FirebaseDatabase in Frameworks */,
 				D4A2BBAD2C97EE29000B9745 /* FirebaseAnalytics in Frameworks */,
 				D4A2BBB12C97EE29000B9745 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
@@ -171,6 +173,7 @@
 				D4A2BBBE2C97EE29000B9745 /* FirebaseStorage */,
 				D4A2BBC02C97EE29000B9745 /* FirebaseStorageCombine-Community */,
 				D4A2BBC32C97FC47000B9745 /* Kingfisher */,
+				D41B463C2CA12A850067D894 /* YouTubePlayerKit */,
 			);
 			productName = ModeLink;
 			productReference = D41344102C92ED4D003400B9 /* ModeLink.app */;
@@ -203,6 +206,7 @@
 			packageReferences = (
 				D4A2BBAB2C97EE29000B9745 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 			);
 			productRefGroup = D41344112C92ED4D003400B9 /* Products */;
 			projectDirPath = "";
@@ -483,6 +487,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SvenTiigi/YouTubePlayerKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.0;
+			};
+		};
 		D4A2BBAB2C97EE29000B9745 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -502,6 +514,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D41B463C2CA12A850067D894 /* YouTubePlayerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */;
+			productName = YouTubePlayerKit;
+		};
 		D4A2BBAC2C97EE29000B9745 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D4A2BBAB2C97EE29000B9745 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

@@ -46,7 +46,7 @@ struct IntroView: View {
         let db = Firestore.firestore()
         db.collection("toolDatas")
             .order(by:"position")
-            .getDocuments { snapshot, error in
+            .addSnapshotListener { (snapshot, error) in
             if let error = error {
                 print("抓取資料時發生錯誤：\(error.localizedDescription)")
                 return
@@ -74,12 +74,11 @@ struct IntroView: View {
         let db = Firestore.firestore()
         db.collection("skillDatas")
             .order(by:"position")
-            .getDocuments { snapshot, error in
+            .addSnapshotListener { (snapshot, error) in
             if let error = error {
                 print("抓取資料時發生錯誤：\(error.localizedDescription)")
                 return
             }
-            
             if let snapshot = snapshot {
                 self.skills = snapshot.documents.compactMap { doc -> Skill? in
                     let data = doc.data()
@@ -87,10 +86,12 @@ struct IntroView: View {
                         let name = data["name"] as? String,
                         let description = data["description"] as? String,
                         let position = data["position"] as? Int,
-                        let imageUrl = data["image_url"] as? String else {
+                        let imageUrl = data["image_url"] as? String,
+                        let ytUrl = data["yt_url"] as? String
+                    else {
                         return nil
                     }
-                    return Skill(name: name, description: description, imageUrl: imageUrl, position: position)
+                    return Skill(name: name, description: description, imageUrl: imageUrl, position: position, ytUrl: ytUrl)
                 }
             }
         }
@@ -100,8 +101,6 @@ struct IntroView: View {
 #Preview {
     IntroView()
 }
-    
-
 
 struct Tool: Identifiable {
     let id: String
@@ -119,6 +118,7 @@ struct Skill: Identifiable {
     let description: String
     let imageUrl: String
     let position: Int
+    let ytUrl: String
 }
 
 struct ToolCard: View {
@@ -148,12 +148,17 @@ struct SkillCard: View {
     let skill: Skill
     var body: some View {
         VStack {
-            KFImage(URL(string: skill.imageUrl))
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+//            KFImage(URL(string: skill.imageUrl))
+//                .resizable()
+//                .aspectRatio(contentMode: .fit)
+//                .frame(width: 80, height: 80)
+//                .cornerRadius(8)
+//                .padding()
+            
+            Image(systemName: "hammer")
                 .frame(width: 80, height: 80)
-                .cornerRadius(8)
-                .padding()
+            
+            
             Text(skill.name)
                 .font(.headline)
                 .foregroundColor(.primary) //變成預設的顏色
