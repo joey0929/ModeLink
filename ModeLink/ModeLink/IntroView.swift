@@ -9,12 +9,10 @@ import SwiftUI
 import FirebaseFirestore
 import FirebaseStorage
 import Kingfisher
-
 struct IntroView: View {
     @State private var tools: [Tool] = [] // 保存從 Firestore 抓取的工具資料
     @State private var skills: [Skill] = [] // 保存從 Firestore 抓取的工具資料
     let columns = [GridItem(.adaptive(minimum: 150))]
-    
     var body: some View {
         NavigationView {
             ScrollView(showsIndicators: false) {
@@ -69,7 +67,6 @@ struct IntroView: View {
             }
         }
     }
-    
     func fetchSkillData() {
         let db = Firestore.firestore()
         db.collection("skillDatas")
@@ -147,6 +144,7 @@ struct ToolCard: View {
 struct SkillCard: View {
     let skill: Skill
     var body: some View {
+        
         VStack {
 //            KFImage(URL(string: skill.imageUrl))
 //                .resizable()

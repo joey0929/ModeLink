@@ -99,7 +99,7 @@ struct ARview: View {
                 }
             }
         }
-        //MARK: - Input Filename Setting
+        // MARK: - Input Filename Setting
         .sheet(isPresented: $showNameInputSheet) {
             VStack {
                 Text("輸入模型名稱")
@@ -138,7 +138,6 @@ struct ARview: View {
                 ARQuickLookView(modelFile: modelPath) {    //use trailing closure
                     quickLookIsPresented = false
                     showNameInputSheet = true  // 顯示名稱輸入 sheet
-                   // restartObjectCapture()  // Quick Look 預覽結束後重新開始捕捉
                 }
                 // or 這種寫法
 //                ARQuickLookView(modelFile: modelPath, endCaptureCallback: {
@@ -170,13 +169,11 @@ extension ARview {
     @MainActor func restartObjectCapture() {   //重新啟用掃描的function
         guard let directory = createNewScanDirectory() else { return }
         session = ObjectCaptureSession()
-
         modelFolderPath = directory.appending(path: "Models/")
         imageFolderPath = directory.appending(path: "Images/")
         guard let imageFolderPath else { return }
         session?.start(imagesDirectory: imageFolderPath)
     }
-    
     func createNewScanDirectory() -> URL? {
         guard let capturesFolder = getRootScansFolder() else { return nil }
         let timestamp = ISO8601DateFormatter().string(from: Date())
@@ -189,7 +186,6 @@ extension ARview {
         }
         return newCaptureDirectory
     }
-    
     private func getRootScansFolder() -> URL? {
         guard let documentFolder = try? FileManager.default.url(for: .documentDirectory,
                                                                 in: .userDomainMask,
@@ -197,7 +193,6 @@ extension ARview {
                                                                 create: false) else { return nil }
         return documentFolder.appendingPathComponent("Scans/", isDirectory: true)
     }
-    
     // MARK: - Construct 3D View Setting
     private func startReconstruction() async {
         guard let imageFolderPath, let modelPath else { return }
@@ -228,20 +223,16 @@ extension ARview {
         do {
             let modelData = try Data(contentsOf: modelPath)
             print("Model data size: \(modelData.count) bytes")  // 打印模型文件大小
-            
             // 使用 UUID 生成 Storage 路徑和模型名稱
             let uniqueID = UUID().uuidString
             let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
-            
             print("Starting upload to Firebase Storage...")
-            
             // 上傳模型文件到 Firebase Storage
             let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
                 if let error = error {
                     print("Error uploading model: \(error.localizedDescription)")
                     return
                 }
-                
                 print("Model uploaded to Firebase Storage, fetching download URL...")
                 // 獲取下載 URL
                 storageRef.downloadURL { url, error in

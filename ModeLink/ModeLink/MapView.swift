@@ -43,8 +43,7 @@ struct MapView: View {
             .labelStyle(.titleAndIcon)
             .symbolVariant(.fill)
             .tint(.pink)
-            .padding(.bottom,50)
-
+            .padding(.bottom, 50)
         }
         .onAppear {
             viewModel.fetchLocationsFromFirebase()
@@ -60,16 +59,13 @@ struct LocationItem: Identifiable {
     let id: String
     let coordinate: CLLocationCoordinate2D
 }
-
 class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
-    
     // swiftlint:disable line_length
     @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 25.038611105581104, longitude: 121.53276716354785), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
     // swiftlint:enable line_length
     @Published var locations: [LocationItem] = []
     let locationManager = CLLocationManager()
     let db = Firestore.firestore()  // 初始化 Firestore
-    
     override init() {
         super.init()
         locationManager.delegate = self
@@ -77,7 +73,6 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         //kCLLocationAccuracyHundredMeters:100米範圍內的精度，通常定位速度較快
         //kCLLocationAccuracyNearestTenMeters : 10米範圍內的精度，適合較快速定位,太慢改用100米的
     }
-    
     // 從 Firestore 拉取 locations
     func fetchLocationsFromFirebase() {
         db.collection("locations").getDocuments { snapshot, error in
@@ -85,12 +80,10 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
                 print("Error fetching locations: \(error.localizedDescription)")
                 return
             }
-            
             guard let documents = snapshot?.documents else {
                 print("No documents found")
                 return
             }
-            
             self.locations = documents.compactMap { doc -> LocationItem? in
                 let data = doc.data()
                 guard let id = data["id"] as? String,
@@ -103,7 +96,6 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     }
-    
     func requestAllowOnceLocationPermission() {
         if CLLocationManager.locationServicesEnabled() {
             checkLocationAuthorization()  // 檢查授權狀態後再進行定位請求
@@ -127,7 +119,6 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkLocationAuthorization()  // 每當授權狀態改變時，檢查是否可以請求位置
     }
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let latestLocation = locations.first else {
             return

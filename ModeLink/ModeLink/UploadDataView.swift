@@ -13,7 +13,6 @@ struct LocationItem2: Identifiable {
     let id: String
     let coordinate: CLLocationCoordinate2D
 }
-
 struct UploadDataView: View {
     @State var imageURL2: URL? = nil
     var locations: [LocationItem] = [
@@ -87,8 +86,7 @@ struct UploadDataView: View {
             "price": "400 ~ 1500",
             "recommend": "田宮、MADWORKS",
             "description": "處理湯口",
-            "image_url": imageURL.absoluteString,
-            // 將 URL 轉換為字串並存入Firestore
+            "image_url": imageURL.absoluteString, // 將 URL 轉換為字串並存入Firestore
             "position": 3
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
@@ -102,9 +100,7 @@ struct UploadDataView: View {
     }
     func uploadDataToFirestore2() {
         let db = Firestore.firestore()
-        
-        // 上傳的資料
-        let skillData: [String: Any] = [
+        let skillData: [String: Any] = [  // 上傳的資料
             "name": "上保護漆",
             "description": "在貼完水貼與上完墨線後，可以用噴灌為模型上一層保護漆，可以有效防止水貼或漆料經時間久了而脫落與可以有效消除塑膠的，呈現出的模型會更為自然",
             "image_url": "",
@@ -120,7 +116,6 @@ struct UploadDataView: View {
         }
     }
 }
-
 #Preview {
     UploadDataView()
 }
