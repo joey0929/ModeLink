@@ -34,6 +34,7 @@
 		D41B465C2CA166810067D894 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = D41B465B2CA166810067D894 /* FirebaseRemoteConfig */; };
 		D41B465E2CA166810067D894 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D41B465D2CA166810067D894 /* FirebaseStorage */; };
 		D41B46602CA166810067D894 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = D41B465F2CA166810067D894 /* FirebaseStorageCombine-Community */; };
+		D41B46622CA24C2E0067D894 /* PersonalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41B46612CA24C2E0067D894 /* PersonalView.swift */; };
 		D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB982C967234000B9745 /* CreateButton.swift */; };
 		D4A2BB9B2C967277000B9745 /* ARQuickLookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */; };
 		D4A2BB9D2C967335000B9745 /* CaptureStateExtend.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9C2C967335000B9745 /* CaptureStateExtend.swift */; };
@@ -59,6 +60,7 @@
 		D41344252C93EA10003400B9 /* ArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleView.swift; sourceTree = "<group>"; };
 		D41344272C93EAF4003400B9 /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		D41344292C93EC13003400B9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		D41B46612CA24C2E0067D894 /* PersonalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalView.swift; sourceTree = "<group>"; };
 		D4A2BB982C967234000B9745 /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
 		D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARQuickLookView.swift; sourceTree = "<group>"; };
 		D4A2BB9C2C967335000B9745 /* CaptureStateExtend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureStateExtend.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				D41344132C92ED4D003400B9 /* ModeLinkApp.swift */,
 				D41344152C92ED4D003400B9 /* ContentView.swift */,
 				D41344212C92EF16003400B9 /* TaBarView.swift */,
+				D41B46612CA24C2E0067D894 /* PersonalView.swift */,
 				D41344252C93EA10003400B9 /* ArticleView.swift */,
 				D4A2BB9E2C9735F9000B9745 /* PostView.swift */,
 				D4A2BBA02C97BD25000B9745 /* ImagePicker.swift */,
@@ -285,6 +288,7 @@
 				D4A2BB9B2C967277000B9745 /* ARQuickLookView.swift in Sources */,
 				D41344222C92EF16003400B9 /* TaBarView.swift in Sources */,
 				D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */,
+				D41B46622CA24C2E0067D894 /* PersonalView.swift in Sources */,
 				D4B14A572C9A7E0800FD12E7 /* SavedModelPreviewView.swift in Sources */,
 				D41344142C92ED4D003400B9 /* ModeLinkApp.swift in Sources */,
 				D4A2BBA12C97BD25000B9745 /* ImagePicker.swift in Sources */,

@@ -72,18 +72,18 @@ struct ArticleView: View {
                                         .cornerRadius(10)
                                 }
                                 // 貼文互動按鈕
-//                                HStack {
-//                                    Button(action: {
-//                                        // 喜歡動作
-//                                    }) {
-//                                        HStack {
-//                                            Image(systemName: "heart")
-//                                            Text("喜歡")
-//                                        }
-//                                    }
-//                                    .buttonStyle(BorderlessButtonStyle())
-//                                    .padding(.trailing, 16)
-//    
+                                HStack {
+                                    Button(action: {
+                                        // 喜歡動作
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "heart")
+                                            Text("喜歡")
+                                        }
+                                    }
+                                    .buttonStyle(BorderlessButtonStyle())
+                                    .padding(.trailing, 16)
+    
 //                                    Button(action: {
 //                                        // 評論動作
 //                                    }) {
@@ -93,9 +93,9 @@ struct ArticleView: View {
 //                                        }
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
-//                                    Spacer()
-//                                }
-//                                .padding(.top, 10)
+                                    Spacer()
+                                }
+                                .padding(.top, 10)
                             }
                             .padding()
                             .background(Color.white)
@@ -128,6 +128,12 @@ struct ArticleView: View {
                         .padding()
                     }
                 }
+                // 右上角齒輪圖標
+                .navigationBarItems(trailing: NavigationLink(destination: PersonalView()) {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 24))
+                        .foregroundColor(.black)
+                })
             }
         }
     }
