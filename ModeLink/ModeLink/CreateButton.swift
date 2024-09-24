@@ -11,12 +11,8 @@ import RealityKit
 @MainActor
 struct CreateButton: View {
     let session: ObjectCaptureSession
-    
     var body: some View {
-        
-        
         HStack {
-            
             Button(action: {
                 performAction()
             }, label: {
@@ -26,7 +22,6 @@ struct CreateButton: View {
                     .background(.tint)
                     .clipShape(Capsule())
             })
-            
             // Cancel button
             if session.state == .detecting || session.state == .capturing {
                 Button(action: {
@@ -39,13 +34,8 @@ struct CreateButton: View {
                         .clipShape(Capsule())
                 })
             }
-            
-            
-            
         }
-        
     }
-    
     private var label: LocalizedStringKey {
         if session.state == .ready {
             return "Start detecting"
@@ -55,25 +45,22 @@ struct CreateButton: View {
             return "Undefined"
         }
     }
-    
     private func performAction() {
         if session.state == .ready {
             let isDetecting = session.startDetecting()
-            print(isDetecting ? "▶️Start detecting" : "😨Not start detecting")
+            print(isDetecting ? "Start detecting" : "Not start detecting")
         } else if session.state == .detecting {
             session.startCapturing()
         } else {
             print("Undefined")
         }
     }
-    
     private func cancelAction() {
            if session.state == .detecting || session.state == .capturing {
                session.resetDetection() // 返回到偵測狀態
                print("Cancelled capturing, back to detecting")
            }
        }
-    
 }
 //#Preview {
 //    CreateButton()

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TaBarView: View {
+    @State private var selectedTab = 1 //record the selected tab item
     var body: some View {
         TabView {
             ArticleView().tabItem {
@@ -16,16 +17,18 @@ struct TaBarView: View {
             ARview().tabItem {
                 Label("scanner", systemImage: "camera.viewfinder")
             }.tag(2)
-            IntroView().tabItem {
-                Label("Intro", systemImage: "bold")
+            ModelListView().tabItem {
+                Label("Model", systemImage: "square.and.arrow.down")
             }.tag(3)
+            IntroView().tabItem {
+                Label("Intro", systemImage: "lightbulb.circle")
+            }.tag(4)
             MapView().tabItem {
                 Label("map", systemImage: "map")
-            }.tag(4)
+            }.tag(5)
         }
     }
 }
-
 #Preview {
     TaBarView()
 }
