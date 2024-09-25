@@ -126,7 +126,8 @@ struct PostView: View {
                         "content": content,
                         "County": county,
                         "imageURL": imageURL.absoluteString, // 圖片的下載 URL
-                        "timestamp": Timestamp(date: Date())
+                        "timestamp": Timestamp(date: Date()),
+                        "likes": 0
                     ]
                     db.collection("articles").addDocument(data: postData) { error in
                         if let error = error {
@@ -146,7 +147,8 @@ struct PostView: View {
                 "title": title,
                 "content": content,
                 "County": county,
-                "timestamp": Timestamp(date: Date())
+                "timestamp": Timestamp(date: Date()),
+                "likes": 0
             ]
             db.collection("articles").addDocument(data: postData) { error in
                 if let error = error {

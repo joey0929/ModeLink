@@ -20,8 +20,20 @@ struct Post: Identifiable {
     var timestamp: Date
 }
 
+struct Post2: Identifiable {
+    var id: String
+    var userId: String
+    var title: String
+    var content: String
+    var county: String
+    var imageURL: String?
+    var timestamp: Date
+    var likes: Int // 新增：儲存讚數量
+    var isLiked: Bool // 新增：用來表示當前用戶是否已經點讚
+}
+
 struct ArticleView: View {
-    @State private var posts: [Post] = []
+    @State private var posts: [Post2] = []
 
     let columns: [GridItem] = [GridItem(.fixed(375))]
     var body: some View {
@@ -29,7 +41,9 @@ struct ArticleView: View {
             ZStack {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {  // 使用 LazyVGrid 來顯示貼文
-                        ForEach(posts) { post in
+                       // ForEach(posts) { post in
+                        ForEach(posts.indices, id: \.self) { index in  //用posts的元素當id
+                            let post = posts[index]
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack {
                                     Image(systemName: "person.circle.fill") // 用戶頭像
@@ -74,11 +88,12 @@ struct ArticleView: View {
                                 // 貼文互動按鈕
                                 HStack {
                                     Button(action: {
-                                        // 喜歡動作
+                                        toggleLike(for: index)
                                     }) {
                                         HStack {
-                                            Image(systemName: "heart")
-                                            Text("喜歡")
+                                            Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                                                //.foregroundColor(post.isLiked ? .red : .gray)
+                                            Text("\(post.likes)") // 顯示讚數量
                                         }
                                     }
                                     .buttonStyle(BorderlessButtonStyle())
@@ -142,6 +157,29 @@ struct ArticleView: View {
         // 封鎖功能的邏輯處理，比如在本地保存被封鎖的用戶，並過濾他們的文章
         print("封鎖作者: \(userId)")
     }
+    
+    // MARK: - Toggle Like Function
+    func toggleLike(for index: Int) {
+        var post = posts[index]
+        post.isLiked.toggle()
+        post.likes += post.isLiked ? 1 : -1
+        
+        // 更新 Firebase 中的讚數
+        let db = Firestore.firestore()
+        let postRef = db.collection("articles").document(post.id)
+        
+        postRef.updateData([
+            "likes": post.likes
+        ]) { error in
+            if let error = error {
+                print("Error updating likes: \(error.localizedDescription)")
+            } else {
+                print("Likes successfully updated")
+                posts[index] = post
+            }
+        }
+    }
+
     // MARK: - Trans TimeStamp to y/m/d/h-min
     func basicFormattedDate(from date: Date) -> String {
         let calendar = Calendar.current
@@ -166,17 +204,19 @@ struct ArticleView: View {
                     print("No articles found")
                     return
                 }
-                self.posts = documents.compactMap { doc -> Post? in
+                self.posts = documents.compactMap { doc -> Post2? in
                     let data = doc.data()
                     guard let userId = data["user_id"] as? String,
                           let title = data["title"] as? String,
                           let content = data["content"] as? String,
                           let county = data["County"] as? String,
-                          let timestamp = data["timestamp"] as? Timestamp else {
+                          let timestamp = data["timestamp"] as? Timestamp,
+                          let likes = data["likes"] as? Int  //
+                    else {
                         return nil
                     }
                     let imageURL = data["imageURL"] as? String
-                    return Post(id: doc.documentID, userId: userId, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue())
+                    return Post2(id: doc.documentID, userId: userId, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(),likes: likes,isLiked: false)
                 }
             }
     }
