@@ -32,7 +32,7 @@ struct PostView: View {
             
             VStack {
                 
-                Text("你好\(userName)")
+                //Text("你好\(userName)")
                 
                 TextField("標題", text: $title)
                     .textFieldStyle(RoundedBorderTextFieldStyle())

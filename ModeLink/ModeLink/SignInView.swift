@@ -17,7 +17,19 @@ struct SignInView: View {
 
     var body: some View {
         VStack {
-            Image("system home")
+            Spacer()
+            Text("Welcome to ModeLink")
+                .font(.largeTitle)
+                .bold()
+            
+            Spacer()
+            
+            // 登入說明
+            Text("Please sign in with your Apple ID:")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.bottom, 20)
+            
             Text("Please sign in with apple Id:")
             if !isLoggedIn {
                 SignInWithAppleButton(
@@ -32,6 +44,9 @@ struct SignInView: View {
                 )
                 .signInWithAppleButtonStyle(.black)
                 .frame(height: 50)
+                .padding(.horizontal, 15)
+                .cornerRadius(10) // 圓角按鈕
+                .shadow(radius: 5) // 陰影效果
                 .padding()
             } else {
                 // 顯示登入成功後的主頁面

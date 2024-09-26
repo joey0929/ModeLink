@@ -59,6 +59,8 @@ struct ArticleView: View {
                                             .foregroundColor(.gray)
                                     }
                                     Spacer()
+                                    
+                                    Text(post.county)
                                     // 禁止符號按鈕，用於封鎖作者文章
 //                                    Button(action: {
 //                                        blockAuthor(post.userId) // 封鎖作者的文章
@@ -117,9 +119,10 @@ struct ArticleView: View {
                                             .foregroundColor(.red)
                                             .frame(width: 30, height: 30) // 固定按鈕大小
                                             .contentShape(Rectangle()) // 增加可點擊範圍
-                                            .border(Color.blue) // 添加邊框以檢查點擊區域
+                                            //.border(Color.blue) // 添加邊框以檢查點擊區域
                                     }
                                     .buttonStyle(BorderlessButtonStyle())
+                                    .padding(.trailing,50)
                                 }
                                 .padding(.top, 10)
                             }

@@ -15,10 +15,17 @@ struct PersonalView: View {
     @State private var userName: String = "Loading..." // 用於存儲用戶名稱
     var body: some View {
         VStack {
-            Text("個人頁面")
-                .font(.largeTitle)
-                .padding()
             
+            HStack {
+                Text("設定")
+                    .font(.largeTitle)
+                    .padding()
+                Spacer()
+            }
+            Image(systemName: "person.circle.fill") // 用戶頭像
+                .resizable()
+                .frame(width: 80, height: 80)
+                .foregroundColor(.gray)
             // 顯示用戶名稱
             Text("Hello, \(userName)")
                 .font(.headline)
@@ -44,8 +51,6 @@ struct PersonalView: View {
     }
 
     func logout() {
-        // 在這裡實現登出邏輯，比如 Firebase 的 signOut 方法
-//        print("User logged out")
         do {
             try Auth.auth().signOut() // 使用 FirebaseAuth 的 signOut 方法登出
             isLoggedIn = false // 更新登入狀態，返回到登入頁面
