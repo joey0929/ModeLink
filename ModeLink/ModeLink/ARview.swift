@@ -116,7 +116,7 @@ struct ARview: View {
                     // 使用 DispatchQueue 確保上傳操作不會阻塞 UI
 //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { }
                     // 上傳文件並在完成後清空輸入框
-                    uploadModelToFirebase() {
+                    uploadModelToFirebase {
                         scanPassCount = 0
                         inputModelName = ""
                         restartObjectCapture()  // 確保在上傳成功後再重新開始捕捉
