@@ -16,11 +16,19 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 @main
 struct ModeLinkApp: App {
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            //ContentView()
+            if isLoggedIn {
+                ContentView()  // 登入後進入的主頁面
+            } else {
+                SignInView()   // 登入頁面
+            }
+            
         }
     }
 }
