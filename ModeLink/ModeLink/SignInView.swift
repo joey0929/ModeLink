@@ -100,7 +100,8 @@ struct SignInView: View {
                     "uid": uid,
                     "displayName": displayName,
                     "email": email,
-                    "createdAt": Timestamp(date: Date())
+                    "createdAt": Timestamp(date: Date()),
+                    "blockedUsers": [] // 初始化空的封鎖列表
                 ]
                 
                 userRef.setData(userData) { error in

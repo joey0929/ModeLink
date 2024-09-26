@@ -10,9 +10,11 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 import PhotosUI
+import FirebaseAuth
 
 struct PostView: View {
     @Environment(\.presentationMode) var presentationMode
+    @State private var userName: String = "" // 用於儲存用戶名稱
     @State private var title = ""
     @State private var content = ""
     @State private var county = "" // 所在縣市
@@ -29,6 +31,9 @@ struct PostView: View {
         ScrollView(showsIndicators: false) {
             
             VStack {
+                
+                Text("你好\(userName)")
+                
                 TextField("標題", text: $title)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
@@ -108,12 +113,40 @@ struct PostView: View {
                 }
                 Spacer()
             }
+            .onAppear() {
+                fetchUserName()
+            }
         }
         .navigationTitle("新貼文")
         .padding()
     }
+    
+    // 獲取用戶名稱的方法
+    func fetchUserName() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("User not logged in")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(userId)
+        
+        userRef.getDocument { document, error in
+            if let document = document, document.exists {
+                let data = document.data()
+                userName = data?["displayName"] as? String ?? "Unknown"
+            } else {
+                print("User not found in Firestore")
+            }
+        }
+    }
+
     // 上傳貼文到 Firestore 的邏輯
     func uploadPost(title: String, content: String, county: String, image: UIImage?) {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("User not logged in")
+            return
+        }
         let db = Firestore.firestore()
         // 如果有選擇圖片，先上傳圖片到 Firebase Storage
         if let image = image {
@@ -121,7 +154,8 @@ struct PostView: View {
                 if let imageURL = imageURL {
                     // 將文章數據與圖片 URL 一起上傳到 Firestore
                     let postData: [String: Any] = [
-                        "user_id": "roger2486",  // 目前先寫死，有登入會有真正id 可用
+                        "user_id": userId,  // 登入後真正id 可用
+                        "user_name": userName,
                         "title": title,
                         "content": content,
                         "County": county,
@@ -143,7 +177,8 @@ struct PostView: View {
         } else {
             // 如果沒有圖片，僅上傳文章數據
             let postData: [String: Any] = [
-                "user_id": "roger2486",
+                "user_id": userId,
+                "name": userName,
                 "title": title,
                 "content": content,
                 "County": county,

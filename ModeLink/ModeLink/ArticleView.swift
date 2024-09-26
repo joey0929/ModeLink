@@ -23,6 +23,7 @@ struct Post: Identifiable {
 struct Post2: Identifiable {
     var id: String
     var userId: String
+    var userName: String
     var title: String
     var content: String
     var county: String
@@ -51,7 +52,7 @@ struct ArticleView: View {
                                         .frame(width: 40, height: 40)
                                         .foregroundColor(.gray)
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(post.userId) // 用戶名
+                                        Text(post.userName) // 用戶名
                                             .font(.headline)
                                         Text(basicFormattedDate(from: post.timestamp)) // 發佈時間
                                             .font(.caption)
@@ -59,15 +60,16 @@ struct ArticleView: View {
                                     }
                                     Spacer()
                                     // 禁止符號按鈕，用於封鎖作者文章
-                                    Button(action: {
-                                        blockAuthor(post.userId) // 封鎖作者的文章
-                                    }) {
-                                        Image(systemName: "nosign")
-                                            .foregroundColor(.red)
-                                            .frame(width: 30, height: 30) // 固定按鈕大小
-                                            .contentShape(Rectangle()) // 增加可點擊範圍
-                                    }
-                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
+//                                    Button(action: {
+//                                        blockAuthor(post.userId) // 封鎖作者的文章
+//                                    }) {
+//                                        Image(systemName: "nosign")
+//                                            .foregroundColor(.red)
+//                                            .frame(width: 30, height: 30) // 固定按鈕大小
+//                                            .contentShape(Rectangle()) // 增加可點擊範圍
+//                                            .border(Color.blue) // 添加邊框以檢查點擊區域
+//                                    }
+//                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
                                 }
 
                                 Text(post.title)
@@ -92,13 +94,11 @@ struct ArticleView: View {
                                     }) {
                                         HStack {
                                             Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
-                                                //.foregroundColor(post.isLiked ? .red : .gray)
                                             Text("\(post.likes)") // 顯示讚數量
                                         }
                                     }
                                     .buttonStyle(BorderlessButtonStyle())
                                     .padding(.trailing, 16)
-    
 //                                    Button(action: {
 //                                        // 評論動作
 //                                    }) {
@@ -109,6 +109,17 @@ struct ArticleView: View {
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
                                     Spacer()
+                                    
+                                    Button(action: {
+                                        blockAuthor(post.userId) // 封鎖作者的文章
+                                    }) {
+                                        Image(systemName: "nosign")
+                                            .foregroundColor(.red)
+                                            .frame(width: 30, height: 30) // 固定按鈕大小
+                                            .contentShape(Rectangle()) // 增加可點擊範圍
+                                            .border(Color.blue) // 添加邊框以檢查點擊區域
+                                    }
+                                    .buttonStyle(BorderlessButtonStyle())
                                 }
                                 .padding(.top, 10)
                             }
@@ -207,6 +218,7 @@ struct ArticleView: View {
                 self.posts = documents.compactMap { doc -> Post2? in
                     let data = doc.data()
                     guard let userId = data["user_id"] as? String,
+                          let userName = data["user_name"] as? String,
                           let title = data["title"] as? String,
                           let content = data["content"] as? String,
                           let county = data["County"] as? String,
@@ -216,7 +228,9 @@ struct ArticleView: View {
                         return nil
                     }
                     let imageURL = data["imageURL"] as? String
-                    return Post2(id: doc.documentID, userId: userId, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(),likes: likes,isLiked: false)
+                    // swiftlint:disable line_length
+                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes,isLiked: false)
+                    // swiftlint:enable line_length
                 }
             }
     }
