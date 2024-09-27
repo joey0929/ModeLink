@@ -9,6 +9,7 @@ import SwiftUI
 import RealityKit
 import Firebase
 import FirebaseStorage
+import PhotosUI
 
 struct ARview: View {
     @State private var session: ObjectCaptureSession?  // 控制圖像捕捉
@@ -21,6 +22,11 @@ struct ARview: View {
     @State private var showContinueScanAlert = false  // 是否繼續掃描提示
     @State private var showNameInputSheet = false  // 控制是否顯示名稱輸入的 sheet
     @State private var inputModelName = ""  // 儲存用戶輸入的模型名稱
+    
+    //testing
+    @State private var selectedImage: UIImage? = nil // 選取的圖片
+    @State private var selectedItem: PhotosPickerItem? = nil // PhotosPicker 選取的項目
+    
     var modelPath: URL? {
         return modelFolderPath?.appending(path: "model.usdz")
     }
@@ -108,6 +114,38 @@ struct ARview: View {
                 TextField("輸入名稱", text: $inputModelName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
+                
+                // 添加 HStack 包含照片選擇器和預覽圖片
+                HStack {
+                    PhotosPicker(selection: $selectedItem, matching: .images) { // 添加 PhotosPicker
+                        Text("選擇圖片")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                            .padding()
+                    }
+                    .onChange(of: selectedItem) { newItem in
+                        if let newItem = newItem {
+                            Task {
+                                if let data = try? await newItem.loadTransferable(type: Data.self),
+                                   let uiImage = UIImage(data: data) {
+                                    selectedImage = uiImage
+                                }
+                            }
+                        }
+                    }
+                    // 顯示選擇的圖片的預覽
+                    if let selectedImage = selectedImage {
+                        Image(uiImage: selectedImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50) // 設定預覽圖片的大小
+                            .clipShape(RoundedRectangle(cornerRadius: 8)) // 圓角圖片
+                            .padding(.leading)
+                    }
+                
+                }
+                
+                
 
                 Button("保存") {
                     guard !inputModelName.isEmpty else { return }
@@ -128,6 +166,9 @@ struct ARview: View {
 
                 Button("取消") {
                     showNameInputSheet = false  // 關閉輸入框
+                    scanPassCount = 0
+                    inputModelName = ""
+                    restartObjectCapture()  // 確保在上傳成功後再重新開始捕捉
                 }
                 .padding()
             }
@@ -241,9 +282,18 @@ extension ARview {
                     } else if let downloadURL = url {
                         print("Model uploaded successfully to Firebase Storage: \(downloadURL.absoluteString)")
                         // 使用用戶輸入的名稱來保存到 Firestore
-                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
-                        // 在成功上傳後執行閉包
-                        completion()
+//                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
+//                        // 在成功上傳後執行閉包
+//                        completion()
+                        
+                        uploadImageToFirebase { imageURL in
+                            // 使用用戶輸入的名稱來保存到 Firestore
+                            saveDownloadURLToFirestore(modelURL: downloadURL, imageURL: imageURL, name: inputModelName)
+                            
+                            // 在成功上傳後執行閉包
+                            completion()
+                        }
+      
                     }
                 }
             }
@@ -256,19 +306,71 @@ extension ARview {
         }
     }
     // 將下載 URL 儲存到 Firestore
-    func saveDownloadURLToFirestore(_ downloadURL: URL,name: String) {
+//    func saveDownloadURLToFirestore(_ downloadURL: URL,name: String) {
+//        let db = Firestore.firestore()
+//        let modelData: [String: Any] = [
+//            "modelURL": downloadURL.absoluteString,
+//            "name": name,  // 使用與 Storage 同樣的 UUID 作為名稱
+//            "timestamp": Timestamp(date: Date())
+//        ]
+//        db.collection("3DModels").addDocument(data: modelData) { error in
+//            if let error = error {
+//                print("Error saving model URL to Firestore: \(error.localizedDescription)")
+//            } else {
+//                print("Model URL saved to Firestore!")
+//            }
+//        }
+//    }
+    
+    // 上傳圖片到 Firebase Storage
+    func uploadImageToFirebase(completion: @escaping (URL?) -> Void) {
+        guard let selectedImage = selectedImage, let imageData = selectedImage.jpegData(compressionQuality: 0.8) else {
+            print("Error: No image selected.")
+            completion(nil)
+            return
+        }
+
+       // let uniqueID = UUID().uuidString
+        let storageRef = Storage.storage().reference().child("images/\(UUID().uuidString).jpg")
+        
+        storageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                print("Error uploading image: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+
+            storageRef.downloadURL { url, error in
+                if let error = error {
+                    print("Error getting download URL for image: \(error.localizedDescription)")
+                    completion(nil)
+                } else {
+                    print("Image uploaded successfully to Firebase Storage: \(url?.absoluteString ?? "")")
+                    completion(url)
+                }
+            }
+        }
+    }
+
+    // 將模型和圖片的下載 URL 儲存到 Firestore
+    func saveDownloadURLToFirestore(modelURL: URL, imageURL: URL?, name: String) {
         let db = Firestore.firestore()
         let modelData: [String: Any] = [
-            "modelURL": downloadURL.absoluteString,
-            "name": name,  // 使用與 Storage 同樣的 UUID 作為名稱
+            "modelURL": modelURL.absoluteString,
+            "imageURL": imageURL?.absoluteString ?? "", // 保存圖片 URL
+            "name": name,
             "timestamp": Timestamp(date: Date())
         ]
         db.collection("3DModels").addDocument(data: modelData) { error in
             if let error = error {
                 print("Error saving model URL to Firestore: \(error.localizedDescription)")
             } else {
-                print("Model URL saved to Firestore!")
+                print("Model URL and Image URL saved to Firestore!")
             }
         }
     }
+    
+    
+    
+    
 }
