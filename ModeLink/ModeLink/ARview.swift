@@ -12,9 +12,9 @@ import FirebaseStorage
 
 struct ARview: View {
     @State private var session: ObjectCaptureSession?  // 控制圖像捕捉
-    @State private var imageFolderPath: URL?           //保存捕捉過程中的圖像
-    @State private var modelFolderPath: URL?           // 保存生成的3D模型
-    @State private var photogrammetrySession: PhotogrammetrySession?  //處理圖像和生成3D模型
+    @State private var imageFolderPath : URL?           //保存捕捉過程中的圖像
+    @State private var modelFolderPath : URL?           // 保存生成的3D模型
+    @State private var photogrammetrySession : PhotogrammetrySession?  //處理圖像和生成3D模型
     @State private var isProgressing = false  //控制捕捉時的預覽圖
     @State private var quickLookIsPresented = false
     @State private var scanPassCount = 0  // 控制掃描次數
@@ -42,7 +42,7 @@ struct ARview: View {
             }
             if isProgressing {
                 Color.black.opacity(0.2) // 背景變得更亮
-                    .edgesIgnoringSafeArea(.all)  // 確保背景覆蓋整個屏幕
+                    .edgesIgnoringSafeArea(.all)  // 確保背景覆蓋整個螢幕
                     .overlay {
                         VStack(spacing: 20) {  // 增加內部元素間距
                             // 自定義的圓角卡片

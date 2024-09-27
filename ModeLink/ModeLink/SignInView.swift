@@ -21,15 +21,13 @@ struct SignInView: View {
             Text("Welcome to ModeLink")
                 .font(.largeTitle)
                 .bold()
-            
+                .padding(.top, 60)
             Spacer()
-            
             // 登入說明
             Text("Please sign in with your Apple ID:")
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding(.bottom, 20)
-            
             Text("Please sign in with apple Id:")
             if !isLoggedIn {
                 SignInWithAppleButton(
