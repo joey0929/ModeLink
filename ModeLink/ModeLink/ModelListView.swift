@@ -111,7 +111,7 @@ struct ModelListView: View {
                             .frame(height: 150) // 設置卡片高度
                             .cornerRadius(10)
                             .shadow(radius: 5)
-                            .padding()
+                            .padding(.vertical, 2)
                         }
                     }
                 }

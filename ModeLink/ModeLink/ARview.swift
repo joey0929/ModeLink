@@ -142,11 +142,7 @@ struct ARview: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8)) // 圓角圖片
                             .padding(.leading)
                     }
-                
                 }
-                
-                
-
                 Button("保存") {
                     guard !inputModelName.isEmpty else { return }
                     showNameInputSheet = false  // 關閉輸入框
@@ -369,8 +365,5 @@ extension ARview {
             }
         }
     }
-    
-    
-    
     
 }

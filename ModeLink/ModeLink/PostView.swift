@@ -117,6 +117,8 @@ struct PostView: View {
                 fetchUserName()
             }
         }
+        .background(.gray)
+        .cornerRadius(10)
         .navigationTitle("新貼文")
         .padding()
     }
