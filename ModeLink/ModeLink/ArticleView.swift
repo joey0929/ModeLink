@@ -61,17 +61,6 @@ struct ArticleView: View {
                                     Spacer()
                                     
                                     Text(post.county)
-                                    // 禁止符號按鈕，用於封鎖作者文章
-//                                    Button(action: {
-//                                        blockAuthor(post.userId) // 封鎖作者的文章
-//                                    }) {
-//                                        Image(systemName: "nosign")
-//                                            .foregroundColor(.red)
-//                                            .frame(width: 30, height: 30) // 固定按鈕大小
-//                                            .contentShape(Rectangle()) // 增加可點擊範圍
-//                                            .border(Color.blue) // 添加邊框以檢查點擊區域
-//                                    }
-//                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
                                 }
 
                                 Text(post.title)
@@ -111,7 +100,6 @@ struct ArticleView: View {
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
                                     Spacer()
-                                    
                                     Button(action: {
                                         blockAuthor(post.userId) // 封鎖作者的文章
                                     }) {
@@ -121,7 +109,7 @@ struct ArticleView: View {
                                             .contentShape(Rectangle()) // 增加可點擊範圍
                                             //.border(Color.blue) // 添加邊框以檢查點擊區域
                                     }
-                                    .buttonStyle(BorderlessButtonStyle())
+                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
                                     .padding(.trailing,50)
                                 }
                                 .padding(.top, 10)
@@ -146,8 +134,8 @@ struct ArticleView: View {
                     HStack {
                         Spacer()
                         NavigationLink(destination: PostView()) {
-                            Image(systemName: "plus")
-                                .font(.system(size: 30))
+                            Image(systemName: "plus.square.on.square")
+                                .font(.system(size: 20))
                                 .foregroundColor(.white)
                                 .padding()
                                 .background(Color.blue)

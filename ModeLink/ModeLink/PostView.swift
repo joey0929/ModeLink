@@ -23,7 +23,7 @@ struct PostView: View {
     @State private var isImagePickerPresented = false
     var canSubmit: Bool {
         // 當所有欄位都有填寫時返回 true，否則返回 false
-        return !title.isEmpty && !content.isEmpty && !county.isEmpty
+        return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
     }
 
     var body: some View {
@@ -31,34 +31,47 @@ struct PostView: View {
         ScrollView(showsIndicators: false) {
             
             VStack {
-                
-                //Text("你好\(userName)")
+                if let selectedImage = selectedImage {  // 顯示選擇的圖片
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 320)
+                        .clipped()
+                        .padding([.horizontal],15)
+                        .padding(.top, 15)
+                } else {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(height: 320)
+                        .overlay(
+                            VStack {
+                                Image(systemName: "photo")
+                                    .font(.system(size: 50))
+                                    .foregroundColor(.gray)
+                                Text("尚未選擇圖片")
+                                    .foregroundColor(.gray)
+                            }
+                        )
+                        .padding([.horizontal],15)
+                        .padding(.top, 15)
+   
+                }
                 
                 TextField("標題", text: $title)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal,15)
-                    .padding(.top, 20)
+                    .padding(.top, 10)
                 
                 TextField("縣市", text: $county)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal,15)
                     .padding(.bottom, 10)
-                    //.padding(.vertical,2)
                 
-//                VStack(alignment:.leading) {
-//                    Text("請輸入內文:").padding(.leading,15)
-//                    TextEditor(text: $content)
-//                        .frame(height: 200)
-//                        .border(Color.gray, width: 1)
-//                        .padding(.top,5)
-//                        .padding(.horizontal,15)
-//                    
-//                }
                 VStack(alignment:.leading) {
                     Text("請輸入內文:")
                         .foregroundColor(Color(.systemGray))
                     TextEditor(text: $content)
-                        .frame(height: 200)
+                        .frame(height: 150)
                         .background(Color.white) // 設置背景色，確保與 TextField 保持一致
                         .cornerRadius(8) // 設置圓角
                         .overlay(
@@ -68,39 +81,13 @@ struct PostView: View {
                         .padding(.top, 5)
                 }.padding(.horizontal, 15) // 確保整個 VStack 具有左右縮排
                 
-                
-                
-                
-                // 顯示選擇的圖片
-                if let selectedImage = selectedImage {
-                    Image(uiImage: selectedImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 200)
-                        .padding()
-                }
-//                // 按鈕來選擇圖片
-//                Button(action: {
-//                    isImagePickerPresented.toggle()
-//                }) {
-//                    Text("選擇圖片")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.blue)
-//                        .cornerRadius(10)
-//                }
-//                .padding()
-//                .sheet(isPresented: $isImagePickerPresented) {
-//                    ImagePicker(selectedImage: $selectedImage)
-//                }
                 // 使用 PhotosPicker 來選擇圖片
                 HStack {
                     PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
-                        Text("選擇圖片")
-                            .font(.headline)
+                        Image(systemName: "photo")
+                            .font(.system(size: 20))
                             .foregroundColor(.white)
-                            .padding()
+                            .padding([.horizontal,.vertical],10)
                             .background(.blue)
                             .cornerRadius(10)
                     }
@@ -117,6 +104,22 @@ struct PostView: View {
                         }
                     }
                     
+                    // 重置按鈕
+                    Button(action: {
+                        selectedImage = nil // 清空已選擇的圖片
+                        selectedItem = nil  // 清空 PhotosPicker 的選擇
+                        title = ""
+                        content = ""
+                        county = ""
+                    }) {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical,8)
+                            .background(.red)
+                            .cornerRadius(10)
+                    }
                     Button(action: {
                         uploadPost(title: title, content: content, county: county, image: selectedImage)
                         presentationMode.wrappedValue.dismiss()
@@ -124,26 +127,24 @@ struct PostView: View {
                         Text("發文")
                             .font(.headline)
                             .foregroundColor(canSubmit ? Color.white : Color.gray)
-                            .padding()
-                            .background(canSubmit ? Color.blue : Color.black) // 根據狀態變色
+                            .padding([.horizontal,.vertical],10)
+                            .background(canSubmit ? Color.blue : Color(.systemGray5)) // 根據狀態變色
                             .cornerRadius(10)
                     }
                     .disabled(!canSubmit)
-                    .padding()
-
-                }
-                Spacer()
+                    //.padding()
+                    Spacer()
+                }.padding(.leading)
+                //Spacer(minLength: 80)
             }
             .onAppear() {
                 fetchUserName()
             }
         }
-//        .background(Color.black.opacity(0.9).blur(radius: 5))
-//        .cornerRadius(10)
         .background(Color.white)
         .cornerRadius(10)
         .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
-        
+//        .frame(height: 550)
         .navigationTitle("新貼文")
         .padding()
     }

@@ -153,6 +153,9 @@ struct ARview: View {
                     uploadModelToFirebase {
                         scanPassCount = 0
                         inputModelName = ""
+                        // test
+                        selectedImage = nil // 清空剛剛選擇的圖片
+                        selectedItem = nil // 清空剛剛選擇的 PhotosPickerItem
                         restartObjectCapture()  // 確保在上傳成功後再重新開始捕捉
                     }
                     print("==== Already upload the usdz File!!!!======")

@@ -48,6 +48,7 @@
 		D4B14A5D2C9D248700FD12E7 /* IntroToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5C2C9D248700FD12E7 /* IntroToolView.swift */; };
 		D4B14A5F2C9D24C700FD12E7 /* IntroSkillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5E2C9D24C700FD12E7 /* IntroSkillView.swift */; };
 		D4B14A632C9D704D00FD12E7 /* UploadDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A622C9D704D00FD12E7 /* UploadDataView.swift */; };
+		D4F585B02CAA441A004362EE /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 				D41B464C2CA166810067D894 /* FirebaseAuthCombine-Community in Frameworks */,
 				D4A2BBC42C97FC47000B9745 /* Kingfisher in Frameworks */,
 				D41B465C2CA166810067D894 /* FirebaseRemoteConfig in Frameworks */,
+				D4F585B02CAA441A004362EE /* IQKeyboardManagerSwift in Frameworks */,
 				D41B46442CA166810067D894 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				D41B46602CA166810067D894 /* FirebaseStorageCombine-Community in Frameworks */,
 				D41B463D2CA12A850067D894 /* YouTubePlayerKit in Frameworks */,
@@ -200,6 +202,7 @@
 				D41B465B2CA166810067D894 /* FirebaseRemoteConfig */,
 				D41B465D2CA166810067D894 /* FirebaseStorage */,
 				D41B465F2CA166810067D894 /* FirebaseStorageCombine-Community */,
+				D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */,
 			);
 			productName = ModeLink;
 			productReference = D41344102C92ED4D003400B9 /* ModeLink.app */;
@@ -233,6 +236,7 @@
 				D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 				D41B463E2CA166810067D894 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = D41344112C92ED4D003400B9 /* Products */;
 			projectDirPath = "";
@@ -541,6 +545,14 @@
 				minimumVersion = 7.12.0;
 			};
 		};
+		D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -638,6 +650,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
