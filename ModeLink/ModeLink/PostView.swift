@@ -36,19 +36,41 @@ struct PostView: View {
                 
                 TextField("標題", text: $title)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+                    .padding(.horizontal,15)
+                    .padding(.top, 20)
                 
                 TextField("縣市", text: $county)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+                    .padding(.horizontal,15)
+                    .padding(.bottom, 10)
+                    //.padding(.vertical,2)
                 
+//                VStack(alignment:.leading) {
+//                    Text("請輸入內文:").padding(.leading,15)
+//                    TextEditor(text: $content)
+//                        .frame(height: 200)
+//                        .border(Color.gray, width: 1)
+//                        .padding(.top,5)
+//                        .padding(.horizontal,15)
+//                    
+//                }
                 VStack(alignment:.leading) {
-                    Text("請輸入內文:").padding(.leading,15)
+                    Text("請輸入內文:")
+                        .foregroundColor(Color(.systemGray))
                     TextEditor(text: $content)
                         .frame(height: 200)
-                        .border(Color.gray, width: 1)
-                        .padding()
-                }
+                        .background(Color.white) // 設置背景色，確保與 TextField 保持一致
+                        .cornerRadius(8) // 設置圓角
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(.systemGray4), lineWidth: 0.5) // 設置外框的顏色和寬度
+                        )
+                        .padding(.top, 5)
+                }.padding(.horizontal, 15) // 確保整個 VStack 具有左右縮排
+                
+                
+                
+                
                 // 顯示選擇的圖片
                 if let selectedImage = selectedImage {
                     Image(uiImage: selectedImage)
@@ -96,15 +118,14 @@ struct PostView: View {
                     }
                     
                     Button(action: {
-                        //uploadPost()
                         uploadPost(title: title, content: content, county: county, image: selectedImage)
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text("提交")
+                        Text("發文")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundColor(canSubmit ? Color.white : Color.gray)
                             .padding()
-                            .background(canSubmit ? Color.blue : Color.gray) // 根據狀態變色
+                            .background(canSubmit ? Color.blue : Color.black) // 根據狀態變色
                             .cornerRadius(10)
                     }
                     .disabled(!canSubmit)
@@ -117,8 +138,12 @@ struct PostView: View {
                 fetchUserName()
             }
         }
-        .background(.gray)
+//        .background(Color.black.opacity(0.9).blur(radius: 5))
+//        .cornerRadius(10)
+        .background(Color.white)
         .cornerRadius(10)
+        .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
+        
         .navigationTitle("新貼文")
         .padding()
     }
@@ -136,7 +161,7 @@ struct PostView: View {
         userRef.getDocument { document, error in
             if let document = document, document.exists {
                 let data = document.data()
-                userName = data?["displayName"] as? String ?? "Unknown"
+                userName = data?["displayName"] as? String ?? "匿名用戶"
             } else {
                 print("User not found in Firestore")
             }
@@ -154,7 +179,7 @@ struct PostView: View {
         if let image = image {
             uploadImage(image) { imageURL in
                 if let imageURL = imageURL {
-                    // 將文章數據與圖片 URL 一起上傳到 Firestore
+                    // 將文章與圖片 URL 一起上傳到 Firestore
                     let postData: [String: Any] = [
                         "user_id": userId,  // 登入後真正id 可用
                         "user_name": userName,

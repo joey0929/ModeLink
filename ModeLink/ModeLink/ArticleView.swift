@@ -160,9 +160,10 @@ struct ArticleView: View {
                 // 右上角齒輪圖標
                 .navigationBarItems(trailing: NavigationLink(destination: PersonalView()) {
                     Image(systemName: "gearshape")
-                        .font(.system(size: 24))
+                        .font(.system(size: 20))
                         .foregroundColor(.black)
                 })
+                .navigationBarItems(leading: Text(""))
             }
         }
     }

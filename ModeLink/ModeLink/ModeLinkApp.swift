@@ -18,6 +18,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct ModeLinkApp: App {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+    
+    
+    
     var body: some Scene {
         WindowGroup {
             //ContentView()
