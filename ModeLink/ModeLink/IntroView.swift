@@ -66,7 +66,6 @@ struct IntroView: View {
     var body: some View {
             NavigationView {
                 VStack {
-                    
                    // HStack {
                        // Spacer()
                         Picker("", selection: $selectedSegment) {

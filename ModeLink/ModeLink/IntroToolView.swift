@@ -20,20 +20,20 @@ let sampleTool = Tool(
         )
 
 
-struct IntroToolView: View {
-    let tool: Tool
-    
-    
+//struct IntroToolView: View {
+//    let tool: Tool
+//    
+//    
 //    var body: some View {
 //        ScrollView(showsIndicators: false) { // 使用 ScrollView 以防資料過多無法顯示完整
 //            VStack(alignment: .leading, spacing: 20) {
 //                // 使用 Kingfisher 加載圖片
 //                KFImage(URL(string: tool.imageUrl))
 //                    .resizable()
-//                    .aspectRatio(contentMode: .fit) // 保持圖片比例
+//                    .aspectRatio(contentMode: .fill) // 保持圖片比例
 //                    .frame(height: 400) // 調整圖片高度
 //                    .clipped()
-//                    .padding(.top)
+//                    //.padding(.top)
 //                    .frame(maxWidth: .infinity) // 寬度撐滿
 //                
 //                
@@ -74,78 +74,96 @@ struct IntroToolView: View {
 //        }
 //        .background(Color(.systemGray5))
 //    }
+//}
+struct IntroToolView: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    let tool: Tool
+
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 20) {
+        ScrollView(showsIndicators: false) { // 使用 ScrollView 以防資料過多無法顯示完整
+            VStack(alignment: .leading, spacing: 5) {
                 // 使用 Kingfisher 加載圖片
                 KFImage(URL(string: tool.imageUrl))
                     .resizable()
-                    .aspectRatio(contentMode: .fit) // 保持圖片比例
-                    .frame(height: 400) // 調整圖片高度
+                    .aspectRatio(contentMode: .fill) // 保持圖片比例
+                    .frame(height: 420) // 調整圖片高度
                     .clipped()
-                    .padding(.top)
                     .frame(maxWidth: .infinity) // 寬度撐滿
                 
-                // 包裹文字的部分，並添加白色背景
-                ZStack {
-                    // 背景視圖
-                    Color.white
-                        .cornerRadius(10) // 圓角
-                        .shadow(radius: 5) // 添加陰影
-                    
-                    VStack(alignment: .leading, spacing: 20) {
-                        // 品名
-                        Text(tool.name)
-                            .font(.largeTitle)
-                            .bold()
-                            //.padding(.horizontal)
-                        
-                        // 用途部分
-                        VStack(alignment: .leading) {
-                            Text("用途：")
-                                .font(.title3)
-                                .bold()
-                                //.padding(.horizontal)
-                            Text(tool.description)
-                                //.padding(.horizontal)
-                        }
-                        
-                        // 價位部分
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("價位：")
-                                .font(.title3)
-                                .bold()
-                                //.padding(.horizontal)
-                            Text(tool.price)
-                               // .padding(.horizontal)
-                            Text("推薦品牌：")
-                                .font(.title3)
-                                .bold()
-                                //.padding(.horizontal)
-                            Text(tool.recommend)
-                                //.padding(.horizontal)
-                        }
-                    }
-                    .padding(.horizontal,5)
-                    .padding(.vertical,8)
-                    //.padding() // 內邊距
+                // 品名
+                Text(tool.name)
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(Color(UIColor.darkGray)) // 使用主題色
+                    .padding(.horizontal)
+                    .padding(.bottom, 10)
+                    .padding(.top, 10)
+                // 用途部分
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("用途：")
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
+                    Text(tool.description)
+                        .font(.body)
+                        .foregroundColor(.secondary) // 使用次要顏色，降低文本的視覺優先級
+                        .padding(.horizontal)
                 }
-                .padding(.horizontal) // 外邊距
+                .padding(.bottom, 10)
+                
+                // 價位部分
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("價位：")
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                        .padding(.horizontal)
+                    Text(tool.price)
+                        .font(.body)
+                        .foregroundColor(.secondary) // 使用次要顏色
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
+                    
+                    Text("推薦品牌：")
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                        .padding(.horizontal)
+                    Text(tool.recommend)
+                        .font(.body)
+                        .foregroundColor(.secondary) // 使用次要顏色
+                        .padding(.horizontal)
+                }
+                
                 Spacer() // 將內容往上推，留出下方空間
             }
+            //.padding() // 整體增加內邊距
+            .background(Color.white) // 添加白色背景
+            .cornerRadius(10) // 添加圓角
+            //.shadow(radius: 5) // 添加陰影以提高視覺層次
             .navigationTitle("工具詳情")
             .background(Color(.systemGray6))
             .ignoresSafeArea()
         }
         .background(Color(.systemGray5))
+        .navigationBarBackButtonHidden(true) 
+        .navigationBarItems(leading: Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(systemName: "chevron.backward").foregroundColor(.black)
+                Text("")
+            }
+        })
     }
-    
-    
-    
-    
 }
+
+
+
+
 #Preview {
-    
     IntroToolView(tool: sampleTool)
 }

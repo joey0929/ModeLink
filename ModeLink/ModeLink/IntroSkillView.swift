@@ -12,6 +12,7 @@ import FirebaseRemoteConfig
 
 let skill2 = Skill(name: "剪裁技巧", description: "剪刀平穩操作，避免過度用力",imageUrl: "", position: 1, ytUrl: "https://www.youtube.com/watch?v=UCGDG7zd1wE")
 struct IntroSkillView: View {
+    @Environment(\.presentationMode) var presentationMode2
     let skill: Skill
     @State private var player: YouTubePlayer
     @State private var showYouTubePlayer: Bool = false  // 由遠程控制的參數
@@ -42,24 +43,37 @@ struct IntroSkillView: View {
                 } else {
                     Text("Turn off the ytView.!!!!")
                 }
-                
-                
-                //YouTubePlayerView(player).frame(height:500)
+
                 Text(skill.name)
-                    .font(.largeTitle)
+                    .font(.title)
+                    .foregroundColor(Color(UIColor.darkGray))
                     .bold()
                     .padding(.horizontal)
                 VStack(alignment: .leading) {
                     Text("技巧說明：")
-                        .font(.title3)
+                        .font(.title2)
+                        .foregroundColor(Color(.systemGray))
                         .bold()
                         .padding(.horizontal)
+                        .padding(.bottom, 10)
                     Text(skill.description)
+                        .foregroundColor(Color(.systemGray))
                         .padding(.horizontal)
                 }
                 Spacer()
             }.background(Color(.systemGray6))
-        }.background(Color(.systemGray6))
+        }
+        .background(Color(.systemGray6))
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: {
+            presentationMode2.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(systemName: "chevron.backward").foregroundColor(.black)
+                Text("")
+            }
+        })
+        
         .onAppear {
             fetchRemoteConfig()
         }
