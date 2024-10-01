@@ -97,47 +97,46 @@ struct IntroToolView: View {
                     .bold()
                     .foregroundColor(Color(UIColor.darkGray)) // 使用主題色
                     .padding(.horizontal)
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 30)
                     .padding(.top, 10)
                 // 用途部分
                 VStack(alignment: .leading, spacing: 10) {
                     Text("用途：")
                         .font(.title3)
                         .bold()
-                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                        //.foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                        .foregroundColor(Color(UIColor.darkGray))
                         .padding(.horizontal)
                         .padding(.bottom, 10)
                     Text(tool.description)
                         .font(.body)
                         .foregroundColor(.secondary) // 使用次要顏色，降低文本的視覺優先級
                         .padding(.horizontal)
-                }
-                .padding(.bottom, 10)
-                
-                // 價位部分
-                VStack(alignment: .leading, spacing: 10) {
+                        .padding(.bottom, 10)
                     Text("價位：")
                         .font(.title3)
                         .bold()
-                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                       //.foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                        .foregroundColor(Color(UIColor.darkGray))
                         .padding(.horizontal)
+                        .padding(.bottom, 10)
                     Text(tool.price)
                         .font(.body)
                         .foregroundColor(.secondary) // 使用次要顏色
                         .padding(.horizontal)
                         .padding(.bottom, 10)
-                    
                     Text("推薦品牌：")
                         .font(.title3)
                         .bold()
-                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+//                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
+                        .foregroundColor(Color(UIColor.darkGray))
                         .padding(.horizontal)
+                        .padding(.bottom, 10)
                     Text(tool.recommend)
                         .font(.body)
                         .foregroundColor(.secondary) // 使用次要顏色
                         .padding(.horizontal)
                 }
-                
                 Spacer() // 將內容往上推，留出下方空間
             }
             //.padding() // 整體增加內邊距
