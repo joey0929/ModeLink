@@ -9,6 +9,7 @@ import Kingfisher
 import Firebase
 import FirebaseStorage
 import FirebaseFirestore
+import FirebaseAuth
 
 struct Post: Identifiable {
     var id: String // Firestore 中的 document ID
@@ -121,8 +122,8 @@ struct ArticleView: View {
                         }
                     }
                     .padding()
-                    .background(.gray)
-                }.background(.gray)
+                    .background(Color(.systemGray6))
+                }.background(Color(.systemGray6))
                 // .navigationTitle("文章列表")
                 .onAppear {
                     UIScrollView.appearance().showsVerticalScrollIndicator = false // 隱藏滾動條
@@ -151,7 +152,7 @@ struct ArticleView: View {
                         .font(.system(size: 20))
                         .foregroundColor(.black)
                 })
-                .navigationBarItems(leading: Text(""))
+                .navigationTitle("動態牆")
             }
         }
     }
@@ -162,27 +163,69 @@ struct ArticleView: View {
     }
     
     // MARK: - Toggle Like Function
+//    func toggleLike(for index: Int) {
+//        var post = posts[index]
+//        post.isLiked.toggle()
+//        post.likes += post.isLiked ? 1 : -1
+//        
+//        // 更新 Firebase 中的讚數
+//        let db = Firestore.firestore()
+//        let postRef = db.collection("articles").document(post.id)
+//        
+//        postRef.updateData([
+//            "likes": post.likes
+//        ]) { error in
+//            if let error = error {
+//                print("Error updating likes: \(error.localizedDescription)")
+//            } else {
+//                print("Likes successfully updated")
+//                posts[index] = post
+//            }
+//        }
+//    }
     func toggleLike(for index: Int) {
         var post = posts[index]
-        post.isLiked.toggle()
-        post.likes += post.isLiked ? 1 : -1
-        
-        // 更新 Firebase 中的讚數
-        let db = Firestore.firestore()
-        let postRef = db.collection("articles").document(post.id)
-        
-        postRef.updateData([
-            "likes": post.likes
-        ]) { error in
-            if let error = error {
-                print("Error updating likes: \(error.localizedDescription)")
-            } else {
-                print("Likes successfully updated")
-                posts[index] = post
+        guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
+        // 判斷是否已按讚
+        if post.isLiked {
+            // 已按讚，取消讚
+            post.isLiked = false
+            post.likes -= 1
+            // 從 likedBy 列表中移除當前使用者的 UID
+            let db = Firestore.firestore()
+            let postRef = db.collection("articles").document(post.id)
+            postRef.updateData([
+                "likes": post.likes,
+                "likedBy": FieldValue.arrayRemove([currentUserUID])
+            ]) { error in
+                if let error = error {
+                    print("Error updating likes: \(error.localizedDescription)")
+                } else {
+                    print("Likes successfully updated")
+                    posts[index] = post
+                }
+            }
+        } else {
+            // 未按讚，新增讚
+            post.isLiked = true
+            post.likes += 1
+            
+            // 將當前使用者的 UID 加入 likedBy 列表
+            let db = Firestore.firestore()
+            let postRef = db.collection("articles").document(post.id)
+            postRef.updateData([
+                "likes": post.likes,
+                "likedBy": FieldValue.arrayUnion([currentUserUID])
+            ]) { error in
+                if let error = error {
+                    print("Error updating likes: \(error.localizedDescription)")
+                } else {
+                    print("Likes successfully updated")
+                    posts[index] = post
+                }
             }
         }
     }
-
     // MARK: - Trans TimeStamp to y/m/d/h-min
     func basicFormattedDate(from date: Date) -> String {
         let calendar = Calendar.current
@@ -194,7 +237,40 @@ struct ArticleView: View {
         return "\(year)-\(month)-\(day) \(hour):\(minute)"
     }
     // MARK: - Monitoring the FireStore in Articles
+//    func startListeningForPosts() {
+//        let db = Firestore.firestore()
+//        db.collection("articles")
+//            .order(by: "timestamp", descending: true)
+//            .addSnapshotListener { (snapshot, error) in
+//                if let error = error {
+//                    print("Error fetching articles: \(error.localizedDescription)")
+//                    return
+//                }
+//                guard let documents = snapshot?.documents else {
+//                    print("No articles found")
+//                    return
+//                }
+//                self.posts = documents.compactMap { doc -> Post2? in
+//                    let data = doc.data()
+//                    guard let userId = data["user_id"] as? String,
+//                          let userName = data["user_name"] as? String,
+//                          let title = data["title"] as? String,
+//                          let content = data["content"] as? String,
+//                          let county = data["County"] as? String,
+//                          let timestamp = data["timestamp"] as? Timestamp,
+//                          let likes = data["likes"] as? Int  //
+//                    else {
+//                        return nil
+//                    }
+//                    let imageURL = data["imageURL"] as? String
+//                    // swiftlint:disable line_length
+//                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes,isLiked: false)
+//                    // swiftlint:enable line_length
+//                }
+//            }
+//    }
     func startListeningForPosts() {
+        guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
         db.collection("articles")
             .order(by: "timestamp", descending: true)
@@ -215,17 +291,21 @@ struct ArticleView: View {
                           let content = data["content"] as? String,
                           let county = data["County"] as? String,
                           let timestamp = data["timestamp"] as? Timestamp,
-                          let likes = data["likes"] as? Int  //
+                          let likes = data["likes"] as? Int
                     else {
                         return nil
                     }
                     let imageURL = data["imageURL"] as? String
+                    let likedBy = data["likedBy"] as? [String] ?? [] // 取得 likedBy 列表
+                    // 判斷當前使用者是否已按讚
+                    let isLiked = likedBy.contains(currentUserUID)
                     // swiftlint:disable line_length
-                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes,isLiked: false)
+                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes, isLiked: isLiked)
                     // swiftlint:enable line_length
                 }
             }
     }
+ 
 }
 #Preview{
     ArticleView()

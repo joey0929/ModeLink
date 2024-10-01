@@ -35,7 +35,7 @@ struct PostView: View {
                     Image(uiImage: selectedImage)
                         .resizable()
                         .scaledToFill()
-                        .frame(height: 320)
+                        .frame(height: 300)
                         .clipped()
                         .padding([.horizontal],15)
                         .padding(.top, 15)
@@ -147,6 +147,15 @@ struct PostView: View {
 //        .frame(height: 550)
         .navigationTitle("新貼文")
         .padding()
+        .navigationBarBackButtonHidden(true) // 隱藏默認的返回按鈕
+        .navigationBarItems(leading: Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(systemName: "chevron.backward")
+                Text("")
+            }
+        })
     }
     
     // 獲取用戶名稱的方法
@@ -189,7 +198,9 @@ struct PostView: View {
                         "County": county,
                         "imageURL": imageURL.absoluteString, // 圖片的下載 URL
                         "timestamp": Timestamp(date: Date()),
-                        "likes": 0
+                        "likes": 0,
+                        "likedBy": [] // 新增的字段，用於存儲按讚使用者的 UID 列表
+                        
                     ]
                     db.collection("articles").addDocument(data: postData) { error in
                         if let error = error {
