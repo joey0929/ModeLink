@@ -42,6 +42,8 @@ struct IntroSkillView: View {
                 } else {
                     Text("Turn off the ytView.!!!!")
                 }
+                
+                
                 //YouTubePlayerView(player).frame(height:500)
                 Text(skill.name)
                     .font(.largeTitle)
@@ -56,8 +58,8 @@ struct IntroSkillView: View {
                         .padding(.horizontal)
                 }
                 Spacer()
-            }
-        }
+            }.background(Color(.systemGray6))
+        }.background(Color(.systemGray6))
         .onAppear {
             fetchRemoteConfig()
         }

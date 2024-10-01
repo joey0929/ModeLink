@@ -152,5 +152,3 @@ struct Model: Identifiable {
     let url: URL
     let imageURL: URL? // 圖片 URL
 }
-
-
