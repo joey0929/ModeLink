@@ -35,6 +35,7 @@
 		D41B465E2CA166810067D894 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D41B465D2CA166810067D894 /* FirebaseStorage */; };
 		D41B46602CA166810067D894 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = D41B465F2CA166810067D894 /* FirebaseStorageCombine-Community */; };
 		D41B46622CA24C2E0067D894 /* PersonalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41B46612CA24C2E0067D894 /* PersonalView.swift */; };
+		D458F08A2CA50B6A00216CB4 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D458F0892CA50B6A00216CB4 /* SignInView.swift */; };
 		D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB982C967234000B9745 /* CreateButton.swift */; };
 		D4A2BB9B2C967277000B9745 /* ARQuickLookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */; };
 		D4A2BB9D2C967335000B9745 /* CaptureStateExtend.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9C2C967335000B9745 /* CaptureStateExtend.swift */; };
@@ -47,6 +48,7 @@
 		D4B14A5D2C9D248700FD12E7 /* IntroToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5C2C9D248700FD12E7 /* IntroToolView.swift */; };
 		D4B14A5F2C9D24C700FD12E7 /* IntroSkillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5E2C9D24C700FD12E7 /* IntroSkillView.swift */; };
 		D4B14A632C9D704D00FD12E7 /* UploadDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A622C9D704D00FD12E7 /* UploadDataView.swift */; };
+		D4F585B02CAA441A004362EE /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +63,8 @@
 		D41344272C93EAF4003400B9 /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		D41344292C93EC13003400B9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		D41B46612CA24C2E0067D894 /* PersonalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalView.swift; sourceTree = "<group>"; };
+		D458F0882CA50AF800216CB4 /* ModeLink.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ModeLink.entitlements; sourceTree = "<group>"; };
+		D458F0892CA50B6A00216CB4 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		D4A2BB982C967234000B9745 /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
 		D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARQuickLookView.swift; sourceTree = "<group>"; };
 		D4A2BB9C2C967335000B9745 /* CaptureStateExtend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureStateExtend.swift; sourceTree = "<group>"; };
@@ -85,6 +89,7 @@
 				D41B464C2CA166810067D894 /* FirebaseAuthCombine-Community in Frameworks */,
 				D4A2BBC42C97FC47000B9745 /* Kingfisher in Frameworks */,
 				D41B465C2CA166810067D894 /* FirebaseRemoteConfig in Frameworks */,
+				D4F585B02CAA441A004362EE /* IQKeyboardManagerSwift in Frameworks */,
 				D41B46442CA166810067D894 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				D41B46602CA166810067D894 /* FirebaseStorageCombine-Community in Frameworks */,
 				D41B463D2CA12A850067D894 /* YouTubePlayerKit in Frameworks */,
@@ -124,10 +129,12 @@
 		D41344122C92ED4D003400B9 /* ModeLink */ = {
 			isa = PBXGroup;
 			children = (
+				D458F0882CA50AF800216CB4 /* ModeLink.entitlements */,
 				D4A2BBA22C97BE47000B9745 /* Info.plist */,
 				D41344132C92ED4D003400B9 /* ModeLinkApp.swift */,
 				D41344152C92ED4D003400B9 /* ContentView.swift */,
 				D41344212C92EF16003400B9 /* TaBarView.swift */,
+				D458F0892CA50B6A00216CB4 /* SignInView.swift */,
 				D41B46612CA24C2E0067D894 /* PersonalView.swift */,
 				D41344252C93EA10003400B9 /* ArticleView.swift */,
 				D4A2BB9E2C9735F9000B9745 /* PostView.swift */,
@@ -195,6 +202,7 @@
 				D41B465B2CA166810067D894 /* FirebaseRemoteConfig */,
 				D41B465D2CA166810067D894 /* FirebaseStorage */,
 				D41B465F2CA166810067D894 /* FirebaseStorageCombine-Community */,
+				D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */,
 			);
 			productName = ModeLink;
 			productReference = D41344102C92ED4D003400B9 /* ModeLink.app */;
@@ -228,6 +236,7 @@
 				D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 				D41B463E2CA166810067D894 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = D41344112C92ED4D003400B9 /* Products */;
 			projectDirPath = "";
@@ -286,6 +295,7 @@
 				D4B14A512C9A7C6E00FD12E7 /* ModelListView.swift in Sources */,
 				D4B14A632C9D704D00FD12E7 /* UploadDataView.swift in Sources */,
 				D4A2BB9B2C967277000B9745 /* ARQuickLookView.swift in Sources */,
+				D458F08A2CA50B6A00216CB4 /* SignInView.swift in Sources */,
 				D41344222C92EF16003400B9 /* TaBarView.swift in Sources */,
 				D4A2BB992C967234000B9745 /* CreateButton.swift in Sources */,
 				D41B46622CA24C2E0067D894 /* PersonalView.swift in Sources */,
@@ -424,6 +434,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ModeLink/ModeLink.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ModeLink/Preview Content\"";
@@ -457,6 +468,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ModeLink/ModeLink.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ModeLink/Preview Content\"";
@@ -531,6 +543,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 7.12.0;
+			};
+		};
+		D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -630,6 +650,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

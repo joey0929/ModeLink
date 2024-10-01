@@ -10,9 +10,11 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 import PhotosUI
+import FirebaseAuth
 
 struct PostView: View {
     @Environment(\.presentationMode) var presentationMode
+    @State private var userName: String = "" // 用於儲存用戶名稱
     @State private var title = ""
     @State private var content = ""
     @State private var county = "" // 所在縣市
@@ -21,7 +23,7 @@ struct PostView: View {
     @State private var isImagePickerPresented = false
     var canSubmit: Bool {
         // 當所有欄位都有填寫時返回 true，否則返回 false
-        return !title.isEmpty && !content.isEmpty && !county.isEmpty
+        return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
     }
 
     var body: some View {
@@ -29,51 +31,63 @@ struct PostView: View {
         ScrollView(showsIndicators: false) {
             
             VStack {
+                if let selectedImage = selectedImage {  // 顯示選擇的圖片
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 300)
+                        .clipped()
+                        .padding([.horizontal],15)
+                        .padding(.top, 15)
+                } else {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(height: 300)
+                        .overlay(
+                            VStack {
+                                Image(systemName: "photo")
+                                    .font(.system(size: 50))
+                                    .foregroundColor(.gray)
+                                Text("尚未選擇圖片")
+                                    .foregroundColor(.gray)
+                            }
+                        )
+                        .padding([.horizontal],15)
+                        .padding(.top, 15)
+   
+                }
+                
                 TextField("標題", text: $title)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+                    .padding(.horizontal,15)
+                    .padding(.top, 10)
                 
                 TextField("縣市", text: $county)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+                    .padding(.horizontal,15)
+                    .padding(.bottom, 10)
                 
                 VStack(alignment:.leading) {
-                    Text("請輸入內文:").padding(.leading,15)
+                    Text("請輸入內文:")
+                        .foregroundColor(Color(.systemGray))
                     TextEditor(text: $content)
-                        .frame(height: 200)
-                        .border(Color.gray, width: 1)
-                        .padding()
-                }
-                // 顯示選擇的圖片
-                if let selectedImage = selectedImage {
-                    Image(uiImage: selectedImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 200)
-                        .padding()
-                }
-//                // 按鈕來選擇圖片
-//                Button(action: {
-//                    isImagePickerPresented.toggle()
-//                }) {
-//                    Text("選擇圖片")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.blue)
-//                        .cornerRadius(10)
-//                }
-//                .padding()
-//                .sheet(isPresented: $isImagePickerPresented) {
-//                    ImagePicker(selectedImage: $selectedImage)
-//                }
+                        .frame(height: 150)
+                        .background(Color.white) // 設置背景色，確保與 TextField 保持一致
+                        .cornerRadius(8) // 設置圓角
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(.systemGray4), lineWidth: 0.5) // 設置外框的顏色和寬度
+                        )
+                        .padding(.top, 5)
+                }.padding(.horizontal, 15) // 確保整個 VStack 具有左右縮排
+                
                 // 使用 PhotosPicker 來選擇圖片
                 HStack {
                     PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
-                        Text("選擇圖片")
-                            .font(.headline)
+                        Image(systemName: "photo")
+                            .font(.system(size: 20))
                             .foregroundColor(.white)
-                            .padding()
+                            .padding([.horizontal,.vertical],10)
                             .background(.blue)
                             .cornerRadius(10)
                     }
@@ -90,43 +104,105 @@ struct PostView: View {
                         }
                     }
                     
+                    // 重置按鈕
                     Button(action: {
-                        //uploadPost()
+                        selectedImage = nil // 清空已選擇的圖片
+                        selectedItem = nil  // 清空 PhotosPicker 的選擇
+                        title = ""
+                        content = ""
+                        county = ""
+                    }) {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical,8)
+                            .background(.red)
+                            .cornerRadius(10)
+                    }
+                    Button(action: {
                         uploadPost(title: title, content: content, county: county, image: selectedImage)
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text("提交")
+                        Text("發文")
                             .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(canSubmit ? Color.blue : Color.gray) // 根據狀態變色
+                            .foregroundColor(canSubmit ? Color.white : Color.gray)
+                            .padding([.horizontal,.vertical],10)
+                            .background(canSubmit ? Color.blue : Color(.systemGray5)) // 根據狀態變色
                             .cornerRadius(10)
                     }
                     .disabled(!canSubmit)
-                    .padding()
-
+                    //.padding()
+                    Spacer()
                 }
-                Spacer()
+                .padding(.leading)
+                .padding(.bottom, 10)
+                //Spacer(minLength: 80)
+            }
+            .onAppear() {
+                fetchUserName()
             }
         }
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
+        .frame(height: 600)
         .navigationTitle("新貼文")
         .padding()
+        .navigationBarBackButtonHidden(true) // 隱藏默認的返回按鈕
+        .navigationBarItems(leading: Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(systemName: "chevron.backward")
+                Text("")
+            }
+        })
     }
+    
+    // 獲取用戶名稱的方法
+    func fetchUserName() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("User not logged in")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(userId)
+        
+        userRef.getDocument { document, error in
+            if let document = document, document.exists {
+                let data = document.data()
+                userName = data?["displayName"] as? String ?? "匿名用戶"
+            } else {
+                print("User not found in Firestore")
+            }
+        }
+    }
+
     // 上傳貼文到 Firestore 的邏輯
     func uploadPost(title: String, content: String, county: String, image: UIImage?) {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("User not logged in")
+            return
+        }
         let db = Firestore.firestore()
         // 如果有選擇圖片，先上傳圖片到 Firebase Storage
         if let image = image {
             uploadImage(image) { imageURL in
                 if let imageURL = imageURL {
-                    // 將文章數據與圖片 URL 一起上傳到 Firestore
+                    // 將文章與圖片 URL 一起上傳到 Firestore
                     let postData: [String: Any] = [
-                        "user_id": "roger2486",  // 目前先寫死，有登入會有真正id 可用
+                        "user_id": userId,  // 登入後真正id 可用
+                        "user_name": userName,
                         "title": title,
                         "content": content,
                         "County": county,
                         "imageURL": imageURL.absoluteString, // 圖片的下載 URL
-                        "timestamp": Timestamp(date: Date())
+                        "timestamp": Timestamp(date: Date()),
+                        "likes": 0,
+                        "likedBy": [] // 新增的字段，用於存儲按讚使用者的 UID 列表
+                        
                     ]
                     db.collection("articles").addDocument(data: postData) { error in
                         if let error = error {
@@ -142,11 +218,13 @@ struct PostView: View {
         } else {
             // 如果沒有圖片，僅上傳文章數據
             let postData: [String: Any] = [
-                "user_id": "roger2486",
+                "user_id": userId,
+                "name": userName,
                 "title": title,
                 "content": content,
                 "County": county,
-                "timestamp": Timestamp(date: Date())
+                "timestamp": Timestamp(date: Date()),
+                "likes": 0
             ]
             db.collection("articles").addDocument(data: postData) { error in
                 if let error = error {
