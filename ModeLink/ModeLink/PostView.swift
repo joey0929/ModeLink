@@ -42,7 +42,7 @@ struct PostView: View {
                 } else {
                     Rectangle()
                         .fill(Color.gray.opacity(0.2))
-                        .frame(height: 320)
+                        .frame(height: 300)
                         .overlay(
                             VStack {
                                 Image(systemName: "photo")
@@ -134,7 +134,9 @@ struct PostView: View {
                     .disabled(!canSubmit)
                     //.padding()
                     Spacer()
-                }.padding(.leading)
+                }
+                .padding(.leading)
+                .padding(.bottom, 10)
                 //Spacer(minLength: 80)
             }
             .onAppear() {
@@ -144,7 +146,7 @@ struct PostView: View {
         .background(Color.white)
         .cornerRadius(10)
         .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
-//        .frame(height: 550)
+        .frame(height: 600)
         .navigationTitle("新貼文")
         .padding()
         .navigationBarBackButtonHidden(true) // 隱藏默認的返回按鈕
