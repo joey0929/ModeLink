@@ -20,11 +20,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct ModeLinkApp: App {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
     init() {
         IQKeyboardManager.shared.enable = true
+        //IQKeyboardManager.shared.layoutIfNeededOnUpdate = false
     }
-
     var body: some Scene {
         WindowGroup {
             //ContentView()

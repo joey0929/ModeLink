@@ -12,6 +12,9 @@ import FirebaseStorage
 import PhotosUI
 import FirebaseAuth
 
+import IQKeyboardManagerSwift
+import Combine
+
 struct PostView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var userName: String = "" // 用於儲存用戶名稱
@@ -21,11 +24,14 @@ struct PostView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var selectedItem: PhotosPickerItem? = nil // 用於存儲選擇的圖片
     @State private var isImagePickerPresented = false
+    
+    @ObservedObject private var keyboardResponder = KeyboardResponder() // 使用 KeyboardResponder
+    
     var canSubmit: Bool {
         // 當所有欄位都有填寫時返回 true，否則返回 false
         return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
     }
-
+    
     var body: some View {
         //  swiftlint:disable trailing_whitespace
         ScrollView(showsIndicators: false) {
@@ -104,6 +110,24 @@ struct PostView: View {
                         }
                     }
                     
+
+                    Button(action: {
+                        uploadPost(title: title, content: content, county: county, image: selectedImage)
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Text("發文")
+                            .font(.headline)
+                            .foregroundColor(canSubmit ? Color.white : Color.gray)
+                            .padding([.horizontal,.vertical],10)
+                            .background(canSubmit ? Color.blue : Color(.systemGray5)) // 根據狀態變色
+                            .cornerRadius(10)
+                    }
+                    .disabled(!canSubmit)
+                    
+                    
+                    Spacer()
+                    
+                    
                     // 重置按鈕
                     Button(action: {
                         selectedImage = nil // 清空已選擇的圖片
@@ -120,20 +144,9 @@ struct PostView: View {
                             .background(.red)
                             .cornerRadius(10)
                     }
-                    Button(action: {
-                        uploadPost(title: title, content: content, county: county, image: selectedImage)
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Text("發文")
-                            .font(.headline)
-                            .foregroundColor(canSubmit ? Color.white : Color.gray)
-                            .padding([.horizontal,.vertical],10)
-                            .background(canSubmit ? Color.blue : Color(.systemGray5)) // 根據狀態變色
-                            .cornerRadius(10)
-                    }
-                    .disabled(!canSubmit)
+                    
                     //.padding()
-                    Spacer()
+                    //Spacer()
                 }
                 .padding(.leading)
                 .padding(.bottom, 10)
@@ -141,8 +154,26 @@ struct PostView: View {
             }
             .onAppear() {
                 fetchUserName()
+               // IQKeyboardManager.shared.layoutIfNeededOnUpdate = false
+                //   IQKeyboardManager.shared.enable = false
+                let appearance = UINavigationBarAppearance()
+                appearance.backgroundColor = UIColor.blue // 設置導航欄的底色
+                
+                UINavigationBar.appearance().standardAppearance = appearance
+                UINavigationBar.appearance().scrollEdgeAppearance = appearance
+                
             }
+//            .onDisappear() {
+//                IQKeyboardManager.shared.enable = true
+//            }
+            .padding(.bottom, keyboardResponder.currentHeight) // 調整底部間距
+//            .onDisappear() {
+//                IQKeyboardManager.shared.enable = true
+//            }
+            
+            
         }
+        
         .background(Color.white)
         .cornerRadius(10)
         .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
@@ -154,11 +185,13 @@ struct PostView: View {
             presentationMode.wrappedValue.dismiss()
         }) {
             HStack {
-                Image(systemName: "chevron.backward")
+                Image(systemName: "chevron.backward").foregroundColor(.black)
                 Text("")
             }
         })
     }
+    
+    
     
     // 獲取用戶名稱的方法
     func fetchUserName() {
@@ -264,4 +297,29 @@ struct PostView: View {
 }
 #Preview {
     PostView()
+}
+
+final class KeyboardResponder: ObservableObject {
+    @Published var currentHeight: CGFloat = 0
+    private var _center: NotificationCenter
+    
+    init(center: NotificationCenter = .default) {
+        _center = center
+        _center.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        _center.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func keyboardWillShow(notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            withAnimation {
+                currentHeight = keyboardFrame.height
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: Notification) {
+        withAnimation {
+            currentHeight = 0
+        }
+    }
 }
