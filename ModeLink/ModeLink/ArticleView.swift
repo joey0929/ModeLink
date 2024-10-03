@@ -36,7 +36,7 @@ struct Post2: Identifiable {
 
 struct ArticleView: View {
     @State private var posts: [Post2] = []
-    
+    @State private var showAlert = false
 
     let columns: [GridItem] = [GridItem(.fixed(375))]
     var body: some View {
@@ -102,7 +102,24 @@ struct ArticleView: View {
 //                                        }
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
+                                    
+                                    // 檢舉按鈕
                                     Spacer()
+                                       Button(action: {
+                                           showAlert = true // 顯示檢舉的提示
+                                       }) {
+                                           Image(systemName: "flag.fill") // 使用小旗子圖示
+                                               .foregroundColor(.orange)
+                                               .frame(width: 30, height: 30)
+                                               .contentShape(Rectangle())
+                                       }
+                                       .buttonStyle(BorderlessButtonStyle())
+                                       .padding(.trailing, 16)
+                                       .alert(isPresented: $showAlert) {
+                                           Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
+                                       }
+                     
+//                                    Spacer()
                                     Button(action: {
                                         blockAuthor(post.userId) // 封鎖作者的文章
                                     }) {
@@ -215,7 +232,6 @@ struct ArticleView: View {
             // 未按讚，新增讚
             post.isLiked = true
             post.likes += 1
-            
             // 將當前使用者的 UID 加入 likedBy 列表
             let db = Firestore.firestore()
             let postRef = db.collection("articles").document(post.id)
@@ -243,43 +259,6 @@ struct ArticleView: View {
         return "\(year)-\(month)-\(day) \(hour):\(minute)"
     }
     // MARK: - Monitoring the FireStore in Articles
-//    func startListeningForPosts() {
-//        guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
-//        let db = Firestore.firestore()
-//        db.collection("articles")
-//            .order(by: "timestamp", descending: true)
-//            .addSnapshotListener { (snapshot, error) in
-//                if let error = error {
-//                    print("Error fetching articles: \(error.localizedDescription)")
-//                    return
-//                }
-//                guard let documents = snapshot?.documents else {
-//                    print("No articles found")
-//                    return
-//                }
-//                self.posts = documents.compactMap { doc -> Post2? in
-//                    let data = doc.data()
-//                    guard let userId = data["user_id"] as? String,
-//                          let userName = data["user_name"] as? String,
-//                          let title = data["title"] as? String,
-//                          let content = data["content"] as? String,
-//                          let county = data["County"] as? String,
-//                          let timestamp = data["timestamp"] as? Timestamp,
-//                          let likes = data["likes"] as? Int
-//                    else {
-//                        return nil
-//                    }
-//                    let imageURL = data["imageURL"] as? String
-//                    let likedBy = data["likedBy"] as? [String] ?? [] // 取得 likedBy 列表
-//                    // 判斷當前使用者是否已按讚
-//                    let isLiked = likedBy.contains(currentUserUID)
-//                    // swiftlint:disable line_length
-//                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes, isLiked: isLiked)
-//                    // swiftlint:enable line_length
-//                }
-//            }
-//    }
- 
     func startListeningForPosts() {
         guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
