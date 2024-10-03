@@ -155,22 +155,10 @@ struct PostView: View {
             }
             .onAppear() {
                 fetchUserName()
-               // IQKeyboardManager.shared.layoutIfNeededOnUpdate = false
-                //   IQKeyboardManager.shared.enable = false
-//                let appearance = UINavigationBarAppearance()
-//                appearance.backgroundColor = UIColor.blue // 設置導航欄的底色
-//                
-//                UINavigationBar.appearance().standardAppearance = appearance
-//                UINavigationBar.appearance().scrollEdgeAppearance = appearance
                 
             }
-//            .onDisappear() {
-//                IQKeyboardManager.shared.enable = true
-//            }
             .padding(.bottom, keyboardResponder.currentHeight) // 調整底部間距
-//            .onDisappear() {
-//                IQKeyboardManager.shared.enable = true
-//            }
+
             
         }
         

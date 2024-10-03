@@ -36,6 +36,7 @@ struct Post2: Identifiable {
 
 struct ArticleView: View {
     @State private var posts: [Post2] = []
+    
 
     let columns: [GridItem] = [GridItem(.fixed(375))]
     var body: some View {
@@ -164,8 +165,28 @@ struct ArticleView: View {
     }
     // MARK: - 封鎖特定作者的文章
     func blockAuthor(_ userId: String) {
-        // 封鎖功能的邏輯處理，比如在本地保存被封鎖的用戶，並過濾他們的文章
-        print("封鎖作者: \(userId)")
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            print("無法取得當前使用者 ID")
+            return
+        }
+        // 禁止封鎖自己
+        if userId == currentUserID {
+            print("無法封鎖自己")
+            return
+        }
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(currentUserID)
+        userRef.updateData([
+            "blockedUsers": FieldValue.arrayUnion([userId]) // 加入新的作者 ID 到封鎖列表
+        ]) { error in
+            if let error = error {
+                print("封鎖作者時發生錯誤: \(error.localizedDescription)")
+            } else {
+                print("作者已封鎖")
+                // 過濾被封鎖作者的文章
+                self.posts.removeAll { $0.userId == userId }
+            }
+        }
     }
     // MARK: - Toggle Like Function
     func toggleLike(for index: Int) {
@@ -223,6 +244,7 @@ struct ArticleView: View {
     }
     // MARK: - Monitoring the FireStore in Articles
 //    func startListeningForPosts() {
+//        guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
 //        let db = Firestore.firestore()
 //        db.collection("articles")
 //            .order(by: "timestamp", descending: true)
@@ -243,54 +265,83 @@ struct ArticleView: View {
 //                          let content = data["content"] as? String,
 //                          let county = data["County"] as? String,
 //                          let timestamp = data["timestamp"] as? Timestamp,
-//                          let likes = data["likes"] as? Int  //
+//                          let likes = data["likes"] as? Int
 //                    else {
 //                        return nil
 //                    }
 //                    let imageURL = data["imageURL"] as? String
+//                    let likedBy = data["likedBy"] as? [String] ?? [] // 取得 likedBy 列表
+//                    // 判斷當前使用者是否已按讚
+//                    let isLiked = likedBy.contains(currentUserUID)
 //                    // swiftlint:disable line_length
-//                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes,isLiked: false)
+//                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes, isLiked: isLiked)
 //                    // swiftlint:enable line_length
 //                }
 //            }
 //    }
+ 
     func startListeningForPosts() {
         guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
-        db.collection("articles")
-            .order(by: "timestamp", descending: true)
-            .addSnapshotListener { (snapshot, error) in
-                if let error = error {
-                    print("Error fetching articles: \(error.localizedDescription)")
-                    return
-                }
-                guard let documents = snapshot?.documents else {
-                    print("No articles found")
-                    return
-                }
-                self.posts = documents.compactMap { doc -> Post2? in
-                    let data = doc.data()
-                    guard let userId = data["user_id"] as? String,
-                          let userName = data["user_name"] as? String,
-                          let title = data["title"] as? String,
-                          let content = data["content"] as? String,
-                          let county = data["County"] as? String,
-                          let timestamp = data["timestamp"] as? Timestamp,
-                          let likes = data["likes"] as? Int
-                    else {
-                        return nil
-                    }
-                    let imageURL = data["imageURL"] as? String
-                    let likedBy = data["likedBy"] as? [String] ?? [] // 取得 likedBy 列表
-                    // 判斷當前使用者是否已按讚
-                    let isLiked = likedBy.contains(currentUserUID)
-                    // swiftlint:disable line_length
-                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes, isLiked: isLiked)
-                    // swiftlint:enable line_length
-                }
+        
+        // 1. 取得當前使用者的 blockedUsers 列表
+        db.collection("users").document(currentUserUID).addSnapshotListener { userSnapshot, error in
+            if let error = error {
+                print("Error fetching user data: \(error.localizedDescription)")
+                return
             }
+            
+            guard let userData = userSnapshot?.data(),
+                  let blockedUsers = userData["blockedUsers"] as? [String] else {
+                print("No blocked users found")
+                return
+            }
+            
+            // 2. 監聽文章數據
+            db.collection("articles")
+                .order(by: "timestamp", descending: true)
+                .addSnapshotListener { (snapshot, error) in
+                    if let error = error {
+                        print("Error fetching articles: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    guard let documents = snapshot?.documents else {
+                        print("No articles found")
+                        return
+                    }
+                    
+                    // 3. 過濾被封鎖作者的文章
+                    self.posts = documents.compactMap { doc -> Post2? in
+                        let data = doc.data()
+                        guard let userId = data["user_id"] as? String,
+                              let userName = data["user_name"] as? String,
+                              let title = data["title"] as? String,
+                              let content = data["content"] as? String,
+                              let county = data["County"] as? String,
+                              let timestamp = data["timestamp"] as? Timestamp,
+                              let likes = data["likes"] as? Int else {
+                            return nil
+                        }
+                        
+                        // 過濾封鎖的使用者
+                        if blockedUsers.contains(userId) {
+                            return nil
+                        }
+                        
+                        let imageURL = data["imageURL"] as? String
+                        let likedBy = data["likedBy"] as? [String] ?? []
+                        
+                        // 判斷當前使用者是否已按讚
+                        let isLiked = likedBy.contains(currentUserUID)
+                        // swiftlint:disable line_length
+                        return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes, isLiked: isLiked)
+                        // swiftlint:enable line_length
+                    }
+                }
+        }
     }
- 
+
 }
 #Preview{
     ArticleView()
