@@ -109,8 +109,6 @@ struct PostView: View {
                             }
                         }
                     }
-                    
-
                     Button(action: {
                         uploadPost(title: title, content: content, county: county, image: selectedImage)
                         presentationMode.wrappedValue.dismiss()
@@ -123,11 +121,7 @@ struct PostView: View {
                             .cornerRadius(10)
                     }
                     .disabled(!canSubmit)
-                    
-                    
                     Spacer()
-                    
-                    
                     // 重置按鈕
                     Button(action: {
                         selectedImage = nil // 清空已選擇的圖片
@@ -136,14 +130,21 @@ struct PostView: View {
                         content = ""
                         county = ""
                     }) {
-                        Image(systemName: "arrow.counterclockwise")
+                        Text("Reset")
                             .font(.system(size: 20))
                             .foregroundColor(.white)
                             .padding(.horizontal, 10)
                             .padding(.vertical,8)
                             .background(.red)
                             .cornerRadius(10)
-                    }
+//                        Image(systemName: "arrow.counterclockwise")
+//                            .font(.system(size: 20))
+//                            .foregroundColor(.white)
+//                            .padding(.horizontal, 10)
+//                            .padding(.vertical,8)
+//                            .background(.red)
+//                            .cornerRadius(10)
+                    }.padding(.trailing,12)
                     
                     //.padding()
                     //Spacer()
@@ -156,11 +157,11 @@ struct PostView: View {
                 fetchUserName()
                // IQKeyboardManager.shared.layoutIfNeededOnUpdate = false
                 //   IQKeyboardManager.shared.enable = false
-                let appearance = UINavigationBarAppearance()
-                appearance.backgroundColor = UIColor.blue // 設置導航欄的底色
-                
-                UINavigationBar.appearance().standardAppearance = appearance
-                UINavigationBar.appearance().scrollEdgeAppearance = appearance
+//                let appearance = UINavigationBarAppearance()
+//                appearance.backgroundColor = UIColor.blue // 設置導航欄的底色
+//                
+//                UINavigationBar.appearance().standardAppearance = appearance
+//                UINavigationBar.appearance().scrollEdgeAppearance = appearance
                 
             }
 //            .onDisappear() {
@@ -171,7 +172,6 @@ struct PostView: View {
 //                IQKeyboardManager.shared.enable = true
 //            }
             
-            
         }
         
         .background(Color.white)
@@ -179,8 +179,8 @@ struct PostView: View {
         .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
         .frame(height: 600)
         .navigationTitle("新貼文")
-        .padding()
-        .navigationBarBackButtonHidden(true) // 隱藏默認的返回按鈕
+        .padding(.horizontal)
+        .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
             presentationMode.wrappedValue.dismiss()
         }) {
@@ -189,10 +189,13 @@ struct PostView: View {
                 Text("")
             }
         })
+        .navigationViewStyle(StackNavigationViewStyle())
+        .toolbarBackground(Color(.systemGray), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+//        .toolbarBackground(Color.black, for: .navigationBar) // 修改導航欄背景顏色
+//        .toolbarColorScheme(.dark, for: .navigationBar)
+        
     }
-    
-    
-    
     // 獲取用戶名稱的方法
     func fetchUserName() {
         guard let userId = Auth.auth().currentUser?.uid else {

@@ -39,8 +39,9 @@ struct ArticleView: View {
 
     let columns: [GridItem] = [GridItem(.fixed(375))]
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
+//                Color(.orange).ignoresSafeArea()
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {  // 使用 LazyVGrid 來顯示貼文
                        // ForEach(posts) { post in
@@ -124,7 +125,6 @@ struct ArticleView: View {
                     .padding()
                     .background(Color(.systemGray6))
                 }.background(Color(.systemGray6))
-                // .navigationTitle("文章列表")
                 .onAppear {
                     UIScrollView.appearance().showsVerticalScrollIndicator = false // 隱藏滾動條
                     startListeningForPosts()
@@ -153,6 +153,12 @@ struct ArticleView: View {
                         .foregroundColor(.black)
                 })
                 .navigationTitle("動態牆")
+                .navigationBarTitleDisplayMode(.automatic) // 可選，調整標題顯示方式
+                //.navigationViewStyle(StackNavigationViewStyle())
+                .toolbarBackground(Color(.systemBlue), for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+//                .toolbarBackground(Color.black, for: .navigationBar)
+
             }
         }
     }
@@ -161,28 +167,7 @@ struct ArticleView: View {
         // 封鎖功能的邏輯處理，比如在本地保存被封鎖的用戶，並過濾他們的文章
         print("封鎖作者: \(userId)")
     }
-    
     // MARK: - Toggle Like Function
-//    func toggleLike(for index: Int) {
-//        var post = posts[index]
-//        post.isLiked.toggle()
-//        post.likes += post.isLiked ? 1 : -1
-//        
-//        // 更新 Firebase 中的讚數
-//        let db = Firestore.firestore()
-//        let postRef = db.collection("articles").document(post.id)
-//        
-//        postRef.updateData([
-//            "likes": post.likes
-//        ]) { error in
-//            if let error = error {
-//                print("Error updating likes: \(error.localizedDescription)")
-//            } else {
-//                print("Likes successfully updated")
-//                posts[index] = post
-//            }
-//        }
-//    }
     func toggleLike(for index: Int) {
         var post = posts[index]
         guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
