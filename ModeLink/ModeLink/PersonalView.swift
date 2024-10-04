@@ -35,17 +35,43 @@ struct PersonalView: View {
             Text("Hello, \(userName)")
                 .font(.headline)
                 .padding()
-            // 顯示封鎖列表按鈕
-            Button {
-                fetchBlockedUsers() // 獲取封鎖的用戶
-                showBlockedList.toggle() // 切換顯示封鎖列表
-            } label: {
-                Text("顯示封鎖列表")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(8)
+//            // 顯示封鎖列表按鈕
+//            Button {
+//                fetchBlockedUsers() // 獲取封鎖的用戶
+//                showBlockedList.toggle() // 切換顯示封鎖列表
+//            } label: {
+//                Text("顯示封鎖列表")
+//                    .font(.headline)
+//                    .foregroundColor(.white)
+//                    .padding()
+//                    .background(Color.blue)
+//                    .cornerRadius(8)
+//            }
+            
+            HStack {
+                Button {
+                    fetchBlockedUsers() // 獲取封鎖的用戶
+                    showBlockedList.toggle() // 切換顯示封鎖列表
+                } label: {
+                    Text("顯示封鎖列表")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                }
+                
+                
+                Button {
+                    logout()
+                } label: {
+                    Text("登出")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(8)
+                }
             }
             // 顯示封鎖列表
             if showBlockedList {
@@ -65,9 +91,9 @@ struct PersonalView: View {
             }
             Spacer()
             Button {
-                logout()
+                deleteAccount()
             } label: {
-                Text("登出")
+                Text("刪除帳號")
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
@@ -77,7 +103,7 @@ struct PersonalView: View {
             .onAppear {
                 fetchUserName()
             }
-            Spacer()
+            //Spacer()
         }
 //        .navigationTitle("個人設定")
     }
@@ -91,6 +117,29 @@ struct PersonalView: View {
             print("Error signing out: \(signOutError.localizedDescription)")
         }
     }
+    
+    
+    func deleteAccount() {
+            guard let userId = Auth.auth().currentUser?.uid else {
+                print("User not logged in")
+                return
+            }
+            
+            let db = Firestore.firestore()
+            let userRef = db.collection("users").document(userId)
+            
+            // 更新 isDelete 狀態
+            userRef.updateData([
+                "isDelete": true
+            ]) { error in
+                if let error = error {
+                    print("更新 isDelete 狀態時發生錯誤: \(error.localizedDescription)")
+                } else {
+                    print("已成功更新 isDelete 狀態")
+                    logout() // 更新成功後登出使用者
+                }
+            }
+        }
     func fetchUserName() {
         guard let userId = Auth.auth().currentUser?.uid else {
             print("User not logged in")

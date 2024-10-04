@@ -63,21 +63,34 @@ struct ArticleView: View {
                                     }
                                     Spacer()
                                     
-                                    Text(post.county)
+                                    Text(post.county).font(.headline)
+                                        .allowsHitTesting(false)
                                 }
 
                                 Text(post.title)
                                     .font(.title2)
                                     .bold()
+                                    .allowsHitTesting(false)
+//                                Text(post.content)
+//                                    .font(.subheadline)
+//                                    .foregroundColor(.gray)
+//                                    .lineLimit(2)
+                                
                                 Text(post.content)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                    .lineLimit(2)
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .allowsHitTesting(false)
+                                
+                                
+                                
                                 if let imageURL = post.imageURL {
                                     KFImage(URL(string: imageURL))
                                         .resizable()
-                                        .scaledToFill()
-                                        .frame(maxWidth: .infinity, maxHeight: 450) // 圖片最大高度
+                                        //.scaledToFill()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(maxWidth: .infinity, maxHeight: 380) // 圖片最大高度
                                         .clipped()
                                         .cornerRadius(10)
                                 }
@@ -173,9 +186,8 @@ struct ArticleView: View {
                 .navigationTitle("動態牆")
                 .navigationBarTitleDisplayMode(.automatic) // 可選，調整標題顯示方式
                 //.navigationViewStyle(StackNavigationViewStyle())
-                .toolbarBackground(Color(.systemBlue), for: .navigationBar)
+                .toolbarBackground(Color(.white), for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
-//                .toolbarBackground(Color.black, for: .navigationBar)
 
             }
         }

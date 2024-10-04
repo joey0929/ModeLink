@@ -178,7 +178,7 @@ struct PostView: View {
             }
         })
         .navigationViewStyle(StackNavigationViewStyle())
-        .toolbarBackground(Color(.systemGray), for: .navigationBar)
+        .toolbarBackground(Color(.white), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
 //        .toolbarBackground(Color.black, for: .navigationBar) // 修改導航欄背景顏色
 //        .toolbarColorScheme(.dark, for: .navigationBar)
