@@ -90,9 +90,10 @@ struct ArticleView: View {
                                         .resizable()
                                         //.scaledToFill()
                                         .aspectRatio(contentMode: .fill)
-                                        .frame(maxWidth: .infinity, maxHeight: 380) // 圖片最大高度
+                                        .frame(maxWidth: .infinity, maxHeight: 300) // 圖片最大高度
                                         .clipped()
                                         .cornerRadius(10)
+                                        .contentShape(Rectangle())
                                 }
                                 // 貼文互動按鈕
                                 HStack {
@@ -100,7 +101,7 @@ struct ArticleView: View {
                                         toggleLike(for: index)
                                     }) {
                                         HStack {
-                                            Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                                            Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup").padding(.leading,5)
                                             Text("\(post.likes)") // 顯示讚數量
                                         }
                                     }
@@ -177,14 +178,36 @@ struct ArticleView: View {
                         .padding()
                     }
                 }
+                
+                
+                .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Text("動態牆")
+                                    .font(.largeTitle)
+                                    .bold()
+                            }
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                NavigationLink(destination: PersonalView()) {
+                                    Image(systemName: "gearshape")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.black)
+                                }
+                            }
+                        }
+                
+                
+                
+                
+                
+                
                 // 右上角齒輪圖標
-                .navigationBarItems(trailing: NavigationLink(destination: PersonalView()) {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 20))
-                        .foregroundColor(.black)
-                })
-                .navigationTitle("動態牆")
-                .navigationBarTitleDisplayMode(.automatic) // 可選，調整標題顯示方式
+//                .navigationBarItems(trailing: NavigationLink(destination: PersonalView()) {
+//                    Image(systemName: "gearshape")
+//                        .font(.system(size: 20))
+//                        .foregroundColor(.black)
+//                })
+//                .navigationTitle("動態牆")
+//                .navigationBarTitleDisplayMode(.automatic) // 可選，調整標題顯示方式
                 //.navigationViewStyle(StackNavigationViewStyle())
                 .toolbarBackground(Color(.white), for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
