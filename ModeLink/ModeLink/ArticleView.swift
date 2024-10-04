@@ -70,26 +70,6 @@ struct ArticleView: View {
                                     Spacer()
                                     
                                     Text(post.county).font(.headline)
-                                        
-                                    // 在這裡使用 ContextMenu
-//                                    Button(action: {
-//                                        //print("123")
-//                                    }, label: {
-//                                        Image(systemName: "ellipsis").foregroundColor(.black).frame(width: 30,height: 30)
-//                                    })
-//                                    .contextMenu {
-//                                        Button(action: {
-//                                            showAlert = true // 顯示檢舉的提示
-//                                        }) {
-//                                            Label("檢舉", systemImage: "flag.fill")
-//                                        }
-//                                        
-//                                        Button(action: {
-//                                            blockAuthor(post.userId) // 封鎖作者的文章
-//                                        }) {
-//                                            Label("封鎖", systemImage: "nosign")
-//                                        }
-//                                    }
                                     // 按鈕來控制顯示自訂選單
                                     Button(action: {
                                         selectedPostID = post.userId // 設定選中的貼文 ID
@@ -157,31 +137,6 @@ struct ArticleView: View {
 //                                    .buttonStyle(BorderlessButtonStyle())
                                     // 檢舉按鈕
                                     Spacer()
-//                                       Button(action: {
-//                                           showAlert = true // 顯示檢舉的提示
-//                                       }) {
-//                                           Image(systemName: "flag.fill") // 使用小旗子圖示
-//                                               .foregroundColor(.orange)
-//                                               .frame(width: 30, height: 30)
-//                                               .contentShape(Rectangle())
-//                                       }
-//                                       .buttonStyle(BorderlessButtonStyle())
-//                                       .padding(.trailing, 16)
-//                                       .alert(isPresented: $showAlert) {
-//                                           Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
-//                                       }
-////                                    Spacer()
-//                                    Button(action: {
-//                                        blockAuthor(post.userId) // 封鎖作者的文章
-//                                    }) {
-//                                        Image(systemName: "nosign")
-//                                            .foregroundColor(.red)
-//                                            .frame(width: 30, height: 30) // 固定按鈕大小
-//                                            .contentShape(Rectangle()) // 增加可點擊範圍
-//                                            //.border(Color.blue) // 添加邊框以檢查點擊區域
-//                                    }
-//                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
-//                                    .padding(.trailing,50)
                                 }
                                 .padding(.top, 10)
                             }
@@ -518,3 +473,4 @@ struct ImagePreviewView: View {
         }
     }
 }
+
