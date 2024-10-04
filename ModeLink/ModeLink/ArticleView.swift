@@ -64,7 +64,27 @@ struct ArticleView: View {
                                     Spacer()
                                     
                                     Text(post.county).font(.headline)
-                                        .allowsHitTesting(false)
+                                        
+                                    // 在這裡使用 ContextMenu
+                                    Button(action: {
+                                        //print("123")
+                                    }, label: {
+                                        Image(systemName: "ellipsis").foregroundColor(.black).frame(width: 30,height: 30)
+                                    })
+                                    .contextMenu {
+                                        Button(action: {
+                                            showAlert = true // 顯示檢舉的提示
+                                        }) {
+                                            Label("檢舉", systemImage: "flag.fill")
+                                        }
+                                        
+                                        Button(action: {
+                                            blockAuthor(post.userId) // 封鎖作者的文章
+                                        }) {
+                                            Label("封鎖", systemImage: "nosign")
+                                        }
+                                    }
+                                    
                                 }
 
                                 Text(post.title)
@@ -116,7 +136,6 @@ struct ArticleView: View {
 //                                        }
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
-                                    
                                     // 檢舉按鈕
                                     Spacer()
                                        Button(action: {
@@ -132,7 +151,6 @@ struct ArticleView: View {
                                        .alert(isPresented: $showAlert) {
                                            Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
                                        }
-                     
 //                                    Spacer()
                                     Button(action: {
                                         blockAuthor(post.userId) // 封鎖作者的文章
@@ -194,12 +212,6 @@ struct ArticleView: View {
                                 }
                             }
                         }
-                
-                
-                
-                
-                
-                
                 // 右上角齒輪圖標
 //                .navigationBarItems(trailing: NavigationLink(destination: PersonalView()) {
 //                    Image(systemName: "gearshape")

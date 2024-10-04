@@ -144,7 +144,7 @@ struct PostView: View {
 //                            .padding(.vertical,8)
 //                            .background(.red)
 //                            .cornerRadius(10)
-                    }.padding(.trailing,12)
+                    }.padding(.trailing, 12)
                     
                     //.padding()
                     //Spacer()
