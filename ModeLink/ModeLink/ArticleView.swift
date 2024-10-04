@@ -37,7 +37,13 @@ struct Post2: Identifiable {
 struct ArticleView: View {
     @State private var posts: [Post2] = []
     @State private var showAlert = false
+    
+    @State private var isImagePreviewPresented = false
+    @State private var selectedImageURL: String? = nil
 
+    @State private var showMenuSheet = false // 控制選單的顯示
+    @State private var selectedPostID: String? = nil // 用於儲存當前選中的貼文 ID
+    
     let columns: [GridItem] = [GridItem(.fixed(375))]
     var body: some View {
         NavigationStack {
@@ -66,24 +72,33 @@ struct ArticleView: View {
                                     Text(post.county).font(.headline)
                                         
                                     // 在這裡使用 ContextMenu
+//                                    Button(action: {
+//                                        //print("123")
+//                                    }, label: {
+//                                        Image(systemName: "ellipsis").foregroundColor(.black).frame(width: 30,height: 30)
+//                                    })
+//                                    .contextMenu {
+//                                        Button(action: {
+//                                            showAlert = true // 顯示檢舉的提示
+//                                        }) {
+//                                            Label("檢舉", systemImage: "flag.fill")
+//                                        }
+//                                        
+//                                        Button(action: {
+//                                            blockAuthor(post.userId) // 封鎖作者的文章
+//                                        }) {
+//                                            Label("封鎖", systemImage: "nosign")
+//                                        }
+//                                    }
+                                    // 按鈕來控制顯示自訂選單
                                     Button(action: {
-                                        //print("123")
+                                        selectedPostID = post.userId // 設定選中的貼文 ID
+                                        showMenuSheet = true // 顯示選單
                                     }, label: {
-                                        Image(systemName: "ellipsis").foregroundColor(.black).frame(width: 30,height: 30)
+                                        Image(systemName: "ellipsis")
+                                            .foregroundColor(.black)
+                                            .frame(width: 30, height: 30)
                                     })
-                                    .contextMenu {
-                                        Button(action: {
-                                            showAlert = true // 顯示檢舉的提示
-                                        }) {
-                                            Label("檢舉", systemImage: "flag.fill")
-                                        }
-                                        
-                                        Button(action: {
-                                            blockAuthor(post.userId) // 封鎖作者的文章
-                                        }) {
-                                            Label("封鎖", systemImage: "nosign")
-                                        }
-                                    }
                                     
                                 }
 
@@ -114,6 +129,10 @@ struct ArticleView: View {
                                         .clipped()
                                         .cornerRadius(10)
                                         .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            selectedImageURL = imageURL
+                                            isImagePreviewPresented = true
+                                        }
                                 }
                                 // 貼文互動按鈕
                                 HStack {
@@ -138,31 +157,31 @@ struct ArticleView: View {
 //                                    .buttonStyle(BorderlessButtonStyle())
                                     // 檢舉按鈕
                                     Spacer()
-                                       Button(action: {
-                                           showAlert = true // 顯示檢舉的提示
-                                       }) {
-                                           Image(systemName: "flag.fill") // 使用小旗子圖示
-                                               .foregroundColor(.orange)
-                                               .frame(width: 30, height: 30)
-                                               .contentShape(Rectangle())
-                                       }
-                                       .buttonStyle(BorderlessButtonStyle())
-                                       .padding(.trailing, 16)
-                                       .alert(isPresented: $showAlert) {
-                                           Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
-                                       }
-//                                    Spacer()
-                                    Button(action: {
-                                        blockAuthor(post.userId) // 封鎖作者的文章
-                                    }) {
-                                        Image(systemName: "nosign")
-                                            .foregroundColor(.red)
-                                            .frame(width: 30, height: 30) // 固定按鈕大小
-                                            .contentShape(Rectangle()) // 增加可點擊範圍
-                                            //.border(Color.blue) // 添加邊框以檢查點擊區域
-                                    }
-                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
-                                    .padding(.trailing,50)
+//                                       Button(action: {
+//                                           showAlert = true // 顯示檢舉的提示
+//                                       }) {
+//                                           Image(systemName: "flag.fill") // 使用小旗子圖示
+//                                               .foregroundColor(.orange)
+//                                               .frame(width: 30, height: 30)
+//                                               .contentShape(Rectangle())
+//                                       }
+//                                       .buttonStyle(BorderlessButtonStyle())
+//                                       .padding(.trailing, 16)
+//                                       .alert(isPresented: $showAlert) {
+//                                           Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
+//                                       }
+////                                    Spacer()
+//                                    Button(action: {
+//                                        blockAuthor(post.userId) // 封鎖作者的文章
+//                                    }) {
+//                                        Image(systemName: "nosign")
+//                                            .foregroundColor(.red)
+//                                            .frame(width: 30, height: 30) // 固定按鈕大小
+//                                            .contentShape(Rectangle()) // 增加可點擊範圍
+//                                            //.border(Color.blue) // 添加邊框以檢查點擊區域
+//                                    }
+//                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
+//                                    .padding(.trailing,50)
                                 }
                                 .padding(.top, 10)
                             }
@@ -174,11 +193,101 @@ struct ArticleView: View {
                     }
                     .padding()
                     .background(Color(.systemGray6))
-                }.background(Color(.systemGray6))
+                }
+                .background(Color(.systemGray6))
                 .onAppear {
                     UIScrollView.appearance().showsVerticalScrollIndicator = false // 隱藏滾動條
                     startListeningForPosts()
                 }
+                .fullScreenCover(isPresented: $isImagePreviewPresented) {
+                    ImagePreviewView(imageURL: selectedImageURL, isPresented: $isImagePreviewPresented)
+                }
+//                .sheet(isPresented: $showMenuSheet) {
+//                    HStack {
+//                        Button(action: {
+//                            
+//                            showMenuSheet = false // 關閉選單
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                                showAlert = true
+//                            }
+//                        }) {
+//                            Label("檢舉", systemImage: "flag.fill")
+//                        }
+//                        .padding()
+//                        
+//                        Button(action: {
+//                            // 假設 blockAuthor 是你的封鎖方法
+//                            blockAuthor(posts[0].userId)
+//                            showMenuSheet = false // 關閉選單
+//                        }) {
+//                            Label("封鎖", systemImage: "nosign")
+//                        }
+//                        .padding()
+//                        
+//                        Button(action: {
+//                            showMenuSheet = false // 取消操作，關閉選單
+//                        }) {
+//                            Text("取消")
+//                                .foregroundColor(.blue)
+//                        }
+//                        .padding()
+//                    }
+//                   // .padding()
+//                    .presentationDetents([.fraction(0.1)]) // 控制選單高度
+//                }
+                .sheet(isPresented: $showMenuSheet) {
+                    HStack(spacing: 30) { // 調整按鈕間的間距
+                        Button(action: {
+                            showMenuSheet = false // 關閉選單
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                showAlert = true
+                            }
+                        }) {
+                            VStack {
+                                Image(systemName: "flag.fill")
+                                Text("檢舉")
+                            }
+                            .foregroundColor(.black) // 設置顏色為黑色
+                        }
+                        .padding()
+                        
+                        Button(action: {
+                            // 假設 blockAuthor 是你的封鎖方法
+                            if let postID = selectedPostID {
+                                blockAuthor(postID) // 使用選中的貼文 ID 進行封鎖
+                            }
+                            //blockAuthor(selectedPostID ?? "")
+                            showMenuSheet = false // 關閉選單
+                        }) {
+                            VStack {
+                                Image(systemName: "nosign")
+                                Text("封鎖")
+                            }
+                            .foregroundColor(.black) // 設置顏色為黑色
+                        }
+                        .padding()
+                        
+                        Button(action: {
+                            showMenuSheet = false // 取消操作，關閉選單
+                        }) {
+                            VStack {
+                                Image(systemName: "xmark")
+                                Text("取消")
+                            }
+                            .foregroundColor(.black) // 設置取消按鈕的顏色為藍色
+                        }
+                        .padding()
+                    }
+                    .padding() // 增加外層內邊距
+                    .presentationDetents([.fraction(0.1)]) // 控制選單高度
+                }
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
+                }
+                
+                
+                
+                
                 // 右下角的 + 按鈕 (頂層)
                 VStack {
                     Spacer()
@@ -199,9 +308,9 @@ struct ArticleView: View {
                 
                 
                 .toolbar {
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                Text("動態牆")
-                                    .font(.largeTitle)
+                            ToolbarItem(placement: .principal) {
+                                Text("ModeLink")
+                                    .font(.title)
                                     .bold()
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
@@ -219,8 +328,8 @@ struct ArticleView: View {
 //                        .foregroundColor(.black)
 //                })
 //                .navigationTitle("動態牆")
-//                .navigationBarTitleDisplayMode(.automatic) // 可選，調整標題顯示方式
                 //.navigationViewStyle(StackNavigationViewStyle())
+                .navigationBarTitleDisplayMode(.inline) // 可選，調整標題顯示方式
                 .toolbarBackground(Color(.white), for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
 
@@ -371,4 +480,41 @@ struct ArticleView: View {
 }
 #Preview{
     ArticleView()
+}
+
+
+
+
+
+struct ImagePreviewView: View {
+    let imageURL: String?
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            
+            if let imageURL = imageURL {
+                KFImage(URL(string: imageURL))
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
+            }
+
+            VStack {
+                Spacer()
+                Button(action: {
+                    isPresented = false
+                }) {
+                    Text("關閉")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.gray.opacity(0.7))
+                        .cornerRadius(10)
+                }
+                .padding()
+            }
+        }
+    }
 }
