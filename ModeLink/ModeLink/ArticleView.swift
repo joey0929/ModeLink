@@ -154,9 +154,9 @@ struct ArticleView: View {
                         }
                     }
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color(.theme))
                 }
-                .background(Color(.systemGray6))
+                .background(Color(.theme))
                 .onAppear {
                     UIScrollView.appearance().showsVerticalScrollIndicator = false // 隱藏滾動條
                     startListeningForPosts()
@@ -203,7 +203,7 @@ struct ArticleView: View {
                                 Image(systemName: "xmark")
                                 Text("取消")
                             }
-                            .foregroundColor(.black) // 設置取消按鈕的顏色為藍色
+                            .foregroundColor(.black) // 設置取消按鈕
                         }
                         .padding()
                     }
@@ -234,13 +234,14 @@ struct ArticleView: View {
                             ToolbarItem(placement: .principal) {
                                 Text("ModeLink")
                                     .font(.title)
+                                    .foregroundColor(.white.opacity(0.8))
                                     .bold()
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 NavigationLink(destination: PersonalView()) {
                                     Image(systemName: "gearshape")
                                         .font(.system(size: 20))
-                                        .foregroundColor(.black)
+                                        .foregroundColor(.white)
                                 }
                             }
                         }
@@ -253,7 +254,7 @@ struct ArticleView: View {
 //                .navigationTitle("動態牆")
                 //.navigationViewStyle(StackNavigationViewStyle())
                 .navigationBarTitleDisplayMode(.inline) // 可選，調整標題顯示方式
-                .toolbarBackground(Color(.white), for: .navigationBar)
+                .toolbarBackground(Color(.theme), for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 
                 // 載入指示器覆蓋層

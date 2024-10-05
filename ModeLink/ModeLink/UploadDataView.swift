@@ -36,7 +36,12 @@ struct UploadDataView: View {
             }
             Spacer()
             Button("Upload to locations") {
-                uploadLocationsToFirebase()
+                //uploadLocationsToFirebase()
+            }
+            Spacer()
+            Button("Upload to tools2") {
+                //uploadLocationsToFirebase()
+                uploadDataToFirestore3()
             }
             Spacer()
         }
@@ -90,7 +95,28 @@ struct UploadDataView: View {
             "position": 3
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
-        db.collection("toolDatas").addDocument(data: toolData) { error in
+        db.collection("toolDatas2").addDocument(data: toolData) { error in
+            if let error = error {
+                print("上傳資料時發生錯誤：\(error.localizedDescription)")
+            } else {
+                print("資料成功上傳到 Firestore！")
+            }
+        }
+    }
+    // 將資料和圖片 URL 一同上傳到 Firestore
+    func uploadDataToFirestore3() {
+        let db = Firestore.firestore()
+        // 上傳的資料
+        let toolData: [String: Any] = [
+            "name": "保護漆",
+            "price": "120~300",
+            "recommend": "郡氏",
+            "description": "增加表面特徵",
+            "image_url": "", // 將 URL 轉換為字串並存入Firestore
+            "position": 1
+        ]
+        // 將資料存入 Firestore 的 "toolDatas" collection
+        db.collection("toolDatas2").addDocument(data: toolData) { error in
             if let error = error {
                 print("上傳資料時發生錯誤：\(error.localizedDescription)")
             } else {

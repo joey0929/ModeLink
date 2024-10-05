@@ -14,6 +14,7 @@ struct BlockedUser: Identifiable {
     let name: String // 使用者名稱
 }
 struct PersonalView: View {
+    @Environment(\.presentationMode) var presentationMode
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true // 用於追蹤登入狀態
     @State private var userName: String = "Loading..." // 用於存儲用戶名稱
     @State private var blockedUsers: [BlockedUser] = [] // 用於儲存封鎖的用戶 ID
@@ -105,6 +106,16 @@ struct PersonalView: View {
             }
             //Spacer()
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(systemName: "chevron.backward").foregroundColor(.black)
+                Text("")
+            }
+        })
+        
 //        .navigationTitle("個人設定")
     }
 

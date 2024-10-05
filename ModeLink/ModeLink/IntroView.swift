@@ -13,56 +13,13 @@ import Kingfisher
 
 struct IntroView: View {
     @State private var tools: [Tool] = [] // 保存從 Firestore 抓取的工具資料
+    @State private var tools2: [Tool] = []
     @State private var skills: [Skill] = [] // 保存從 Firestore 抓取的工具資料
-    
     @State private var selectedSegment = 0 // 控制 segment 的選擇
     
     let columns = [GridItem(.adaptive(minimum: 150))]
     let columns2 = [GridItem(.flexible())]
-//    var body: some View {
-//        NavigationView {
-//            ScrollView(showsIndicators: false) {
-////                HStack {
-////                    Text("模型工具").font(.title2).padding(.leading,30)
-////                    Spacer()
-////                }
-//                    LazyVGrid(columns: columns, spacing: 20) {
-//                    Section(header: Text("模型工具").font(.title2)) {
-//                        ForEach(tools) { tool in
-//                            NavigationLink(destination: IntroToolView(tool: tool)) {
-//                                ToolCard(tool: tool)
-//                                    .padding(.horizontal, 5) // 調整卡片的內部間距
-//                            }
-//                        }
-//                    }
-////                    Section(header: Text("模型技巧").font(.title2)) {
-////                        ForEach(skills) { skill in
-////                            NavigationLink(destination: IntroSkillView(skill: skill)) {
-////                                SkillCard(skill: skill)
-////                            }
-////                        }
-////                    }
-//                }
-//                .padding()
-//                LazyVGrid(columns: columns2, spacing: 20) {
-//                    Section(header: Text("模型技巧").font(.title2)) {
-//                        ForEach(skills) { skill in
-//                            NavigationLink(destination: IntroSkillView(skill: skill)) {
-//                                SkillCard(skill: skill)
-//                            }
-//                        }
-//                    }
-//                }
-//                
-//                
-//                
-//                
-//            }
-//        }.onAppear {
-//            fetchToolData() // 當視圖出現時抓取tool資料
-//            fetchSkillData() // 當視圖出現時抓取skill資料
-//        }
-//    }
+
     var body: some View {
             NavigationView {
                 VStack {
@@ -87,18 +44,23 @@ struct IntroView: View {
                     ScrollView(showsIndicators: false) {
                         if selectedSegment == 0 {
                             // 第一個 LazyVGrid
-                            LazyVGrid(columns: columns, spacing: 20) { // 調整 spacing
-                                Section(header: Text("").font(.title2)) {
-                                    ForEach(tools) { tool in
-                                        NavigationLink(destination: IntroToolView(tool: tool)) {
-                                            ToolCard(tool: tool)
-                                                .padding(.horizontal, 10) // 調整卡片的內部間距
-                                        }
-                                    }
-                                }
-                            }
-                            .padding(.horizontal, 10) // 整個網格的外部間距
+//                            LazyVGrid(columns: columns, spacing: 20) { // 調整 spacing
+//                                Section(header: Text("").font(.title2)) {
+//                                    ForEach(tools) { tool in
+//                                        NavigationLink(destination: IntroToolView(tool: tool)) {
+//                                            ToolCard(tool: tool)
+//                                                .padding(.horizontal, 10) // 調整卡片的內部間距
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            .padding(.horizontal, 10) // 整個網格的外部間距
                             //.padding(.vertical, 1)
+                            VStack {
+                                ToolCard(tools: tools).padding(.bottom,5)
+                                
+                                ToolCard(tools: tools2)
+                            }
                         } else {
                             // 第二個 LazyVGrid
                             LazyVGrid(columns: columns2, spacing: 20) {
@@ -117,6 +79,7 @@ struct IntroView: View {
                 }.background(Color(.systemGray6))
                 .onAppear {
                     fetchToolData() // 當視圖出現時抓取工具資料
+                    fetchToolData2()
                     fetchSkillData() // 當視圖出現時抓取技能資料
                 }
             }
@@ -149,6 +112,38 @@ struct IntroView: View {
             }
         }
     }
+    func fetchToolData2() {
+        let db = Firestore.firestore()
+        db.collection("toolDatas2")
+            .order(by:"position")
+            .addSnapshotListener { (snapshot, error) in
+            if let error = error {
+                print("抓取資料時發生錯誤：\(error.localizedDescription)")
+                return
+            }
+            
+            if let snapshot = snapshot {
+                self.tools2 = snapshot.documents.compactMap { doc -> Tool? in
+                    let data = doc.data()
+                    guard
+                        let name = data["name"] as? String,
+                        let price = data["price"] as? String,
+                        let recommend = data["recommend"] as? String,
+                        let description = data["description"] as? String,
+                        let position = data["position"] as? Int,
+                        let imageUrl = data["image_url"] as? String else {
+                        return nil
+                    }
+                    return Tool(id: doc.documentID, name: name, price: price, recommend: recommend, description: description, imageUrl: imageUrl, position: position)
+                }
+            }
+        }
+    }
+    
+    
+    
+    
+    
     func fetchSkillData() {
         let db = Firestore.firestore()
         db.collection("skillDatas")
@@ -200,32 +195,78 @@ struct Skill: Identifiable {
     let ytUrl: String
 }
 
+//struct ToolCard: View {
+//    let tool: Tool
+//    var body: some View {
+//        ZStack {
+//            // 使用 Kingfisher 來下載並顯示圖片
+//            KFImage(URL(string: tool.imageUrl))
+//                .resizable()
+//                .aspectRatio(contentMode: .fill)
+//                .frame(width: 150, height: 130)
+//                .cornerRadius(8)
+//                .padding()
+//            Rectangle()
+//                .fill(Color.black.opacity(0.4))
+//                .frame(height: 150)
+//                .cornerRadius(10)
+//            Text(tool.name)
+//                .foregroundColor(.white)
+//                .font(.headline)
+//                .foregroundColor(.primary) // 保持文字顏色一致
+//        }
+//        .frame(width: 165, height: 150)
+//        .background(Color(.systemGray6))
+//        .cornerRadius(10)
+//        .shadow(radius: 5)
+//    }
+//}
 struct ToolCard: View {
-    let tool: Tool
+    let tools: [Tool] // 工具數據
+
     var body: some View {
-        ZStack {
-            // 使用 Kingfisher 來下載並顯示圖片
-            KFImage(URL(string: tool.imageUrl))
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 150, height: 130)
-                .cornerRadius(8)
-                .padding()
-            Rectangle()
-                .fill(Color.black.opacity(0.4))
-                .frame(height: 150)
-                .cornerRadius(10)
-            Text(tool.name)
-                .foregroundColor(.white)
-                .font(.headline)
-                .foregroundColor(.primary) // 保持文字顏色一致
+        TabView {
+            ForEach(tools) { tool in
+                NavigationLink(destination: IntroToolView(tool: tool)) { // 導航到工具詳細頁面
+                    ZStack {
+                        // 使用 Kingfisher 來下載並顯示圖片
+                        KFImage(URL(string: tool.imageUrl))
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 320, height: 280)
+                            .cornerRadius(12)
+                            .clipped()
+                        
+                        // 工具名稱
+                        VStack {
+                            Spacer()
+                            HStack{
+                                Text(tool.name)
+                                    .foregroundColor(.white)
+                                    .font(.headline)
+                                    .padding()
+                                    .background(Color.black.opacity(0.1))
+                                    .cornerRadius(8)
+                                    .padding(.bottom, 10)
+                                Spacer()
+                            }
+                           
+                        }
+                    }
+                    .frame(width: 320, height: 280)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .shadow(radius: 5)
+                    .padding()
+                }
+                .buttonStyle(PlainButtonStyle()) // 去除默認的按鈕效果
+            }
         }
-        .frame(width: 165, height: 150)
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
-        .shadow(radius: 5)
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always)) // 設置為分頁樣式
+        .frame(height: 300) // 設置高度
     }
 }
+
 
 struct SkillCard: View {
     let skill: Skill
