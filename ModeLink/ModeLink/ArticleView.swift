@@ -44,7 +44,13 @@ struct ArticleView: View {
     @State private var showMenuSheet = false // 控制選單的顯示
     @State private var selectedPostID: String? = nil // 用於儲存當前選中的貼文 ID
     
-    let columns: [GridItem] = [GridItem(.fixed(375))]
+    
+    @State private var isLoadingPreview: Bool = false
+    @State private var showErrorAlert: Bool = false
+    @State private var errorMessage: String = ""
+    
+    
+    let columns: [GridItem] = [GridItem(.fixed(370))]
     var body: some View {
         NavigationStack {
             ZStack {
@@ -86,14 +92,10 @@ struct ArticleView: View {
                                     .font(.title2)
                                     .bold()
                                     .allowsHitTesting(false)
-//                                Text(post.content)
-//                                    .font(.subheadline)
-//                                    .foregroundColor(.gray)
-//                                    .lineLimit(2)
-                                
+
                                 Text(post.content)
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
+                                    .font(.headline)
+                                    .foregroundColor(.black.opacity(0.8))
                                     .lineLimit(nil)
                                     .fixedSize(horizontal: false, vertical: true)
                                     .allowsHitTesting(false)
@@ -109,10 +111,15 @@ struct ArticleView: View {
                                         .clipped()
                                         .cornerRadius(10)
                                         .contentShape(Rectangle())
+//                                        .onTapGesture {
+//                                            selectedImageURL = imageURL
+//                                            isImagePreviewPresented = true
+//                                        }
                                         .onTapGesture {
-                                            selectedImageURL = imageURL
-                                            isImagePreviewPresented = true
+                                            handleImageTap(imageURL: imageURL)
                                         }
+                                    
+                                    
                                 }
                                 // 貼文互動按鈕
                                 HStack {
@@ -157,39 +164,6 @@ struct ArticleView: View {
                 .fullScreenCover(isPresented: $isImagePreviewPresented) {
                     ImagePreviewView(imageURL: selectedImageURL, isPresented: $isImagePreviewPresented)
                 }
-//                .sheet(isPresented: $showMenuSheet) {
-//                    HStack {
-//                        Button(action: {
-//                            
-//                            showMenuSheet = false // 關閉選單
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                                showAlert = true
-//                            }
-//                        }) {
-//                            Label("檢舉", systemImage: "flag.fill")
-//                        }
-//                        .padding()
-//                        
-//                        Button(action: {
-//                            // 假設 blockAuthor 是你的封鎖方法
-//                            blockAuthor(posts[0].userId)
-//                            showMenuSheet = false // 關閉選單
-//                        }) {
-//                            Label("封鎖", systemImage: "nosign")
-//                        }
-//                        .padding()
-//                        
-//                        Button(action: {
-//                            showMenuSheet = false // 取消操作，關閉選單
-//                        }) {
-//                            Text("取消")
-//                                .foregroundColor(.blue)
-//                        }
-//                        .padding()
-//                    }
-//                   // .padding()
-//                    .presentationDetents([.fraction(0.1)]) // 控制選單高度
-//                }
                 .sheet(isPresented: $showMenuSheet) {
                     HStack(spacing: 30) { // 調整按鈕間的間距
                         Button(action: {
@@ -287,10 +261,49 @@ struct ArticleView: View {
                 .navigationBarTitleDisplayMode(.inline) // 可選，調整標題顯示方式
                 .toolbarBackground(Color(.white), for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
-
+                
+                // 載入指示器覆蓋層
+                if isLoadingPreview {
+                    ZStack {
+                        Color.black.opacity(0.4).ignoresSafeArea()
+                        ProgressView("載入中...")
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.gray.opacity(0.7))
+                            .cornerRadius(10)
+                    }
+                }
+                
+                
+                
             }
         }
     }
+    // 處理圖片點擊事件
+    func handleImageTap(imageURL: String) {
+        guard let url = URL(string: imageURL) else { return }
+        isLoadingPreview = true
+        
+        KingfisherManager.shared.retrieveImage(with: url) { result in
+            DispatchQueue.main.async {
+                isLoadingPreview = false
+                switch result {
+                case .success(_):
+                    selectedImageURL = imageURL
+                    isImagePreviewPresented = true
+                case .failure(let error):
+                    // 處理錯誤，例如顯示警告訊息
+                    print("Failed to load image: \(error)")
+                    errorMessage = "無法載入圖片，請稍後再試。"
+                    showErrorAlert = true
+                }
+            }
+        }
+    }
+    
+    
+    
     // MARK: - 封鎖特定作者的文章
     func blockAuthor(_ userId: String) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
@@ -441,21 +454,85 @@ struct ArticleView: View {
 
 
 
+//struct ImagePreviewView: View {
+//    let imageURL: String?
+//    @Binding var isPresented: Bool
+//
+//    var body: some View {
+//        ZStack {
+//            Color.black.ignoresSafeArea()
+//            
+//            if let imageURL = imageURL {
+//                KFImage(URL(string: imageURL))
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .padding()
+//            }
+//
+//            VStack {
+//                Spacer()
+//                Button(action: {
+//                    isPresented = false
+//                }) {
+//                    Text("關閉")
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .padding()
+//                        .background(Color.gray.opacity(0.7))
+//                        .cornerRadius(10)
+//                }
+//                .padding()
+//            }
+//        }
+//    }
+//}
+
 struct ImagePreviewView: View {
     let imageURL: String?
     @Binding var isPresented: Bool
-
+    @StateObject private var imageLoader = ImageLoader()
+    
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
             
-            if let imageURL = imageURL {
-                KFImage(URL(string: imageURL))
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+            if imageLoader.isLoading {
+                ProgressView("載入中...")
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .foregroundColor(.white)
                     .padding()
+                    .background(Color.gray.opacity(0.7))
+                    .cornerRadius(10)
+            } else if imageLoader.loadFailed {
+                VStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.red)
+                    Text("無法載入圖片")
+                        .foregroundColor(.white)
+                        .padding(.top, 8)
+                }
+            } else if let uiImage = imageLoader.image {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .padding()
+            } else {
+                // 當 imageURL 為 nil 或無效時顯示錯誤訊息
+                VStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.red)
+                    Text("無效的圖片連結")
+                        .foregroundColor(.white)
+                        .padding(.top, 8)
+                }
             }
-
+            
             VStack {
                 Spacer()
                 Button(action: {
@@ -471,6 +548,39 @@ struct ImagePreviewView: View {
                 .padding()
             }
         }
+        .onAppear {
+            if let imageURL = imageURL, let url = URL(string: imageURL) {
+                imageLoader.loadImage(from: url)
+            } else {
+                imageLoader.loadFailed = true
+            }
+        }
     }
 }
 
+
+
+
+
+class ImageLoader: ObservableObject {
+    @Published var image: UIImage? = nil
+    @Published var isLoading: Bool = false
+    @Published var loadFailed: Bool = false
+    
+    func loadImage(from url: URL) {
+        isLoading = true
+        loadFailed = false
+        
+        KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let value):
+                    self?.image = value.image
+                case .failure(_):
+                    self?.loadFailed = true
+                }
+            }
+        }
+    }
+}
