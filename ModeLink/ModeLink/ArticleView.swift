@@ -107,7 +107,7 @@ struct ArticleView: View {
                                         .resizable()
                                         //.scaledToFill()
                                         .aspectRatio(contentMode: .fill)
-                                        .frame(maxWidth: .infinity, maxHeight: 300) // 圖片最大高度
+                                        .frame(maxWidth: .infinity, maxHeight: 280) // 圖片最大高度
                                         .clipped()
                                         .cornerRadius(10)
                                         .contentShape(Rectangle())
@@ -213,10 +213,6 @@ struct ArticleView: View {
                 .alert(isPresented: $showAlert) {
                     Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
                 }
-                
-                
-                
-                
                 // 右下角的 + 按鈕 (頂層)
                 VStack {
                     Spacer()
@@ -234,8 +230,6 @@ struct ArticleView: View {
                         .padding()
                     }
                 }
-                
-                
                 .toolbar {
                             ToolbarItem(placement: .principal) {
                                 Text("ModeLink")
@@ -274,9 +268,6 @@ struct ArticleView: View {
                             .cornerRadius(10)
                     }
                 }
-                
-                
-                
             }
         }
     }
@@ -301,9 +292,6 @@ struct ArticleView: View {
             }
         }
     }
-    
-    
-    
     // MARK: - 封鎖特定作者的文章
     func blockAuthor(_ userId: String) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
@@ -449,11 +437,6 @@ struct ArticleView: View {
 #Preview{
     ArticleView()
 }
-
-
-
-
-
 //struct ImagePreviewView: View {
 //    let imageURL: String?
 //    @Binding var isPresented: Bool
@@ -491,6 +474,7 @@ struct ImagePreviewView: View {
     let imageURL: String?
     @Binding var isPresented: Bool
     @StateObject private var imageLoader = ImageLoader()
+    @GestureState private var dragOffset = CGSize.zero
     
     var body: some View {
         ZStack {
@@ -519,6 +503,21 @@ struct ImagePreviewView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .padding()
+                    .gesture(
+                        DragGesture()
+                            .updating($dragOffset) { value, state, _ in
+                                if value.translation.height > 0 {
+                                    state = value.translation
+                                }
+                            }
+                            .onEnded { value in
+                                if value.translation.height > 100 {
+                                    withAnimation {
+                                        isPresented = false
+                                    }
+                                }
+                            }
+                    )
             } else {
                 // 當 imageURL 為 nil 或無效時顯示錯誤訊息
                 VStack {
@@ -534,18 +533,33 @@ struct ImagePreviewView: View {
             }
             
             VStack {
-                Spacer()
-                Button(action: {
-                    isPresented = false
-                }) {
-                    Text("關閉")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.gray.opacity(0.7))
-                        .cornerRadius(10)
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        isPresented = false
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 15))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.gray.opacity(0.8))
+                            //.cornerRadius(10)
+                            .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                    }.padding()
                 }
-                .padding()
+                Spacer()
+//                Button(action: {
+//                    isPresented = false
+//                }) {
+//                    Text("關閉")
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .padding()
+//                        .background(Color.gray.opacity(0.7))
+//                        .cornerRadius(10)
+//                        .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+//                }
+//                .padding()
             }
         }
         .onAppear {
@@ -557,10 +571,6 @@ struct ImagePreviewView: View {
         }
     }
 }
-
-
-
-
 
 class ImageLoader: ObservableObject {
     @Published var image: UIImage? = nil
