@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D40776DF2CB07BB300713AE0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D40776DE2CB07BB300713AE0 /* Kingfisher */; };
+		D40777062CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D40777052CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf */; };
 		D41344142C92ED4D003400B9 /* ModeLinkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41344132C92ED4D003400B9 /* ModeLinkApp.swift */; };
 		D41344162C92ED4D003400B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41344152C92ED4D003400B9 /* ContentView.swift */; };
 		D41344182C92ED4E003400B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D41344172C92ED4E003400B9 /* Assets.xcassets */; };
@@ -52,6 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D40777052CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LexendDeca-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		D41344102C92ED4D003400B9 /* ModeLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModeLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41344132C92ED4D003400B9 /* ModeLinkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeLinkApp.swift; sourceTree = "<group>"; };
 		D41344152C92ED4D003400B9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D40776FE2CB2312E00713AE0 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				D40777052CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
 		D41344072C92ED4D003400B9 = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +139,7 @@
 		D41344122C92ED4D003400B9 /* ModeLink */ = {
 			isa = PBXGroup;
 			children = (
+				D40776FE2CB2312E00713AE0 /* Font */,
 				D458F0882CA50AF800216CB4 /* ModeLink.entitlements */,
 				D4A2BBA22C97BE47000B9745 /* Info.plist */,
 				D41344132C92ED4D003400B9 /* ModeLinkApp.swift */,
@@ -252,6 +263,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D40777062CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf in Resources */,
 				D413441B2C92ED4E003400B9 /* Preview Assets.xcassets in Resources */,
 				D41344182C92ED4E003400B9 /* Assets.xcassets in Resources */,
 				D4A2BBAA2C97EC84000B9745 /* GoogleService-Info.plist in Resources */,

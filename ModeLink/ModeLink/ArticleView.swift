@@ -233,7 +233,8 @@ struct ArticleView: View {
                 .toolbar {
                             ToolbarItem(placement: .principal) {
                                 Text("ModeLink")
-                                    .font(.title)
+                                    //.font(.title)
+                                    .font(.custom("LexendDeca-Medium", size: 30))
                                     .foregroundColor(.white.opacity(0.8))
                                     .bold()
                             }
