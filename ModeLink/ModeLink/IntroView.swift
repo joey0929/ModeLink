@@ -25,22 +25,57 @@ struct IntroView: View {
                 VStack {
                    // HStack {
                        // Spacer()
-                        Picker("", selection: $selectedSegment) {
-                            Text("模型工具").tag(0)
-                            Text("模型技巧").tag(1)
-                        }
-                        .pickerStyle(SegmentedPickerStyle()) // 使用 Segmented 樣式
-                        //.scaleEffect(1) // 放大整個 Picker 的比例
-                       // .frame(width: 330, height: 60) // 調整 Picker 的高度
-                        .frame(width: 320) // 設定 Picker 的寬度
-                        .padding()
-                        .background(Color(.clear)) // 設置背景顏色
-                        .cornerRadius(10) // 添加圓角
-                        //.shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5) // 添加陰影
-                        .padding([.horizontal], 15)
+//                        Picker("", selection: $selectedSegment) {
+//                            Text("模型工具").tag(0)
+//                            Text("模型技巧").tag(1)
+//                        }
+//                        .pickerStyle(SegmentedPickerStyle()) // 使用 Segmented 樣式
+//                        //.scaleEffect(1) // 放大整個 Picker 的比例
+//                       // .frame(width: 330, height: 60) // 調整 Picker 的高度
+//                        .frame(width: 320) // 設定 Picker 的寬度
+//                        .padding()
+//                        .background(Color(.clear)) // 設置背景顏色
+//                        .cornerRadius(10) // 添加圓角
+//                        //.shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5) // 添加陰影
+//                        .padding([.horizontal], 15)
                         //.padding(.top, 10)
                        // Spacer()
                    // }
+                    ZStack {
+                        // 背景效果，模擬 SegmentedPicker 背景
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color(.systemGray4)) // 整個背景設置為灰色
+                            .frame(width: 290,height: 40) // 設定背景高度
+                        HStack(spacing: 1) {
+                            Button(action: {
+                                selectedSegment = 0
+                            }) {
+                                Text("模型工具")
+                                    .font(.system(size: 18)).bold()
+                                    .padding(.vertical,8)
+                                    .padding(.horizontal,6)
+                                    .frame(width: 140) // 調整按鈕的寬度
+                                    .background(selectedSegment == 0 ? Color.white : Color(.systemGray5)) // 選中時背景為白色，否則為灰色
+                                    .foregroundColor(selectedSegment == 0 ? .theme: .gray) // 改變文字顏色
+                                    .cornerRadius(10) // 添加圓角
+                            }
+                            
+                            Button(action: {
+                                selectedSegment = 1
+                            }) {
+                                Text("模型技巧")
+                                    .font(.system(size: 18)).bold()
+                                    .padding(.vertical,8)
+                                    .padding(.horizontal,6)
+                                    .frame(width: 140) // 調整按鈕的寬度
+                                    .background(selectedSegment == 1 ? Color.white : Color(.systemGray5)) // 選中時背景為白色，否則為灰色
+                                    .foregroundColor(selectedSegment == 1 ? .theme : .gray) // 改變文字顏色
+                                    .cornerRadius(10) // 添加圓角
+                            }
+                        }
+                        .padding(.horizontal, 15) // 調整整個 HStack 的內部間距
+                    }
+                    
                     ScrollView(showsIndicators: false) {
                         if selectedSegment == 0 {
 
@@ -69,21 +104,21 @@ struct IntroView: View {
 
                 .onAppear {
                     // 設定 UISegmentedControl 的外觀
-                    let segmentedControlAppearance = UISegmentedControl.appearance()
-                    // 設定選中項的背景色
-                    segmentedControlAppearance.selectedSegmentTintColor = UIColor.white
-                    // 設定未選中項的背景色
-                    segmentedControlAppearance.backgroundColor = UIColor.clear
-                    UISegmentedControl.appearance().setTitleTextAttributes([
-                        .font: UIFont(name: "LexendDeca-SemiBold", size: 22),
-                        .foregroundColor: UIColor.theme // 未選中狀態的字體顏色
-                    ], for: .normal)
-                    
-                    // 設定選中狀態的文字屬性
-                    UISegmentedControl.appearance().setTitleTextAttributes([
-                        .font: UIFont(name: "LexendDeca-SemiBold", size: 22),
-                        .foregroundColor: UIColor.theme // 選中狀態的字體顏色
-                    ], for: .selected)
+//                    let segmentedControlAppearance = UISegmentedControl.appearance()
+//                    // 設定選中項的背景色
+//                    segmentedControlAppearance.selectedSegmentTintColor = UIColor.white
+//                    // 設定未選中項的背景色
+//                    segmentedControlAppearance.backgroundColor = UIColor.clear
+//                    UISegmentedControl.appearance().setTitleTextAttributes([
+//                        .font: UIFont(name: "LexendDeca-SemiBold", size: 22),
+//                        .foregroundColor: UIColor.theme // 未選中狀態的字體顏色
+//                    ], for: .normal)
+//                    
+//                    // 設定選中狀態的文字屬性
+//                    UISegmentedControl.appearance().setTitleTextAttributes([
+//                        .font: UIFont(name: "LexendDeca-SemiBold", size: 22),
+//                        .foregroundColor: UIColor.theme // 選中狀態的字體顏色
+//                    ], for: .selected)
 
                     fetchToolData() // 當視圖出現時抓取工具資料
                     fetchToolData2()
