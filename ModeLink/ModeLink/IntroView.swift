@@ -199,9 +199,10 @@ struct ToolCard: View {
                             HStack{
                                 Text(tool.name)
                                     .foregroundColor(.white)
-                                    .font(.headline)
+                                    .font(.custom("LexendDeca-Medium", size: 18))
+                                    //.font(.headline)
                                     .padding()
-                                    .background(Color.black.opacity(0.1))
+                                    .background(Color.black.opacity(0.25))
                                     .cornerRadius(8)
                                     .padding(.bottom, 10)
                                 Spacer()
