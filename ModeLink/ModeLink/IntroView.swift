@@ -26,15 +26,15 @@ struct IntroView: View {
                    // HStack {
                        // Spacer()
                         Picker("", selection: $selectedSegment) {
-                            Text("模型工具")
-                                .font(.system(size: 60)).tag(0)
-                            Text("模型技巧").font(.system(size: 60)).tag(1)
+                            Text("模型工具").tag(0)
+                            Text("模型技巧").tag(1)
                         }
                         .pickerStyle(SegmentedPickerStyle()) // 使用 Segmented 樣式
-                        .scaleEffect(1.1) // 放大整個 Picker 的比例
+                        //.scaleEffect(1) // 放大整個 Picker 的比例
                        // .frame(width: 330, height: 60) // 調整 Picker 的高度
+                        .frame(width: 320) // 設定 Picker 的寬度
                         .padding()
-                        .background(Color(.systemGray6)) // 設置背景顏色
+                        .background(Color(.clear)) // 設置背景顏色
                         .cornerRadius(10) // 添加圓角
                         //.shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5) // 添加陰影
                         .padding([.horizontal], 15)
@@ -45,8 +45,8 @@ struct IntroView: View {
                         if selectedSegment == 0 {
 
                             VStack {
-                                ToolCard(tools: tools).padding(.bottom,5)
-                                
+                                ToolCard(tools: tools)
+                                    .padding(.bottom, 5)
                                 ToolCard(tools: tools2)
                             }
                         } else {
@@ -64,13 +64,40 @@ struct IntroView: View {
                             .padding(.horizontal, 10) // 整個網格的外部間距
                         }
                     }
-                }.background(Color(.systemGray6))
+                }
+                .background(Color(.systemGray5))
+
                 .onAppear {
+                    // 設定 UISegmentedControl 的外觀
+                    let segmentedControlAppearance = UISegmentedControl.appearance()
+                    // 設定選中項的背景色
+                    segmentedControlAppearance.selectedSegmentTintColor = UIColor.white
+                    // 設定未選中項的背景色
+                    segmentedControlAppearance.backgroundColor = UIColor.clear
+                    UISegmentedControl.appearance().setTitleTextAttributes([
+                        .font: UIFont(name: "LexendDeca-SemiBold", size: 22),
+                        .foregroundColor: UIColor.theme // 未選中狀態的字體顏色
+                    ], for: .normal)
+                    
+                    // 設定選中狀態的文字屬性
+                    UISegmentedControl.appearance().setTitleTextAttributes([
+                        .font: UIFont(name: "LexendDeca-SemiBold", size: 22),
+                        .foregroundColor: UIColor.theme // 選中狀態的字體顏色
+                    ], for: .selected)
+
                     fetchToolData() // 當視圖出現時抓取工具資料
                     fetchToolData2()
                     fetchSkillData() // 當視圖出現時抓取技能資料
+                    
+//                    UITabBar.appearance().backgroundImage = UIImage() // 移除預設背景圖像
+//                    UITabBar.appearance().shadowImage = UIImage()     // 移除預設陰影
+//                    UITabBar.appearance().isTranslucent = false       // 禁用透明效果
+//                    UITabBar.appearance().backgroundColor = .white    // 設定背景顏色
+                    
                 }
             }
+//            .toolbarBackground(Color.white, for: .navigationBar)
+//            .toolbarBackground(.visible, for: .navigationBar)
         }
     // 抓取 Firestore 中的工具資料
     func fetchToolData() {
@@ -92,10 +119,11 @@ struct IntroView: View {
                         let recommend = data["recommend"] as? String,
                         let description = data["description"] as? String,
                         let position = data["position"] as? Int,
-                        let imageUrl = data["image_url"] as? String else {
+                        let imageUrl = data["image_url"] as? String ,
+                        let careful = data["careful"] as? String else {
                         return nil
                     }
-                    return Tool(id: doc.documentID, name: name, price: price, recommend: recommend, description: description, imageUrl: imageUrl, position: position)
+                    return Tool(id: doc.documentID, name: name, price: price, recommend: recommend, description: description, imageUrl: imageUrl, position: position, careful: careful)
                 }
             }
         }
@@ -119,10 +147,11 @@ struct IntroView: View {
                         let recommend = data["recommend"] as? String,
                         let description = data["description"] as? String,
                         let position = data["position"] as? Int,
-                        let imageUrl = data["image_url"] as? String else {
+                        let imageUrl = data["image_url"] as? String ,
+                        let careful = data["careful"] as? String else {
                         return nil
                     }
-                    return Tool(id: doc.documentID, name: name, price: price, recommend: recommend, description: description, imageUrl: imageUrl, position: position)
+                    return Tool(id: doc.documentID, name: name, price: price, recommend: recommend, description: description, imageUrl: imageUrl, position: position, careful: careful)
                 }
             }
         }
@@ -167,6 +196,7 @@ struct Tool: Identifiable {
     let description: String
     let imageUrl: String
     let position: Int
+    let careful: String
 }
 
 struct Skill: Identifiable {
@@ -231,7 +261,7 @@ struct SkillCard: View {
             KFImage(URL(string: skill.imageUrl))
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 350, height: 150)
+                .frame(width: 320, height: 150)
                 .cornerRadius(8)
                 .padding()
             
@@ -255,7 +285,7 @@ struct SkillCard: View {
                 }
             }
         }
-        .frame(width: 350, height: 150)
+        .frame(width: 320, height: 150)
         .background(Color(.systemGray6))
         .cornerRadius(10)
         .shadow(radius: 5)

@@ -16,7 +16,7 @@ let sampleTool = Tool(
             recommend: "Tamiya, GodHand",
             description: "用於剪斷各種材料的工具，適合於模型製作。",
             imageUrl: "https://via.placeholder.com/400", // 假的圖片 URL
-            position: 1
+            position: 1, careful: "小心對準零件後再下刀"
         )
 
 
@@ -249,6 +249,19 @@ struct IntroToolView: View {
                                 .foregroundColor(.white)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal)
+                                .padding(.bottom, 10)
+                            Text("注意事項：")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding(.horizontal)
+                                .padding(.bottom, 10)
+                            
+                            Text(tool.careful)
+                                .font(.body)
+                                .foregroundColor(.white)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal)
+
                         }
                         .padding(.top, 20)
                         

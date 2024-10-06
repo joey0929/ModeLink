@@ -28,6 +28,7 @@ struct TaBarView: View {
                 Label("map", systemImage : "map")
             }.tag(5)
         }
+        
         .accentColor(selectedTab == 2 ? .red : .blue) // 根據當前選中的頁面設置選中項目顏色
         .onAppear {
             customizeTabBarAppearance() // 自定義 TabBar 外觀
@@ -37,14 +38,14 @@ struct TaBarView: View {
     // 自定義 TabBar 外觀
     func customizeTabBarAppearance() {
         // 修改背景色
-        UITabBar.appearance().barTintColor = UIColor.white
-        
+//        UITabBar.appearance().barTintColor = UIColor.white
+        // 設定未選中項目的顏色
+        UITabBar.appearance().backgroundColor = UIColor.white
+       // UITabBar.appearance().unselectedItemTintColor = UIColor.gray
+        // 禁用透明效果
+        //UITabBar.appearance().isTranslucent = false
         // 修改未選中項目的顏色
-       // UITabBar.appearance().unselectedItemTintColor = selectedTab == 1 ? UIColor.blue : UIColor.gray
-        
-        // 移除 TabBar 上方的陰影線
-//        UITabBar.appearance().shadowImage = UIImage()
-//        UITabBar.appearance().backgroundImage = UIImage()
+
     }
     
 }

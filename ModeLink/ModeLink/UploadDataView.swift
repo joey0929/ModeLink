@@ -92,7 +92,8 @@ struct UploadDataView: View {
             "recommend": "田宮、MADWORKS",
             "description": "處理湯口",
             "image_url": imageURL.absoluteString, // 將 URL 轉換為字串並存入Firestore
-            "position": 3
+            "position": 3,
+            "careful" : ""
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
         db.collection("toolDatas2").addDocument(data: toolData) { error in
@@ -113,7 +114,8 @@ struct UploadDataView: View {
             "recommend": "郡氏",
             "description": "增加表面特徵",
             "image_url": "", // 將 URL 轉換為字串並存入Firestore
-            "position": 1
+            "position": 1,
+            "careful" : ""
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
         db.collection("toolDatas2").addDocument(data: toolData) { error in
