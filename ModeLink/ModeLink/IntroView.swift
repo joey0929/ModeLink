@@ -43,19 +43,7 @@ struct IntroView: View {
                    // }
                     ScrollView(showsIndicators: false) {
                         if selectedSegment == 0 {
-                            // 第一個 LazyVGrid
-//                            LazyVGrid(columns: columns, spacing: 20) { // 調整 spacing
-//                                Section(header: Text("").font(.title2)) {
-//                                    ForEach(tools) { tool in
-//                                        NavigationLink(destination: IntroToolView(tool: tool)) {
-//                                            ToolCard(tool: tool)
-//                                                .padding(.horizontal, 10) // 調整卡片的內部間距
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            .padding(.horizontal, 10) // 整個網格的外部間距
-                            //.padding(.vertical, 1)
+
                             VStack {
                                 ToolCard(tools: tools).padding(.bottom,5)
                                 
@@ -139,11 +127,6 @@ struct IntroView: View {
             }
         }
     }
-    
-    
-    
-    
-    
     func fetchSkillData() {
         let db = Firestore.firestore()
         db.collection("skillDatas")
@@ -195,32 +178,6 @@ struct Skill: Identifiable {
     let ytUrl: String
 }
 
-//struct ToolCard: View {
-//    let tool: Tool
-//    var body: some View {
-//        ZStack {
-//            // 使用 Kingfisher 來下載並顯示圖片
-//            KFImage(URL(string: tool.imageUrl))
-//                .resizable()
-//                .aspectRatio(contentMode: .fill)
-//                .frame(width: 150, height: 130)
-//                .cornerRadius(8)
-//                .padding()
-//            Rectangle()
-//                .fill(Color.black.opacity(0.4))
-//                .frame(height: 150)
-//                .cornerRadius(10)
-//            Text(tool.name)
-//                .foregroundColor(.white)
-//                .font(.headline)
-//                .foregroundColor(.primary) // 保持文字顏色一致
-//        }
-//        .frame(width: 165, height: 150)
-//        .background(Color(.systemGray6))
-//        .cornerRadius(10)
-//        .shadow(radius: 5)
-//    }
-//}
 struct ToolCard: View {
     let tools: [Tool] // 工具數據
 
@@ -236,7 +193,6 @@ struct ToolCard: View {
                             .frame(width: 320, height: 280)
                             .cornerRadius(12)
                             .clipped()
-                        
                         // 工具名稱
                         VStack {
                             Spacer()
@@ -266,8 +222,6 @@ struct ToolCard: View {
         .frame(height: 300) // 設置高度
     }
 }
-
-
 struct SkillCard: View {
     let skill: Skill
     var body: some View {
