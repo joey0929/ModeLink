@@ -160,14 +160,14 @@ struct ModelListView: View {
                             .foregroundColor(.white) // 自訂顏色
                             .bold()
                         Spacer()
-//                        Button(action: {
-//                            // 這裡是篩選按鈕的動作
-//                            print("Filter button tapped")
-//                        }) {
-//                            Image(systemName: "line.horizontal.3.decrease.circle")
-//                                .font(.title)
-//                                .foregroundColor(.blue)
-//                        }
+                        Button(action: {
+                            // 這裡是篩選按鈕的動作
+                            print("Filter button tapped")
+                        }) {
+                            Image(systemName: "line.horizontal.3.decrease.circle")
+                                .font(.title)
+                                .foregroundColor(.blue)
+                        }
                     }
                 }
             }

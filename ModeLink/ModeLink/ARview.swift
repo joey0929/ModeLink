@@ -23,6 +23,9 @@ struct ARview: View {
     @State private var showNameInputSheet = false  // 控制是否顯示名稱輸入的 sheet
     @State private var inputModelName = ""  // 儲存用戶輸入的模型名稱
     
+    @State private var selectedCategory = "模型"  // 新增種類屬性
+    let categories = ["模型", "公仔", "其他"]  // 三個選項
+    
     //增加選取上傳照片
     @State private var selectedImage: UIImage? = nil // 選取的圖片
     @State private var selectedItem: PhotosPickerItem? = nil // PhotosPicker 選取的項目
@@ -114,6 +117,17 @@ struct ARview: View {
                 TextField("輸入名稱", text: $inputModelName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
+                
+                // Picker 選擇種類
+                Picker("選擇種類", selection: $selectedCategory) {
+                    ForEach(categories, id: \.self) {
+                        Text($0)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+                
+                
                 
                 // 添加 HStack 包含照片選擇器和預覽圖片
                 HStack {
@@ -287,7 +301,7 @@ extension ARview {
                         
                         uploadImageToFirebase { imageURL in
                             // 使用用戶輸入的名稱來保存到 Firestore
-                            saveDownloadURLToFirestore(modelURL: downloadURL, imageURL: imageURL, name: inputModelName)
+                            saveDownloadURLToFirestore(modelURL: downloadURL, imageURL: imageURL, name: inputModelName, category: selectedCategory)
                             
                             // 在成功上傳後執行閉包
                             completion()
@@ -352,12 +366,13 @@ extension ARview {
     }
 
     // 將模型和圖片的下載 URL 儲存到 Firestore
-    func saveDownloadURLToFirestore(modelURL: URL, imageURL: URL?, name: String) {
+    func saveDownloadURLToFirestore(modelURL: URL, imageURL: URL?, name: String,category: String) {
         let db = Firestore.firestore()
         let modelData: [String: Any] = [
             "modelURL": modelURL.absoluteString,
             "imageURL": imageURL?.absoluteString ?? "", // 保存圖片 URL
             "name": name,
+            "category": category,  // 保存選擇的種類
             "timestamp": Timestamp(date: Date())
         ]
         db.collection("3DModels").addDocument(data: modelData) { error in
