@@ -40,8 +40,7 @@ struct UploadDataView: View {
             }
             Spacer()
             Button("Upload to tools2") {
-                //uploadLocationsToFirebase()
-                uploadDataToFirestore3()
+               // uploadDataToFirestore3()
             }
             Spacer()
         }
@@ -129,10 +128,11 @@ struct UploadDataView: View {
     func uploadDataToFirestore2() {
         let db = Firestore.firestore()
         let skillData: [String: Any] = [  // 上傳的資料
-            "name": "上保護漆",
-            "description": "在貼完水貼與上完墨線後，可以用噴灌為模型上一層保護漆，可以有效防止水貼或漆料經時間久了而脫落與可以有效消除塑膠的，呈現出的模型會更為自然",
-            "image_url": "",
-            "position": 5
+            "name": "打磨",
+            "description": "對剪下來的零件的湯口進行打磨處理，通常會從低號數往高號數磨。",
+            "image_url": "https://firebasestorage.googleapis.com/v0/b/modelink-298ca.appspot.com/o/infoImages%2Fsk2.jpg?alt=media&token=4096ff73-1ffc-4214-ba73-cbf96f4796b7",
+            "position": 2,
+            "yt_url" : ""
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
         db.collection("skillDatas").addDocument(data: skillData) { error in

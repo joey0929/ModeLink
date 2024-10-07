@@ -47,7 +47,7 @@ struct TaBarView: View {
         // 修改背景色
 //        UITabBar.appearance().barTintColor = UIColor.white
         // 設定未選中項目的顏色
-        UITabBar.appearance().backgroundColor = UIColor.gray
+        UITabBar.appearance().backgroundColor = UIColor.white
        // UITabBar.appearance().unselectedItemTintColor = UIColor.gray
         // 禁用透明效果
         //UITabBar.appearance().isTranslucent = false
@@ -63,7 +63,6 @@ struct TaBarView: View {
         } else {
             // 否則設為白色
             UITabBar.appearance().backgroundColor = UIColor.white
-            
             //UITabBar.appearance().isTranslucent = false
         }
     }

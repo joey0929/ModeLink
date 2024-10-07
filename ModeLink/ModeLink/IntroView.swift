@@ -43,10 +43,10 @@ struct IntroView: View {
                    // }
                     ZStack {
                         // 背景效果，模擬 SegmentedPicker 背景
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(.systemGray4)) // 整個背景設置為灰色
-                            .frame(width: 290,height: 40) // 設定背景高度
-                        HStack(spacing: 1) {
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .fill(Color(.systemGray4)) // 整個背景設置為灰色
+//                            .frame(width: 290,height: 40) // 設定背景高度
+                        HStack(spacing: 30) {
                             Button(action: {
                                 selectedSegment = 0
                             }) {
