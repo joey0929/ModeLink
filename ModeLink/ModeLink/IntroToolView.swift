@@ -242,19 +242,19 @@ struct IntroToolView: View {
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding(.horizontal)
-                                .padding(.bottom, 15)
+                                .padding(.bottom, 5)
                             
                             Text(tool.description)
                                 .font(.body)
                                 .foregroundColor(.white)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal)
-                                .padding(.bottom, 10)
+                                .padding(.bottom, 15)
                             Text("注意事項：")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding(.horizontal)
-                                .padding(.bottom, 10)
+                                .padding(.bottom, 5)
                             
                             Text(tool.careful)
                                 .font(.body)
@@ -263,7 +263,7 @@ struct IntroToolView: View {
                                 .padding(.horizontal)
 
                         }
-                        .padding(.top, 20)
+                        .padding(.top, 10)
                         
                         Spacer() // 添加一個 Spacer 來填充空間
                     }
