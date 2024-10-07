@@ -69,9 +69,25 @@ import SwiftUI
 import Firebase
 import Kingfisher
 
+
+
+
+
 struct ModelListView: View {
     @State private var models = [Model]()
-    let columns = [GridItem(.flexible())] // 設置兩列的網格布局
+//    @State private var models = [
+//           Model(name: "模型一", url: URL(string: "https://example.com/model1.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//           Model(name: "模型二", url: URL(string: "https://example.com/model2.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//           Model(name: "模型三", url: URL(string: "https://example.com/model3.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//           Model(name: "模型四", url: URL(string: "https://example.com/model4.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//           Model(name: "模型五", url: URL(string: "https://example.com/model5.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//           Model(name: "模型六", url: URL(string: "https://example.com/model6.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//           Model(name: "模型七", url: URL(string: "https://example.com/model7.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//           Model(name: "模型八", url: URL(string: "https://example.com/model8.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150"))
+//       ]
+    
+     
+    let columns = [GridItem(.flexible())] //
 
     var body: some View {
         NavigationView {
@@ -97,16 +113,27 @@ struct ModelListView: View {
 
                                 // 添加一個半透明背景層以確保文字清晰
                                 Rectangle()
-                                    .fill(Color.black.opacity(0.4))
+                                    .fill(Color.black.opacity(0.2))
                                     .cornerRadius(10)
-
+                                VStack {
+                                    Spacer()
+                                    HStack {
+                                        Spacer()
+                                        Text(model.name)
+                                            .font(.custom("LexendDeca-ExtraBold", size: 20))
+                                            .foregroundColor(.white) // 設置文字顏色為白色
+                                            .padding()
+                                            .lineLimit(1)
+                                           // .frame(maxWidth: .infinity) // 確保名稱佔滿整個卡片寬度
+                                    }
+                                }
                                 // 顯示模型名稱
-                                Text(model.name)
-                                    .font(.headline)
-                                    .foregroundColor(.white) // 設置文字顏色為白色
-                                    .padding()
-                                    .lineLimit(1)
-                                    .frame(maxWidth: .infinity) // 確保名稱佔滿整個卡片寬度
+//                                Text(model.name)
+//                                    .font(.headline)
+//                                    .foregroundColor(.white) // 設置文字顏色為白色
+//                                    .padding()
+//                                    .lineLimit(1)
+//                                    .frame(maxWidth: .infinity) // 確保名稱佔滿整個卡片寬度
                             }
                             .frame(height: 150) // 設置卡片高度
                             .cornerRadius(10)
@@ -117,7 +144,35 @@ struct ModelListView: View {
                 }
                 .padding()
             }
-            .navigationTitle("模型庫")
+            .background(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
+                    startPoint: .top, // 漸層起點
+                    endPoint: .bottom // 漸層終點
+                )
+            )
+//            .navigationTitle("模型庫")
+            .toolbar {
+                ToolbarItem(placement: .principal) { // 自訂標題
+                    HStack {
+                        Text("模型庫")
+                            .font(.custom("LexendDeca-SemiBold", size: 30)) // 自訂字體
+                            .foregroundColor(.white) // 自訂顏色
+                            .bold()
+                        Spacer()
+//                        Button(action: {
+//                            // 這裡是篩選按鈕的動作
+//                            print("Filter button tapped")
+//                        }) {
+//                            Image(systemName: "line.horizontal.3.decrease.circle")
+//                                .font(.title)
+//                                .foregroundColor(.blue)
+//                        }
+                    }
+                }
+            }
+            .toolbarBackground(Color(.theme), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .onAppear {
                 fetchModelsFromFirestore() // 加載數據
             }
@@ -151,4 +206,24 @@ struct Model: Identifiable {
     let name: String
     let url: URL
     let imageURL: URL? // 圖片 URL
+}
+
+//#Preview {
+//    let models2 = [
+//    Model(name: "模型一", url: URL(string: "https://example.com/model1.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//    Model(name: "模型二", url: URL(string: "https://example.com/model2.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//    Model(name: "模型三", url: URL(string: "https://example.com/model3.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//    Model(name: "模型四", url: URL(string: "https://example.com/model4.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//    Model(name: "模型五", url: URL(string: "https://example.com/model5.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//    Model(name: "模型六", url: URL(string: "https://example.com/model6.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//    Model(name: "模型七", url: URL(string: "https://example.com/model7.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
+//    Model(name: "模型八", url: URL(string: "https://example.com/model8.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150"))
+//]
+//    ModelListView(models: models2)
+//}
+
+struct ModelListView_Previews: PreviewProvider {
+    static var previews: some View {
+        ModelListView()
+    }
 }

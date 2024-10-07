@@ -23,7 +23,7 @@ struct ARview: View {
     @State private var showNameInputSheet = false  // 控制是否顯示名稱輸入的 sheet
     @State private var inputModelName = ""  // 儲存用戶輸入的模型名稱
     
-    //testing
+    //增加選取上傳照片
     @State private var selectedImage: UIImage? = nil // 選取的圖片
     @State private var selectedItem: PhotosPickerItem? = nil // PhotosPicker 選取的項目
     

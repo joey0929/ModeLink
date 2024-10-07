@@ -101,15 +101,15 @@ struct IntroSkillView: View {
 //    }
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 0) {
                 // 根據 showYouTubePlayer 來決定是否顯示 YouTube 播放器
                 if showYouTubePlayer {
                     YouTubePlayerView(player)
                         .frame(height: 400)
-                        .padding(.horizontal, 8)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .padding(.horizontal, 0)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
                         .shadow(radius: 10) // 添加陰影
-                        .padding(.top, 16)
+                        .padding(.top, 0)
                 } else {
                     Image(systemName: "photo")
                         .resizable()
