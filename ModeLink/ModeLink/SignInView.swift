@@ -127,7 +127,8 @@ struct SignInView: View {
                     "displayName": displayName,
                     "email": email,
                     "createdAt": Timestamp(date: Date()),
-                    "blockedUsers": [] // 初始化空的封鎖列表
+                    "blockedUsers": [], // 初始化空的封鎖列表
+                    "isDelete" : false
                 ]
                 
                 userRef.setData(userData) { error in
