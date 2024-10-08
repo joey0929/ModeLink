@@ -40,7 +40,7 @@ struct UploadDataView: View {
             }
             Spacer()
             Button("Upload to tools2") {
-               // uploadDataToFirestore3()
+                //uploadDataToFirestore3()
             }
             Spacer()
         }
@@ -108,16 +108,16 @@ struct UploadDataView: View {
         let db = Firestore.firestore()
         // 上傳的資料
         let toolData: [String: Any] = [
-            "name": "保護漆",
-            "price": "120~300",
-            "recommend": "郡氏",
-            "description": "增加表面特徵",
+            "name": "斜口剪",
+            "price": "300 ~ 1500",
+            "recommend": "# 神之手、# MADWORKS、# 田宮",
+            "description": "專門用於將模型零件從零件框架上取下，與修剪湯口等等.",
             "image_url": "", // 將 URL 轉換為字串並存入Firestore
             "position": 1,
             "careful" : ""
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
-        db.collection("toolDatas2").addDocument(data: toolData) { error in
+        db.collection("toolDatas").addDocument(data: toolData) { error in
             if let error = error {
                 print("上傳資料時發生錯誤：\(error.localizedDescription)")
             } else {

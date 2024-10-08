@@ -100,7 +100,7 @@ struct IntroSkillView: View {
 //        }
 //    }
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        //ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 0) {
                 // 根據 showYouTubePlayer 來決定是否顯示 YouTube 播放器
                 if showYouTubePlayer {
@@ -155,28 +155,19 @@ struct IntroSkillView: View {
                             .padding(.bottom, 15)
                             
                         Text("技巧說明：")
-//                            .font(.title2)
-//                            .foregroundColor(Color(.systemGray))
-//                            .bold()
-//                            .padding(.horizontal)
-                            //.font(.headline).bold()
-                            .font(.custom("LexendDeca-Medium", size: 20))
+                            .font(.custom("LexendDeca-Medium", size: 18))
                             .foregroundColor(.white)
                             .padding(.horizontal)
                             .padding(.bottom, 0)
-                        
-                        
-                        Text(skill.description)
-//                            .foregroundColor(Color(.systemGray))
-//                            .padding(.horizontal)
-//                            .padding(.bottom, 16)
-//                            .font(.body)
-                            .font(.custom("LexendDeca-Medium", size: 18))
-                            .lineLimit(nil)
-                            .foregroundColor(.white)
-                            .padding(.horizontal)
-                            .padding(.bottom, 10)
-                            .lineSpacing(10)
+                        ScrollView {
+                            Text(skill.description)
+                                .font(.custom("LexendDeca-Medium", size: 16))
+                                .lineLimit(nil)
+                                .foregroundColor(.white)
+                                .padding(.horizontal)
+                                .padding(.bottom, 10)
+                                .lineSpacing(10)
+                        }
                         Spacer()
                     }
                 }.frame(height: 250)
@@ -195,13 +186,14 @@ struct IntroSkillView: View {
                 Color.theme
             )
             .frame(minHeight: UIScreen.main.bounds.height - 150)
-            .padding(.top, 16) // 給 ScrollView 添加頂部間距
-        }
-        .padding(.top, 70)
+            //.padding(.top, 16) // 給 ScrollView 添加頂部間距
+            .padding(.top, 95) 
+        //}
+        //.padding(.top, 70)
         
         .edgesIgnoringSafeArea(.top)
         //.safeAreaInset(edge: .top) { Color.clear.frame(height: 80) }
-        .toolbarBackground(Color(.white).opacity(0.1), for: .navigationBar)
+        .toolbarBackground(Color(.theme).opacity(0.5), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {

@@ -199,78 +199,126 @@ struct IntroToolView: View {
                             .foregroundColor(.white)
                             .bold()
                             .padding(.horizontal)
-                            .padding(.top, 15)
-                            .padding(.bottom,0)
+                            .padding(.top, 40)
+                            .padding(.leading,15)
+                            .padding(.bottom,-28)
                         // 增加頂部間距
                         
                         // 價位和推薦品牌部分 - 模仿白色小框樣式
-                        HStack(spacing: 40) {
-                            VStack {
-                                Text("價位")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                Divider().padding(.horizontal, 20)
-                                Text("$\(tool.price)")
-                                    .font(.system(size: 15))
-                                    .bold()
+//                        HStack(spacing: 40) {
+//                            VStack {
+//                                Text("價位")
+//                                    .font(.headline)
+//                                    .foregroundColor(.gray)
+//                                Divider().padding(.horizontal, 20)
+//                                Text("$\(tool.price)")
+//                                    .font(.system(size: 15))
+//                                    .bold()
+//                            }
+//                            .frame(width: 150, height: 100)
+//                            .background(Color.white)
+//                            .cornerRadius(15)
+//                            .shadow(radius: 5)
+//                            
+//                            VStack {
+//                                Text("推薦品牌")
+//                                    .font(.headline)
+//                                    .foregroundColor(.gray)
+//                                Divider().padding(.horizontal, 20)
+//                                Text(tool.recommend)
+//                                    .font(.system(size: 15))
+//                                    .multilineTextAlignment(.center)
+//                                    .bold()
+//                            }
+//                            .frame(width: 150, height: 100)
+//                            .background(Color.white)
+//                            .cornerRadius(15)
+//                            .shadow(radius: 5)
+//                        }
+//                        .padding(.horizontal)
+                        VStack {
+                            HStack {
+                                VStack {
+//                                    Text("價位:")
+//                                        .font(.headline)
+//                                        .foregroundColor(.white)
+//                                        .padding(.leading,-50)
+//                                        .padding(.bottom, 5)
+                                    Text("$\(tool.price)")
+                                        //.font(.system(size: 15))
+                                        .font(.custom("LexendDeca-Medium", size: 16))
+                                        .foregroundColor(Color(.systemGray3))
+                                        .bold()
+                                        .padding(.leading,15)
+                                }
+                                Spacer()
                             }
-                            .frame(width: 150, height: 100)
-                            .background(Color.white)
-                            .cornerRadius(15)
+                            .frame(width: 380, height: 50)
+                            //.background(Color.white)
+                            //.cornerRadius(15)
                             .shadow(radius: 5)
-                            
-                            VStack {
-                                Text("推薦品牌")
-                                    .font(.headline)
-                                    .foregroundColor(.gray)
-                                Divider().padding(.horizontal, 20)
-                                Text(tool.recommend)
-                                    .font(.system(size: 15))
-                                    .multilineTextAlignment(.center)
-                                    .bold()
+                            //.padding(.horizontal)
+                            HStack {
+                                VStack {
+//                                    Text("推薦品牌:")
+//                                        //.font(.headline)
+//                                        .font(.custom("LexendDeca-Medium", size: 18))
+//                                        .foregroundColor(.white)
+//                                        .padding(.leading,-122)
+//                                        .padding(.bottom, 5)
+                                    Text(tool.recommend)
+                                        .font(.custom("LexendDeca-Medium", size: 16))
+//                                        .font(.system(size: 15))
+                                        
+                                        .foregroundColor(Color(red: 1.0, green: 0.8745098039215686, blue: 0.43137254901960786))
+                                        .bold().padding(.leading,15)
+                                }
+                                Spacer()
                             }
-                            .frame(width: 150, height: 100)
-                            .background(Color.white)
-                            .cornerRadius(15)
+                            .frame(width: 380, height: 50)
+                            //.background(Color.white)
+//                            .cornerRadius(15)
                             .shadow(radius: 5)
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
                         
                         // 用途部分
                         VStack(alignment: .leading, spacing: 8) {
                             Text("用途：")
 //                                .font(.headline)
-                                .font(.custom("LexendDeca-Medium", size: 20))
+                                .font(.custom("LexendDeca-Medium", size: 18))
                                 .foregroundColor(.white)
-                                .padding(.horizontal)
+                               // .padding(.horizontal,30)
                                 .padding(.bottom, 5)
+                                .padding(.top, 10)
                             
                             Text(tool.description)
                                 //.font(.body)
-                                .font(.custom("LexendDeca-Medium", size: 18))
+                                .font(.custom("LexendDeca-Medium", size: 16))
                                 .foregroundColor(.white)
                                 //.foregroundColor(.secondary)
-                                .padding(.horizontal)
-                                .padding(.bottom, 15)
+                                //.padding(.horizontal,30)
+                                .padding(.bottom, 20)
                                 .lineSpacing(10)
                             
                             Text("注意事項：")
 //                                .font(.headline)
-                                .font(.custom("LexendDeca-Medium", size: 20))
+                                .font(.custom("LexendDeca-Medium", size: 18))
                                 .foregroundColor(.white)
-                                .padding(.horizontal)
+                                //.padding(.horizontal,30)
                                 .padding(.bottom, 5)
                             ScrollView {
                                 Text(tool.careful)
                                 //.font(.body)
-                                    .font(.custom("LexendDeca-Medium", size: 18))
+                                    .font(.custom("LexendDeca-Medium", size: 16))
                                     .foregroundColor(.white)
                                 // .foregroundColor(.secondary)
-                                    .padding(.horizontal)
+                                    //.padding(.horizontal,30)
                                     .lineSpacing(10)
                             }
                         }
                         .padding(.top, 10)
+                        .padding(.horizontal,30)
                         
                         Spacer() // 添加一個 Spacer 來填充空間
                     }
@@ -284,12 +332,12 @@ struct IntroToolView: View {
 //                            endPoint: .bottom // 漸層終點
 //                        )
 //                    )
-                    .cornerRadius(30) // 只設置上方圓角
+                    .cornerRadius(50) // 只設置上方圓角
                     .padding(.top, -30) // 使卡片稍微往上與圖片疊加
                     
                     
                     
-                }
+                }.padding(.horizontal)
 //            }
 //            .background(Color(UIColor.darkGray).opacity(0.9)) // 設置背景顏色
 //            .ignoresSafeArea()

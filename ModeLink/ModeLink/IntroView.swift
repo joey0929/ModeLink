@@ -51,7 +51,8 @@ struct IntroView: View {
                                 selectedSegment = 0
                             }) {
                                 Text("模型工具")
-                                    .font(.system(size: 18)).bold()
+                                    //.font(.system(size: 18)).bold()
+                                    .font(.custom("LexendDeca-ExtraBold", size: 18)).bold()
                                     .padding(.vertical,8)
                                     .padding(.horizontal,6)
                                     .frame(width: 140) // 調整按鈕的寬度
@@ -64,7 +65,8 @@ struct IntroView: View {
                                 selectedSegment = 1
                             }) {
                                 Text("模型技巧")
-                                    .font(.system(size: 18)).bold()
+                                    //.font(.system(size: 18)).bold()
+                                    .font(.custom("LexendDeca-ExtraBold", size: 18)).bold()
                                     .padding(.vertical,8)
                                     .padding(.horizontal,6)
                                     .frame(width: 140) // 調整按鈕的寬度
