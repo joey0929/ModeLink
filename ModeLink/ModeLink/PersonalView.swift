@@ -45,7 +45,7 @@ struct PersonalView: View {
                         .font(.title2)
                         .bold()
                         .padding(.bottom, 10)
-                }.padding(.top, 120)
+                }.padding(.top, 170)
                 //            .background(
                 //                RoundedRectangle(cornerRadius: 16)
                 //                    .fill(Color.white)
@@ -82,8 +82,10 @@ struct PersonalView: View {
                             }
                         }
                     }
+                    .listStyle(PlainListStyle()) // 使用 PlainListStyle 使列表背景更容易設置
+                    .background(Color.white.opacity(0.5)) // 設定列表的背景顏色
                     .frame(height: 200) // 限制列表高度
-                    .cornerRadius(30)
+                    .cornerRadius(15)
                     .padding(.horizontal)
                 }
                 
@@ -92,13 +94,17 @@ struct PersonalView: View {
                     Button(action: {
                         logout()
                     }) {
-                        Text("登出")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
+                        HStack{
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                            Text("登出")
+                            
+                        }.font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.red)
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
+                       
                     }
                     
                     Button(action: {
@@ -140,7 +146,8 @@ struct PersonalView: View {
             // 自訂標題
             ToolbarItem(placement: .principal) {
                 Text("個人設定")
-                    .font(.headline)
+//                    .font(.headline)
+                    .font(.custom("LexendDeca-Medium", size: 20))
                     .bold()
                     .foregroundStyle(Color(.black))
             }

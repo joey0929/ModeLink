@@ -110,7 +110,7 @@ struct IntroSkillView: View {
                         .padding(.horizontal, 0)
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                         .shadow(radius: 10) // 添加陰影
-                        .padding(.top, 15)
+                        .padding(.top, 25)
                 } else {
                     //                    Image(systemName: "photo")
                     //                        .resizable()
@@ -133,7 +133,7 @@ struct IntroSkillView: View {
                             }
                         )
                         .padding([.horizontal],15)
-                        .padding(.top, 15)
+                        .padding(.top, 25)
                 }
                 
                 // 白色圓角背景

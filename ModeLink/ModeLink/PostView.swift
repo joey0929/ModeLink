@@ -302,12 +302,13 @@ struct PostView: View {
             // 如果沒有圖片，僅上傳文章數據
             let postData: [String: Any] = [
                 "user_id": userId,
-                "name": userName,
+                "user_name": userName,
                 "title": title,
                 "content": content,
                 "County": county,
                 "timestamp": Timestamp(date: Date()),
-                "likes": 0
+                "likes": 0,
+                "likedBy": []
             ]
             db.collection("articles").addDocument(data: postData) { error in
                 if let error = error {
