@@ -14,21 +14,21 @@ struct MapView: View {
     @StateObject private var viewModel = MapViewModel()
     var body: some View {
         ZStack(alignment: .bottom) {
-            Map(coordinateRegion: $viewModel.region,showsUserLocation: true,annotationItems: viewModel.locations) { location in
+            Map(coordinateRegion: $viewModel.region,showsUserLocation: true, annotationItems: viewModel.locations) { location in
                // MapMarker(coordinate: location.coordinate, tint: .blue)
                 MapAnnotation(coordinate: location.coordinate) {
                     VStack {
                         // 使用自定義圖示，這裡可以是任何 SwiftUI 視圖
-                        Image(systemName: "mappin")
+                        Image(systemName: "mappin.and.ellipse")
                             .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.blue)
+                            .frame(width: 30, height: 50)
+                            .foregroundColor(.red)
                         // 也可以顯示文字或其他視覺元素
                         Text(location.id)
                             .font(.caption)
                             .foregroundColor(.black)
                             .padding(5)
-                            .background(Color.white)
+                            .background(Color.white.opacity(0.3))
                             .cornerRadius(8)
                     }
                 }
