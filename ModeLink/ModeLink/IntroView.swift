@@ -289,9 +289,10 @@ struct ToolCard: View {
                                     .foregroundColor(.white)
                                     .font(.custom("LexendDeca-Medium", size: 18))
                                     //.font(.headline)
-                                    .padding()
+                                    .padding(10)
                                     .background(Color.black.opacity(0.25))
                                     .cornerRadius(8)
+                                    .padding(.leading, 5)
                                     .padding(.bottom, 10)
                                 Spacer()
                             }
@@ -336,10 +337,11 @@ struct SkillCard: View {
                     Spacer()
                     Text(skill.name)
                         .foregroundColor(.white)
+                        .font(.custom("LexendDeca-Medium", size: 18))
                         .padding()
                         .padding(.trailing, 10)
                         .font(.headline)
-                        .foregroundColor(.primary) //變成預設的顏色
+                        //.foregroundColor(.primary) //變成預設的顏色
                 }
             }
         }

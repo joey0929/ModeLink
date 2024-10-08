@@ -166,7 +166,7 @@ struct IntroToolView: View {
 
     var body: some View {
         ZStack {
-            ScrollView(showsIndicators: false) {
+//            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     // 頂部圖片
                     ZStack(alignment: .topLeading) {
@@ -199,8 +199,8 @@ struct IntroToolView: View {
                             .foregroundColor(.white)
                             .bold()
                             .padding(.horizontal)
-                            .padding(.top, 35)
-                            .padding(.bottom,20)
+                            .padding(.top, 15)
+                            .padding(.bottom,0)
                         // 增加頂部間距
                         
                         // 價位和推薦品牌部分 - 模仿白色小框樣式
@@ -239,29 +239,36 @@ struct IntroToolView: View {
                         // 用途部分
                         VStack(alignment: .leading, spacing: 8) {
                             Text("用途：")
-                                .font(.headline)
+//                                .font(.headline)
+                                .font(.custom("LexendDeca-Medium", size: 20))
                                 .foregroundColor(.white)
                                 .padding(.horizontal)
                                 .padding(.bottom, 5)
                             
                             Text(tool.description)
-                                .font(.body)
+                                //.font(.body)
+                                .font(.custom("LexendDeca-Medium", size: 18))
                                 .foregroundColor(.white)
-                                .foregroundColor(.secondary)
+                                //.foregroundColor(.secondary)
                                 .padding(.horizontal)
                                 .padding(.bottom, 15)
+                                .lineSpacing(10)
+                            
                             Text("注意事項：")
-                                .font(.headline)
+//                                .font(.headline)
+                                .font(.custom("LexendDeca-Medium", size: 20))
                                 .foregroundColor(.white)
                                 .padding(.horizontal)
                                 .padding(.bottom, 5)
-                            
-                            Text(tool.careful)
-                                .font(.body)
-                                .foregroundColor(.white)
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal)
-
+                            ScrollView {
+                                Text(tool.careful)
+                                //.font(.body)
+                                    .font(.custom("LexendDeca-Medium", size: 18))
+                                    .foregroundColor(.white)
+                                // .foregroundColor(.secondary)
+                                    .padding(.horizontal)
+                                    .lineSpacing(10)
+                            }
                         }
                         .padding(.top, 10)
                         
@@ -270,13 +277,30 @@ struct IntroToolView: View {
                     .frame(maxWidth: .infinity) // 讓內容寬度自適應螢幕
                     .frame(height: 550)
                     .background(Color.theme) // 設置藍色背景
-                    .cornerRadius(20) // 只設置上方圓角
+//                    .background(
+//                        LinearGradient(
+//                            gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
+//                            startPoint: .top, // 漸層起點
+//                            endPoint: .bottom // 漸層終點
+//                        )
+//                    )
+                    .cornerRadius(30) // 只設置上方圓角
                     .padding(.top, -30) // 使卡片稍微往上與圖片疊加
                     
+                    
+                    
                 }
+//            }
+//            .background(Color(UIColor.darkGray).opacity(0.9)) // 設置背景顏色
+//            .ignoresSafeArea()
+            ZStack{
+                VStack{
+                    Spacer()
+                    //Rectangle().background(.clear).frame(height: 100)
+                }
+                Color.white.frame(height: 100).padding(.top,800)
             }
-            .background(Color(UIColor.darkGray).opacity(0.9)) // 設置背景顏色
-            .ignoresSafeArea()
+            
         }
         .navigationBarHidden(true) // 隱藏默認導航欄
     }

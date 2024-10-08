@@ -144,7 +144,7 @@ struct IntroSkillView: View {
 
                     VStack(alignment: .leading, spacing: 10) {
                         Text(skill.name)
-                            .font(.custom("LexendDeca-Medium", size: 25))
+                            .font(.custom("LexendDeca-Medium", size: 22))
                             .foregroundColor(Color(.white))
                             .bold()
                             .padding(.horizontal)
@@ -176,6 +176,7 @@ struct IntroSkillView: View {
                             .foregroundColor(.white)
                             .padding(.horizontal)
                             .padding(.bottom, 10)
+                            .lineSpacing(10)
                         Spacer()
                     }
                 }.frame(height: 250)
@@ -200,7 +201,7 @@ struct IntroSkillView: View {
         
         .edgesIgnoringSafeArea(.top)
         //.safeAreaInset(edge: .top) { Color.clear.frame(height: 80) }
-        .toolbarBackground(Color(.systemGray5), for: .navigationBar)
+        .toolbarBackground(Color(.white).opacity(0.1), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {

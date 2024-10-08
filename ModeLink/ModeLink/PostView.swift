@@ -39,31 +39,70 @@ struct PostView: View {
             ScrollView(showsIndicators: false) {
                 
                 VStack {
-                    if let selectedImage = selectedImage {  // 顯示選擇的圖片
-                        Image(uiImage: selectedImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 300)
-                            .clipped()
-                            .padding([.horizontal],15)
-                            .padding(.top, 15)
-                    } else {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .frame(height: 300)
-                            .overlay(
-                                VStack {
-                                    Image(systemName: "photo")
-                                        .font(.system(size: 50))
-                                        .foregroundColor(.gray)
-                                    Text("尚未選擇圖片")
-                                        .foregroundColor(.gray)
+//                    if let selectedImage = selectedImage {  // 顯示選擇的圖片
+//                        Image(uiImage: selectedImage)
+//                            .resizable()
+//                            .scaledToFill()
+//                            .frame(height: 300)
+//                            .clipped()
+//                            .padding([.horizontal],15)
+//                            .padding(.top, 15)
+//                    } else {
+//                        Rectangle()
+//                            .fill(Color.gray.opacity(0.2))
+//                            .frame(height: 300)
+//                            .overlay(
+//                                VStack {
+//                                    Image(systemName: "photo")
+//                                        .font(.system(size: 50))
+//                                        .foregroundColor(.gray)
+//                                    Text("尚未選擇圖片")
+//                                        .foregroundColor(.gray)
+//                                }
+//                            )
+//                            .padding([.horizontal],15)
+//                            .padding(.top, 15)
+//                        
+//                    }
+                    // 用於顯示選擇的圖片或按鈕
+                    PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
+                        if let selectedImage = selectedImage {
+                            Image(uiImage: selectedImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 300)
+                                .clipped()
+                                .padding([.horizontal], 15)
+                                .padding(.top, 15)
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .frame(height: 300)
+                                .overlay(
+                                    VStack {
+                                        Image(systemName: "photo")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(.gray)
+                                        Text("點擊選擇圖片")
+                                            .foregroundColor(.gray)
+                                    }
+                                )
+                                .padding([.horizontal], 15)
+                                .padding(.top, 15)
+                        }
+                    }.onChange(of: selectedItem) { newItem in
+                        if let newItem = newItem {
+                            Task {
+                                // 當選擇項變更時，將圖片加載為 UIImage
+                                if let data = try? await newItem.loadTransferable(type: Data.self),
+                                   // 圖片加載為 Data 格式 再轉乘 UIImage
+                                   let uiImage = UIImage(data: data) {
+                                    selectedImage = uiImage
                                 }
-                            )
-                            .padding([.horizontal],15)
-                            .padding(.top, 15)
-                        
+                            }
+                        }
                     }
+                    
                     
                     TextField("標題", text: $title)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -91,26 +130,27 @@ struct PostView: View {
                     
                     // 使用 PhotosPicker 來選擇圖片
                     HStack {
-                        PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
-                            Image(systemName: "photo")
-                                .font(.system(size: 20))
-                                .foregroundColor(.white)
-                                .padding([.horizontal,.vertical],10)
-                                .background(.blue)
-                                .cornerRadius(10)
-                        }
-                        .onChange(of: selectedItem) { newItem in
-                            if let newItem = newItem {
-                                Task {
-                                    // 當選擇項變更時，將圖片加載為 UIImage
-                                    if let data = try? await newItem.loadTransferable(type: Data.self),
-                                       // 圖片加載為 Data 格式 再轉乘 UIImage
-                                       let uiImage = UIImage(data: data) {
-                                        selectedImage = uiImage
-                                    }
-                                }
-                            }
-                        }
+//                        PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
+//                            Image(systemName: "photo")
+//                                .font(.system(size: 20))
+//                                .foregroundColor(.white)
+//                                .padding([.horizontal,.vertical],10)
+//                                .background(.blue)
+//                                .cornerRadius(10)
+//                        }
+//                        .onChange(of: selectedItem) { newItem in
+//                            if let newItem = newItem {
+//                                Task {
+//                                    // 當選擇項變更時，將圖片加載為 UIImage
+//                                    if let data = try? await newItem.loadTransferable(type: Data.self),
+//                                       // 圖片加載為 Data 格式 再轉乘 UIImage
+//                                       let uiImage = UIImage(data: data) {
+//                                        selectedImage = uiImage
+//                                    }
+//                                }
+//                            }
+//                        }
+                        Spacer()
                         Button(action: {
                             uploadPost(title: title, content: content, county: county, image: selectedImage)
                             presentationMode.wrappedValue.dismiss()
@@ -123,30 +163,24 @@ struct PostView: View {
                                 .cornerRadius(10)
                         }
                         .disabled(!canSubmit)
-                        Spacer()
+                        .padding(.trailing,14)
+                        //Spacer()
                         // 重置按鈕
-                        Button(action: {
-                            selectedImage = nil // 清空已選擇的圖片
-                            selectedItem = nil  // 清空 PhotosPicker 的選擇
-                            title = ""
-                            content = ""
-                            county = ""
-                        }) {
-                            Text("Reset")
-                                .font(.system(size: 20))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical,8)
-                                .background(.red)
-                                .cornerRadius(10)
-                            //                        Image(systemName: "arrow.counterclockwise")
-                            //                            .font(.system(size: 20))
-                            //                            .foregroundColor(.white)
-                            //                            .padding(.horizontal, 10)
-                            //                            .padding(.vertical,8)
-                            //                            .background(.red)
-                            //                            .cornerRadius(10)
-                        }.padding(.trailing, 12)
+//                        Button(action: {
+//                            selectedImage = nil // 清空已選擇的圖片
+//                            selectedItem = nil  // 清空 PhotosPicker 的選擇
+//                            title = ""
+//                            content = ""
+//                            county = ""
+//                        }) {
+//                            Text("Reset")
+//                                .font(.system(size: 20))
+//                                .foregroundColor(.white)
+//                                .padding(.horizontal, 10)
+//                                .padding(.vertical,8)
+//                                .background(.red)
+//                                .cornerRadius(10)
+//                        }.padding(.trailing, 12)
                         
                         //.padding()
                         //Spacer()

@@ -48,6 +48,7 @@ struct ARview: View {
                             .padding(.bottom)
                     }
                 }
+                
             }
             if isProgressing {
                 Color.black.opacity(0.2) // 背景變得更亮
@@ -79,7 +80,20 @@ struct ARview: View {
                         }
                     }
             }
+//            ZStack{
+//                VStack{
+//                    Spacer()
+//                    //Rectangle().background(.clear).frame(height: 100)
+//                }
+//                Color.gray.opacity(0.8).frame(height: 50).padding(.top,800)
+//            }
+            Rectangle()
+                .fill(Color.white.opacity(0.4))
+                .frame(height: 80)  // 設定高度以覆蓋 TabBar 的位置
+                .edgesIgnoringSafeArea(.bottom)  // 確保覆蓋整個底部
+                .padding(.bottom, -100)
         }
+        
         .task {
             guard let directory = createNewScanDirectory() else { return }
             session = ObjectCaptureSession()
