@@ -90,7 +90,6 @@ struct ARview: View {
             Rectangle()
                 .fill(Color.white.opacity(0.4))
                 .frame(height: 80)  // 設定高度以覆蓋 TabBar 的位置
-                //.frame(width: .infinity)
                 .edgesIgnoringSafeArea(.bottom)  // 確保覆蓋整個底部
                 .padding(.bottom, -100)
         }
