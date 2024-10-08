@@ -19,7 +19,7 @@ struct MapView: View {
                 MapAnnotation(coordinate: location.coordinate) {
                     VStack {
                         // 使用自定義圖示，這裡可以是任何 SwiftUI 視圖
-                        Image(systemName: "cart")
+                        Image(systemName: "mappin")
                             .resizable()
                             .frame(width: 30, height: 30)
                             .foregroundColor(.blue)

@@ -100,7 +100,7 @@ struct IntroSkillView: View {
 //        }
 //    }
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 0) {
                 // 根據 showYouTubePlayer 來決定是否顯示 YouTube 播放器
                 if showYouTubePlayer {
@@ -163,7 +163,7 @@ struct IntroSkillView: View {
                             .font(.custom("LexendDeca-Medium", size: 20))
                             .foregroundColor(.white)
                             .padding(.horizontal)
-                            .padding(.bottom, -5)
+                            .padding(.bottom, 0)
                         
                         
                         Text(skill.description)
@@ -171,7 +171,7 @@ struct IntroSkillView: View {
 //                            .padding(.horizontal)
 //                            .padding(.bottom, 16)
 //                            .font(.body)
-                            .font(.custom("LexendDeca-Medium", size: 20))
+                            .font(.custom("LexendDeca-Medium", size: 18))
                             .lineLimit(nil)
                             .foregroundColor(.white)
                             .padding(.horizontal)
@@ -200,7 +200,7 @@ struct IntroSkillView: View {
         
         .edgesIgnoringSafeArea(.top)
         //.safeAreaInset(edge: .top) { Color.clear.frame(height: 80) }
-        .toolbarBackground(Color(.white), for: .navigationBar)
+        .toolbarBackground(Color(.systemGray5), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {

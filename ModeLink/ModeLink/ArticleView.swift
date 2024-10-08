@@ -154,9 +154,24 @@ struct ArticleView: View {
                         }
                     }
                     .padding()
-                    .background(Color(.theme))
+//                    .background(Color(.theme))
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
+                            startPoint: .top, // 漸層起點
+                            endPoint: .bottom // 漸層終點
+                        )
+                    )
                 }
-                .background(Color(.theme))
+                //.background(Color(.theme))
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
+                        startPoint: .top, // 漸層起點
+                        endPoint: .bottom // 漸層終點
+                    )
+                )
+                //.background(Color(.white))
                 .onAppear {
                     UIScrollView.appearance().showsVerticalScrollIndicator = false // 隱藏滾動條
                     startListeningForPosts()

@@ -55,8 +55,8 @@ struct IntroView: View {
                                     .padding(.vertical,8)
                                     .padding(.horizontal,6)
                                     .frame(width: 140) // 調整按鈕的寬度
-                                    .background(selectedSegment == 0 ? Color.white : Color(.systemGray5)) // 選中時背景為白色，否則為灰色
-                                    .foregroundColor(selectedSegment == 0 ? .theme: .gray) // 改變文字顏色
+                                    .background(selectedSegment == 0 ? Color.white : Color(.gray).opacity(0.2)) // 選中時背景為白色，否則為灰色
+                                    .foregroundColor(selectedSegment == 0 ? .theme: .white) // 改變文字顏色
                                     .cornerRadius(10) // 添加圓角
                             }
                             
@@ -68,19 +68,35 @@ struct IntroView: View {
                                     .padding(.vertical,8)
                                     .padding(.horizontal,6)
                                     .frame(width: 140) // 調整按鈕的寬度
-                                    .background(selectedSegment == 1 ? Color.white : Color(.systemGray5)) // 選中時背景為白色，否則為灰色
-                                    .foregroundColor(selectedSegment == 1 ? .theme : .gray) // 改變文字顏色
+                                    .background(selectedSegment == 1 ? Color.white : Color(.gray).opacity(0.2)) // 選中時背景為白色，否則為灰色
+                                    .foregroundColor(selectedSegment == 1 ? .theme : .white) // 改變文字顏色
                                     .cornerRadius(10) // 添加圓角
                             }
                         }
                         .padding(.horizontal, 15) // 調整整個 HStack 的內部間距
+                        .padding(.top, 15)
                     }
                     
                     ScrollView(showsIndicators: false) {
                         if selectedSegment == 0 {
 
-                            VStack {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("工具類:")
+                                    .font(.custom("LexendDeca-ExtraBold", size: 20))
+                                    .foregroundColor(.theme)
+                                    .bold()
+                                    .padding(.leading, 40)
+                                    .padding(.top, 5) // 添加上方間距以分開標題和上方內容
+                                    .padding(.bottom, 5)
+                                
                                 ToolCard(tools: tools)
+                                    //.padding(.bottom, 10)
+                                Text("漆料類:")
+                                    .font(.custom("LexendDeca-ExtraBold", size: 20))
+                                    .foregroundColor(.theme)
+                                    .bold()
+                                    .padding(.leading, 40)
+                                    .padding(.top, 0) // 添加上方間距以分開標題和上方內容
                                     .padding(.bottom, 5)
                                 ToolCard(tools: tools2)
                             }
@@ -97,11 +113,18 @@ struct IntroView: View {
                                 }
                             }
                             .padding(.horizontal, 10) // 整個網格的外部間距
+                            .padding(.top, -20)
                         }
                     }
                 }
-                .background(Color(.systemGray5))
-
+//                .background(Color(.systemGray5))
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color(.gray), Color(.white)]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
                 .onAppear {
                     // 設定 UISegmentedControl 的外觀
 //                    let segmentedControlAppearance = UISegmentedControl.appearance()

@@ -17,7 +17,7 @@ struct TaBarView: View {
             }.tag(1)
             ARview().tabItem {
                 Label("scanner", systemImage : "camera.viewfinder")
-            }.tag(2)
+            }.tag(2).background(.clear)
             ModelListView().tabItem {
                 Label("Model", systemImage : "square.and.arrow.down")
             }.tag(3)
@@ -33,11 +33,11 @@ struct TaBarView: View {
         //.background(selectedTab == 2 ? .white : .white)
         .onAppear {
             //customizeTabBarAppearance() // 自定義 TabBar 外觀
-            updateTabBarAppearance()
+           // updateTabBarAppearance()
         }
-        .onChange(of: selectedTab) { _ in
-            updateTabBarAppearance()
-        }
+//        .onChange(of: selectedTab) { _ in
+//            updateTabBarAppearance()
+//        }
         
         
     }
@@ -59,11 +59,11 @@ struct TaBarView: View {
         if selectedTab == 2 {
             // 如果選中 ARView，將 TabBar 設為透明
             UITabBar.appearance().backgroundColor = UIColor.clear
-            //UITabBar.appearance().isTranslucent = true
+            UITabBar.appearance().isTranslucent = true
         } else {
             // 否則設為白色
             UITabBar.appearance().backgroundColor = UIColor.white
-            //UITabBar.appearance().isTranslucent = false
+           // UITabBar.appearance().isTranslucent = false
         }
     }
     
