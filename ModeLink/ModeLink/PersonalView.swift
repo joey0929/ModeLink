@@ -21,103 +21,227 @@ struct PersonalView: View {
     @State private var showBlockedList = false // 用於控制是否顯示封鎖列表
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("設定")
-                    .font(.largeTitle)
-                    .padding()
-                Spacer()
-            }
-            Image(systemName: "person.circle.fill") // 用戶頭像
-                .resizable()
-                .frame(width: 80, height: 80)
-                .foregroundColor(.gray)
-            // 顯示用戶名稱
-            Text("Hello, \(userName)")
-                .font(.headline)
-                .padding()
-//            // 顯示封鎖列表按鈕
-//            Button {
-//                fetchBlockedUsers() // 獲取封鎖的用戶
-//                showBlockedList.toggle() // 切換顯示封鎖列表
-//            } label: {
-//                Text("顯示封鎖列表")
-//                    .font(.headline)
-//                    .foregroundColor(.white)
-//                    .padding()
-//                    .background(Color.blue)
-//                    .cornerRadius(8)
-//            }
-            
-            HStack {
-                Button {
+        ZStack {
+            VStack(spacing: 20) {
+                // 設定標題
+//                HStack {
+//                    Text("個人設定")
+//                        .font(.custom("LexendDeca-Bold", size: 33))
+//                    //                    .font(.largeTitle)
+//                        .bold()
+//                        .padding()
+//                    Spacer()
+//                }.padding(.top,65)
+                
+                // 用戶頭像與名稱
+                VStack {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 10)
+                    
+                    Text("Hello, \(userName)")
+                        .font(.title2)
+                        .bold()
+                        .padding(.bottom, 10)
+                }.padding(.top, 120)
+                //            .background(
+                //                RoundedRectangle(cornerRadius: 16)
+                //                    .fill(Color.white)
+                //                    .shadow(radius: 5)
+                //            )
+                .padding(.horizontal)
+                
+                // 顯示封鎖列表按鈕
+                Button(action: {
                     fetchBlockedUsers() // 獲取封鎖的用戶
                     showBlockedList.toggle() // 切換顯示封鎖列表
-                } label: {
-                    Text("顯示封鎖列表")
+                }) {
+                    Text(showBlockedList ? "關閉封鎖列表" : "顯示封鎖列表")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.blue)
-                        .cornerRadius(8)
-                }
-                
-                
-                Button {
-                    logout()
-                } label: {
-                    Text("登出")
-                        .font(.headline)
                         .foregroundColor(.white)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(8)
+                        .cornerRadius(12)
                 }
-            }
-            // 顯示封鎖列表
-            if showBlockedList {
-                List(blockedUsers) { blockedUser in
-                    HStack {
-                        Text(blockedUser.name) // 顯示封鎖的使用者名稱
-                        Spacer()
-                        Button {
-                            unblockUser(userId: blockedUser.id) // 解除封鎖
-                        } label: {
-                            Text("解除封鎖")
-                                .foregroundColor(.red)
+                .padding(.horizontal)
+                
+                // 封鎖列表
+                if showBlockedList {
+                    List(blockedUsers) { blockedUser in
+                        HStack {
+                            Text(blockedUser.name) // 顯示封鎖的使用者名稱
+                            Spacer()
+                            Button {
+                                unblockUser(userId: blockedUser.id) // 解除封鎖
+                            } label: {
+                                Text("解除封鎖")
+                                    .foregroundColor(.red)
+                            }
                         }
                     }
+                    .frame(height: 200) // 限制列表高度
+                    .cornerRadius(30)
+                    .padding(.horizontal)
                 }
-                .frame(height: 200) // 限制列表高度
+                
+                // 按鈕區域
+                VStack(spacing: 15) {
+                    Button(action: {
+                        logout()
+                    }) {
+                        Text("登出")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.red)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                    
+                    Button(action: {
+                        deleteAccount()
+                    }) {
+                        Text("刪除帳號")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.red.opacity(0.7))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                }
+                .padding(.horizontal)
+                
+                Spacer()
             }
-            Spacer()
-            Button {
-                deleteAccount()
-            } label: {
-                Text("刪除帳號")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.red)
-                    .cornerRadius(8)
+            
+            ZStack{
+                VStack{
+                    Spacer()
+                    //Rectangle().background(.clear).frame(height: 100)
+                }
+                Color.white.frame(height: 130).padding(.top,800)
             }
-            .onAppear {
-                fetchUserName()
-            }
-            //Spacer()
+ 
         }
+        //.padding()
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
             presentationMode.wrappedValue.dismiss()
         }) {
             HStack {
                 Image(systemName: "chevron.backward").foregroundColor(.black)
-                Text("")
             }
         })
-        
-//        .navigationTitle("個人設定")
+        .toolbar {
+            // 自訂標題
+            ToolbarItem(placement: .principal) {
+                Text("個人設定")
+                    .font(.headline)
+                    .bold()
+                    .foregroundStyle(Color(.black))
+            }
+        }
+        .onAppear {
+            fetchUserName()
+        }
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color.gray, Color.white]), // 設定漸層顏色
+                startPoint: .bottom, // 漸層起點
+                endPoint: .top // 漸層終點
+            )
+        )
     }
+//    var body: some View {
+//        VStack {
+//            HStack {
+//                Text("設定")
+//                    .font(.largeTitle)
+//                    .padding()
+//                Spacer()
+//            }
+//            Image(systemName: "person.circle.fill") // 用戶頭像
+//                .resizable()
+//                .frame(width: 80, height: 80)
+//                .foregroundColor(.gray)
+//            // 顯示用戶名稱
+//            Text("Hello, \(userName)")
+//                .font(.headline)
+//                .padding()
+//
+//            HStack {
+//                Button {
+//                    fetchBlockedUsers() // 獲取封鎖的用戶
+//                    showBlockedList.toggle() // 切換顯示封鎖列表
+//                } label: {
+//                    Text("顯示封鎖列表")
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .padding()
+//                        .background(Color.blue)
+//                        .cornerRadius(8)
+//                }
+//                
+//                
+//                Button {
+//                    logout()
+//                } label: {
+//                    Text("登出")
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .padding()
+//                        .background(Color.red)
+//                        .cornerRadius(8)
+//                }
+//            }
+//            // 顯示封鎖列表
+//            if showBlockedList {
+//                List(blockedUsers) { blockedUser in
+//                    HStack {
+//                        Text(blockedUser.name) // 顯示封鎖的使用者名稱
+//                        Spacer()
+//                        Button {
+//                            unblockUser(userId: blockedUser.id) // 解除封鎖
+//                        } label: {
+//                            Text("解除封鎖")
+//                                .foregroundColor(.red)
+//                        }
+//                    }
+//                }
+//                .frame(height: 200) // 限制列表高度
+//            }
+//            Spacer()
+//            Button {
+//                deleteAccount()
+//            } label: {
+//                Text("刪除帳號")
+//                    .font(.headline)
+//                    .foregroundColor(.white)
+//                    .padding()
+//                    .background(Color.red)
+//                    .cornerRadius(8)
+//            }
+//            .onAppear {
+//                fetchUserName()
+//            }
+//            //Spacer()
+//        }
+//        .navigationBarBackButtonHidden(true)
+//        .navigationBarItems(leading: Button(action: {
+//            presentationMode.wrappedValue.dismiss()
+//        }) {
+//            HStack {
+//                Image(systemName: "chevron.backward").foregroundColor(.black)
+//                Text("")
+//            }
+//        })
+//        
+////        .navigationTitle("個人設定")
+//    }
 
     func logout() {
         do {

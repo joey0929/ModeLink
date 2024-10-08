@@ -101,6 +101,7 @@ struct IntroSkillView: View {
 //    }
     var body: some View {
         //ScrollView(showsIndicators: false) {
+        ZStack {
             VStack(alignment: .leading, spacing: 0) {
                 // 根據 showYouTubePlayer 來決定是否顯示 YouTube 播放器
                 if showYouTubePlayer {
@@ -109,16 +110,16 @@ struct IntroSkillView: View {
                         .padding(.horizontal, 0)
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                         .shadow(radius: 10) // 添加陰影
-                        .padding(.top, 0)
+                        .padding(.top, 15)
                 } else {
-//                    Image(systemName: "photo")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(height: 400)
-//                        .padding(.horizontal, 16)
-//                        .clipShape(RoundedRectangle(cornerRadius: 20))
-//                        .shadow(radius: 10) // 添加陰影
-//                        .padding(.top, 16)
+                    //                    Image(systemName: "photo")
+                    //                        .resizable()
+                    //                        .scaledToFit()
+                    //                        .frame(height: 400)
+                    //                        .padding(.horizontal, 16)
+                    //                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                    //                        .shadow(radius: 10) // 添加陰影
+                    //                        .padding(.top, 16)
                     Rectangle()
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 400)
@@ -134,14 +135,14 @@ struct IntroSkillView: View {
                         .padding([.horizontal],15)
                         .padding(.top, 15)
                 }
-
+                
                 // 白色圓角背景
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color(.clear))
                         .shadow(radius: 5) // 添加陰影以突出效果
                         .padding(.horizontal, 8)
-
+                    
                     VStack(alignment: .leading, spacing: 10) {
                         Text(skill.name)
                             .font(.custom("LexendDeca-Medium", size: 22))
@@ -150,10 +151,10 @@ struct IntroSkillView: View {
                             .padding(.horizontal)
                             .padding(.top, 16)
                         Divider()
-                            
+                        
                             .overlay(Color.white).padding(.horizontal,15)
                             .padding(.bottom, 15)
-                            
+                        
                         Text("技巧說明：")
                             .font(.custom("LexendDeca-Medium", size: 18))
                             .foregroundColor(.white)
@@ -174,37 +175,50 @@ struct IntroSkillView: View {
                 
                 //.padding(.horizontal, 16) // 控制圓角背景與螢幕邊緣的距離
                 //.padding(.top, 16)
-
+                
                 Spacer()
             }
             .background(
-//                LinearGradient(
-//                    gradient: Gradient(colors: [Color(.theme), Color(.white)]),
-//                    startPoint: .top,
-//                    endPoint: .bottom
-//                )
+                //                LinearGradient(
+                //                    gradient: Gradient(colors: [Color(.theme), Color(.white)]),
+                //                    startPoint: .top,
+                //                    endPoint: .bottom
+                //                )
                 Color.theme
             )
             .frame(minHeight: UIScreen.main.bounds.height - 150)
             //.padding(.top, 16) // 給 ScrollView 添加頂部間距
-            .padding(.top, 95) 
-        //}
-        //.padding(.top, 70)
-        
-        .edgesIgnoringSafeArea(.top)
-        //.safeAreaInset(edge: .top) { Color.clear.frame(height: 80) }
-        .toolbarBackground(Color(.theme).opacity(0.5), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            presentationMode2.wrappedValue.dismiss()
-        }) {
-            HStack {
-                Image(systemName: "chevron.backward").foregroundColor(.black)
+            .padding(.top, 95)
+            //}
+            //.padding(.top, 70)
+            
+            .edgesIgnoringSafeArea(.top)
+            //.safeAreaInset(edge: .top) { Color.clear.frame(height: 80) }
+            .toolbarBackground(Color(.theme).opacity(0.5), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: Button(action: {
+                presentationMode2.wrappedValue.dismiss()
+            }) {
+                HStack {
+                    Image(systemName: "chevron.backward").foregroundColor(.black)
+                }
+            })
+            .onAppear {
+                fetchRemoteConfig()
             }
-        })
-        .onAppear {
-            fetchRemoteConfig()
+            
+            ZStack{
+                VStack{
+                    Spacer()
+                    //Rectangle().background(.clear).frame(height: 100)
+                }
+                Color.white.frame(height: 125).padding(.top,800)
+            }
+            
+            
+            
+            
         }
     }
 

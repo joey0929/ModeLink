@@ -32,7 +32,7 @@ struct MapView: View {
                             .cornerRadius(8)
                     }
                 }
-            }
+            }.ignoresSafeArea()
 //            .ignoresSafeArea()
             .tint(.pink)
             LocationButton(.currentLocation) {
@@ -43,7 +43,17 @@ struct MapView: View {
             .labelStyle(.titleAndIcon)
             .symbolVariant(.fill)
             .tint(.pink)
-            .padding(.bottom, 50)
+            .padding(.bottom, 100)
+            
+            ZStack{
+                VStack{
+                    Spacer()
+                    //Rectangle().background(.clear).frame(height: 100)
+                }
+                Color.white.frame(height: 90).padding(.top,800)
+            }
+            
+            
         }
         .onAppear {
             viewModel.fetchLocationsFromFirebase()

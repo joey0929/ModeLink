@@ -29,7 +29,8 @@ struct PostView: View {
     
     var canSubmit: Bool {
         // 當所有欄位都有填寫時返回 true，否則返回 false
-        return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
+        return !title.isEmpty && !content.isEmpty && !county.isEmpty
+        //return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
     }
     
     var body: some View {

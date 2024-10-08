@@ -188,7 +188,7 @@ struct IntroToolView: View {
                                 .background(Color.white.opacity(0.1)) // 調整按鈕背景透明度
                                 .clipShape(Circle())
                         }
-                        .padding(.top, 50) // 調整返回按鈕距離
+                        .padding(.top, 60) // 調整返回按鈕距離
                         .padding(.leading, 20)
                     }
                     
@@ -346,7 +346,7 @@ struct IntroToolView: View {
                     Spacer()
                     //Rectangle().background(.clear).frame(height: 100)
                 }
-                Color.white.frame(height: 100).padding(.top,800)
+                Color.white.frame(height: 90).padding(.top,800)
             }
             
         }
