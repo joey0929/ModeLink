@@ -36,7 +36,11 @@ struct UploadDataView: View {
             }
             Spacer()
             Button("Upload to locations") {
-                uploadLocationsToFirebase()
+                //uploadLocationsToFirebase()
+            }
+            Spacer()
+            Button("Upload to tools2") {
+                //uploadDataToFirestore3()
             }
             Spacer()
         }
@@ -87,7 +91,30 @@ struct UploadDataView: View {
             "recommend": "田宮、MADWORKS",
             "description": "處理湯口",
             "image_url": imageURL.absoluteString, // 將 URL 轉換為字串並存入Firestore
-            "position": 3
+            "position": 3,
+            "careful" : ""
+        ]
+        // 將資料存入 Firestore 的 "toolDatas" collection
+        db.collection("toolDatas2").addDocument(data: toolData) { error in
+            if let error = error {
+                print("上傳資料時發生錯誤：\(error.localizedDescription)")
+            } else {
+                print("資料成功上傳到 Firestore！")
+            }
+        }
+    }
+    // 將資料和圖片 URL 一同上傳到 Firestore
+    func uploadDataToFirestore3() {
+        let db = Firestore.firestore()
+        // 上傳的資料
+        let toolData: [String: Any] = [
+            "name": "斜口剪",
+            "price": "300 ~ 1500",
+            "recommend": "# 神之手、# MADWORKS、# 田宮",
+            "description": "專門用於將模型零件從零件框架上取下，與修剪湯口等等.",
+            "image_url": "", // 將 URL 轉換為字串並存入Firestore
+            "position": 1,
+            "careful" : ""
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
         db.collection("toolDatas").addDocument(data: toolData) { error in
@@ -101,10 +128,11 @@ struct UploadDataView: View {
     func uploadDataToFirestore2() {
         let db = Firestore.firestore()
         let skillData: [String: Any] = [  // 上傳的資料
-            "name": "上保護漆",
-            "description": "在貼完水貼與上完墨線後，可以用噴灌為模型上一層保護漆，可以有效防止水貼或漆料經時間久了而脫落與可以有效消除塑膠的，呈現出的模型會更為自然",
-            "image_url": "",
-            "position": 5
+            "name": "打磨",
+            "description": "對剪下來的零件的湯口進行打磨處理，通常會從低號數往高號數磨。",
+            "image_url": "https://firebasestorage.googleapis.com/v0/b/modelink-298ca.appspot.com/o/infoImages%2Fsk2.jpg?alt=media&token=4096ff73-1ffc-4214-ba73-cbf96f4796b7",
+            "position": 2,
+            "yt_url" : ""
         ]
         // 將資料存入 Firestore 的 "toolDatas" collection
         db.collection("skillDatas").addDocument(data: skillData) { error in

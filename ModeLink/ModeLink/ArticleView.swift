@@ -36,11 +36,25 @@ struct Post2: Identifiable {
 
 struct ArticleView: View {
     @State private var posts: [Post2] = []
+    @State private var showAlert = false
+    
+    @State private var isImagePreviewPresented = false
+    @State private var selectedImageURL: String? = nil
 
-    let columns: [GridItem] = [GridItem(.fixed(375))]
+    @State private var showMenuSheet = false // 控制選單的顯示
+    @State private var selectedPostID: String? = nil // 用於儲存當前選中的貼文 ID
+    
+    
+    @State private var isLoadingPreview: Bool = false
+    @State private var showErrorAlert: Bool = false
+    @State private var errorMessage: String = ""
+    
+    
+    let columns: [GridItem] = [GridItem(.fixed(370))]
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
+//                Color(.orange).ignoresSafeArea()
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {  // 使用 LazyVGrid 來顯示貼文
                        // ForEach(posts) { post in
@@ -61,23 +75,51 @@ struct ArticleView: View {
                                     }
                                     Spacer()
                                     
-                                    Text(post.county)
+                                    Text(post.county).font(.headline)
+                                    // 按鈕來控制顯示自訂選單
+                                    Button(action: {
+                                        selectedPostID = post.userId // 設定選中的貼文 ID
+                                        showMenuSheet = true // 顯示選單
+                                    }, label: {
+                                        Image(systemName: "ellipsis")
+                                            .foregroundColor(.black)
+                                            .frame(width: 30, height: 30)
+                                    })
+                                    
                                 }
 
                                 Text(post.title)
                                     .font(.title2)
                                     .bold()
+                                    .allowsHitTesting(false)
+
                                 Text(post.content)
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                    .lineLimit(2)
+                                    .font(.headline)
+                                    .foregroundColor(.black.opacity(0.8))
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .allowsHitTesting(false)
+                                
+                                
+                                
                                 if let imageURL = post.imageURL {
                                     KFImage(URL(string: imageURL))
                                         .resizable()
-                                        .scaledToFill()
-                                        .frame(maxWidth: .infinity, maxHeight: 450) // 圖片最大高度
+                                        //.scaledToFill()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(maxWidth: .infinity, maxHeight: 280) // 圖片最大高度
                                         .clipped()
                                         .cornerRadius(10)
+                                        .contentShape(Rectangle())
+//                                        .onTapGesture {
+//                                            selectedImageURL = imageURL
+//                                            isImagePreviewPresented = true
+//                                        }
+                                        .onTapGesture {
+                                            handleImageTap(imageURL: imageURL)
+                                        }
+                                    
+                                    
                                 }
                                 // 貼文互動按鈕
                                 HStack {
@@ -85,7 +127,7 @@ struct ArticleView: View {
                                         toggleLike(for: index)
                                     }) {
                                         HStack {
-                                            Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                                            Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup").padding(.leading,5)
                                             Text("\(post.likes)") // 顯示讚數量
                                         }
                                     }
@@ -100,18 +142,8 @@ struct ArticleView: View {
 //                                        }
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
+                                    // 檢舉按鈕
                                     Spacer()
-                                    Button(action: {
-                                        blockAuthor(post.userId) // 封鎖作者的文章
-                                    }) {
-                                        Image(systemName: "nosign")
-                                            .foregroundColor(.red)
-                                            .frame(width: 30, height: 30) // 固定按鈕大小
-                                            .contentShape(Rectangle()) // 增加可點擊範圍
-                                            //.border(Color.blue) // 添加邊框以檢查點擊區域
-                                    }
-                                    .buttonStyle(BorderlessButtonStyle()) // 防止影響列表的點擊事件
-                                    .padding(.trailing,50)
                                 }
                                 .padding(.top, 10)
                             }
@@ -122,12 +154,79 @@ struct ArticleView: View {
                         }
                     }
                     .padding()
-                    .background(Color(.systemGray6))
-                }.background(Color(.systemGray6))
-                // .navigationTitle("文章列表")
+//                    .background(Color(.theme))
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
+                            startPoint: .top, // 漸層起點
+                            endPoint: .bottom // 漸層終點
+                        )
+                    )
+                }
+                //.background(Color(.theme))
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
+                        startPoint: .top, // 漸層起點
+                        endPoint: .bottom // 漸層終點
+                    )
+                )
+                //.background(Color(.white))
                 .onAppear {
                     UIScrollView.appearance().showsVerticalScrollIndicator = false // 隱藏滾動條
                     startListeningForPosts()
+                }
+                .fullScreenCover(isPresented: $isImagePreviewPresented) {
+                    ImagePreviewView(imageURL: selectedImageURL, isPresented: $isImagePreviewPresented)
+                }
+                .sheet(isPresented: $showMenuSheet) {
+                    HStack(spacing: 30) { // 調整按鈕間的間距
+                        Button(action: {
+                            showMenuSheet = false // 關閉選單
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                showAlert = true
+                            }
+                        }) {
+                            VStack {
+                                Image(systemName: "flag.fill")
+                                Text("檢舉")
+                            }
+                            .foregroundColor(.black) // 設置顏色為黑色
+                        }
+                        .padding()
+                        
+                        Button(action: {
+                            // 假設 blockAuthor 是你的封鎖方法
+                            if let postID = selectedPostID {
+                                blockAuthor(postID) // 使用選中的貼文 ID 進行封鎖
+                            }
+                            //blockAuthor(selectedPostID ?? "")
+                            showMenuSheet = false // 關閉選單
+                        }) {
+                            VStack {
+                                Image(systemName: "nosign")
+                                Text("封鎖")
+                            }
+                            .foregroundColor(.black) // 設置顏色為黑色
+                        }
+                        .padding()
+                        
+                        Button(action: {
+                            showMenuSheet = false // 取消操作，關閉選單
+                        }) {
+                            VStack {
+                                Image(systemName: "xmark")
+                                Text("取消")
+                            }
+                            .foregroundColor(.black) // 設置取消按鈕
+                        }
+                        .padding()
+                    }
+                    .padding() // 增加外層內邊距
+                    .presentationDetents([.fraction(0.1)]) // 控制選單高度
+                }
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
                 }
                 // 右下角的 + 按鈕 (頂層)
                 VStack {
@@ -146,43 +245,96 @@ struct ArticleView: View {
                         .padding()
                     }
                 }
+                .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                Text("ModeLink")
+                                    //.font(.title)
+                                    .font(.custom("LexendDeca-Medium", size: 30))
+                                    .foregroundColor(.white.opacity(0.9))
+                                    .bold()
+                            }
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                NavigationLink(destination: PersonalView()) {
+                                    Image(systemName: "gearshape")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
                 // 右上角齒輪圖標
-                .navigationBarItems(trailing: NavigationLink(destination: PersonalView()) {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 20))
-                        .foregroundColor(.black)
-                })
-                .navigationTitle("動態牆")
+//                .navigationBarItems(trailing: NavigationLink(destination: PersonalView()) {
+//                    Image(systemName: "gearshape")
+//                        .font(.system(size: 20))
+//                        .foregroundColor(.black)
+//                })
+//                .navigationTitle("動態牆")
+                //.navigationViewStyle(StackNavigationViewStyle())
+                .navigationBarTitleDisplayMode(.inline) // 可選，調整標題顯示方式
+                .toolbarBackground(Color(.theme), for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                
+                // 載入指示器覆蓋層
+                if isLoadingPreview {
+                    ZStack {
+                        Color.black.opacity(0.4).ignoresSafeArea()
+                        ProgressView("載入中...")
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.gray.opacity(0.7))
+                            .cornerRadius(10)
+                    }
+                }
+            }
+        }
+    }
+    // 處理圖片點擊事件
+    func handleImageTap(imageURL: String) {
+        guard let url = URL(string: imageURL) else { return }
+        isLoadingPreview = true
+        
+        KingfisherManager.shared.retrieveImage(with: url) { result in
+            DispatchQueue.main.async {
+                isLoadingPreview = false
+                switch result {
+                case .success(_):
+                    selectedImageURL = imageURL
+                    isImagePreviewPresented = true
+                case .failure(let error):
+                    // 處理錯誤，例如顯示警告訊息
+                    print("Failed to load image: \(error)")
+                    errorMessage = "無法載入圖片，請稍後再試。"
+                    showErrorAlert = true
+                }
             }
         }
     }
     // MARK: - 封鎖特定作者的文章
     func blockAuthor(_ userId: String) {
-        // 封鎖功能的邏輯處理，比如在本地保存被封鎖的用戶，並過濾他們的文章
-        print("封鎖作者: \(userId)")
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            print("無法取得當前使用者 ID")
+            return
+        }
+        // 禁止封鎖自己
+        if userId == currentUserID {
+            print("無法封鎖自己")
+            return
+        }
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(currentUserID)
+        userRef.updateData([
+            "blockedUsers": FieldValue.arrayUnion([userId]) // 加入新的作者 ID 到封鎖列表
+        ]) { error in
+            if let error = error {
+                print("封鎖作者時發生錯誤: \(error.localizedDescription)")
+            } else {
+                print("作者已封鎖")
+                // 過濾被封鎖作者的文章
+                self.posts.removeAll { $0.userId == userId }
+            }
+        }
     }
-    
     // MARK: - Toggle Like Function
-//    func toggleLike(for index: Int) {
-//        var post = posts[index]
-//        post.isLiked.toggle()
-//        post.likes += post.isLiked ? 1 : -1
-//        
-//        // 更新 Firebase 中的讚數
-//        let db = Firestore.firestore()
-//        let postRef = db.collection("articles").document(post.id)
-//        
-//        postRef.updateData([
-//            "likes": post.likes
-//        ]) { error in
-//            if let error = error {
-//                print("Error updating likes: \(error.localizedDescription)")
-//            } else {
-//                print("Likes successfully updated")
-//                posts[index] = post
-//            }
-//        }
-//    }
     func toggleLike(for index: Int) {
         var post = posts[index]
         guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
@@ -209,7 +361,6 @@ struct ArticleView: View {
             // 未按讚，新增讚
             post.isLiked = true
             post.likes += 1
-            
             // 將當前使用者的 UID 加入 likedBy 列表
             let db = Firestore.firestore()
             let postRef = db.collection("articles").document(post.id)
@@ -237,76 +388,226 @@ struct ArticleView: View {
         return "\(year)-\(month)-\(day) \(hour):\(minute)"
     }
     // MARK: - Monitoring the FireStore in Articles
-//    func startListeningForPosts() {
-//        let db = Firestore.firestore()
-//        db.collection("articles")
-//            .order(by: "timestamp", descending: true)
-//            .addSnapshotListener { (snapshot, error) in
-//                if let error = error {
-//                    print("Error fetching articles: \(error.localizedDescription)")
-//                    return
-//                }
-//                guard let documents = snapshot?.documents else {
-//                    print("No articles found")
-//                    return
-//                }
-//                self.posts = documents.compactMap { doc -> Post2? in
-//                    let data = doc.data()
-//                    guard let userId = data["user_id"] as? String,
-//                          let userName = data["user_name"] as? String,
-//                          let title = data["title"] as? String,
-//                          let content = data["content"] as? String,
-//                          let county = data["County"] as? String,
-//                          let timestamp = data["timestamp"] as? Timestamp,
-//                          let likes = data["likes"] as? Int  //
-//                    else {
-//                        return nil
-//                    }
-//                    let imageURL = data["imageURL"] as? String
-//                    // swiftlint:disable line_length
-//                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes,isLiked: false)
-//                    // swiftlint:enable line_length
-//                }
-//            }
-//    }
     func startListeningForPosts() {
         guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
-        db.collection("articles")
-            .order(by: "timestamp", descending: true)
-            .addSnapshotListener { (snapshot, error) in
-                if let error = error {
-                    print("Error fetching articles: \(error.localizedDescription)")
-                    return
-                }
-                guard let documents = snapshot?.documents else {
-                    print("No articles found")
-                    return
-                }
-                self.posts = documents.compactMap { doc -> Post2? in
-                    let data = doc.data()
-                    guard let userId = data["user_id"] as? String,
-                          let userName = data["user_name"] as? String,
-                          let title = data["title"] as? String,
-                          let content = data["content"] as? String,
-                          let county = data["County"] as? String,
-                          let timestamp = data["timestamp"] as? Timestamp,
-                          let likes = data["likes"] as? Int
-                    else {
-                        return nil
-                    }
-                    let imageURL = data["imageURL"] as? String
-                    let likedBy = data["likedBy"] as? [String] ?? [] // 取得 likedBy 列表
-                    // 判斷當前使用者是否已按讚
-                    let isLiked = likedBy.contains(currentUserUID)
-                    // swiftlint:disable line_length
-                    return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes, isLiked: isLiked)
-                    // swiftlint:enable line_length
-                }
+        
+        // 1. 取得當前使用者的 blockedUsers 列表
+        db.collection("users").document(currentUserUID).addSnapshotListener { userSnapshot, error in
+            if let error = error {
+                print("Error fetching user data: \(error.localizedDescription)")
+                return
             }
+            
+            guard let userData = userSnapshot?.data(),
+                  let blockedUsers = userData["blockedUsers"] as? [String] else {
+                print("No blocked users found")
+                return
+            }
+            
+            // 2. 監聽文章數據
+            db.collection("articles")
+                .order(by: "timestamp", descending: true)
+                .addSnapshotListener { (snapshot, error) in
+                    if let error = error {
+                        print("Error fetching articles: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    guard let documents = snapshot?.documents else {
+                        print("No articles found")
+                        return
+                    }
+                    
+                    // 3. 過濾被封鎖作者的文章
+                    self.posts = documents.compactMap { doc -> Post2? in
+                        let data = doc.data()
+                        guard let userId = data["user_id"] as? String,
+                              let userName = data["user_name"] as? String,
+                              let title = data["title"] as? String,
+                              let content = data["content"] as? String,
+                              let county = data["County"] as? String,
+                              let timestamp = data["timestamp"] as? Timestamp,
+                              let likes = data["likes"] as? Int else {
+                            return nil
+                        }
+                        
+                        // 過濾封鎖的使用者
+                        if blockedUsers.contains(userId) {
+                            return nil
+                        }
+                        
+                        let imageURL = data["imageURL"] as? String
+                        let likedBy = data["likedBy"] as? [String] ?? []
+                        
+                        // 判斷當前使用者是否已按讚
+                        let isLiked = likedBy.contains(currentUserUID)
+                        // swiftlint:disable line_length
+                        return Post2(id: doc.documentID, userId: userId, userName: userName, title: title, content: content, county: county, imageURL: imageURL, timestamp: timestamp.dateValue(), likes: likes, isLiked: isLiked)
+                        // swiftlint:enable line_length
+                    }
+                }
+        }
     }
- 
+
 }
 #Preview{
     ArticleView()
+}
+//struct ImagePreviewView: View {
+//    let imageURL: String?
+//    @Binding var isPresented: Bool
+//
+//    var body: some View {
+//        ZStack {
+//            Color.black.ignoresSafeArea()
+//            
+//            if let imageURL = imageURL {
+//                KFImage(URL(string: imageURL))
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .padding()
+//            }
+//
+//            VStack {
+//                Spacer()
+//                Button(action: {
+//                    isPresented = false
+//                }) {
+//                    Text("關閉")
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .padding()
+//                        .background(Color.gray.opacity(0.7))
+//                        .cornerRadius(10)
+//                }
+//                .padding()
+//            }
+//        }
+//    }
+//}
+
+struct ImagePreviewView: View {
+    let imageURL: String?
+    @Binding var isPresented: Bool
+    @StateObject private var imageLoader = ImageLoader()
+    @GestureState private var dragOffset = CGSize.zero
+    
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            
+            if imageLoader.isLoading {
+                ProgressView("載入中...")
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.gray.opacity(0.7))
+                    .cornerRadius(10)
+            } else if imageLoader.loadFailed {
+                VStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.red)
+                    Text("無法載入圖片")
+                        .foregroundColor(.white)
+                        .padding(.top, 8)
+                }
+            } else if let uiImage = imageLoader.image {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .padding()
+                    .gesture(
+                        DragGesture()
+                            .updating($dragOffset) { value, state, _ in
+                                if value.translation.height > 0 {
+                                    state = value.translation
+                                }
+                            }
+                            .onEnded { value in
+                                if value.translation.height > 100 {
+                                    withAnimation {
+                                        isPresented = false
+                                    }
+                                }
+                            }
+                    )
+            } else {
+                // 當 imageURL 為 nil 或無效時顯示錯誤訊息
+                VStack {
+                    Image(systemName: "exclamationmark.triangle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.red)
+                    Text("無效的圖片連結")
+                        .foregroundColor(.white)
+                        .padding(.top, 8)
+                }
+            }
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        isPresented = false
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 15))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.gray.opacity(0.8))
+                            //.cornerRadius(10)
+                            .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                    }.padding()
+                }
+                Spacer()
+//                Button(action: {
+//                    isPresented = false
+//                }) {
+//                    Text("關閉")
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .padding()
+//                        .background(Color.gray.opacity(0.7))
+//                        .cornerRadius(10)
+//                        .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+//                }
+//                .padding()
+            }
+        }
+        .onAppear {
+            if let imageURL = imageURL, let url = URL(string: imageURL) {
+                imageLoader.loadImage(from: url)
+            } else {
+                imageLoader.loadFailed = true
+            }
+        }
+    }
+}
+
+class ImageLoader: ObservableObject {
+    @Published var image: UIImage? = nil
+    @Published var isLoading: Bool = false
+    @Published var loadFailed: Bool = false
+    
+    func loadImage(from url: URL) {
+        isLoading = true
+        loadFailed = false
+        
+        KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let value):
+                    self?.image = value.image
+                case .failure(_):
+                    self?.loadFailed = true
+                }
+            }
+        }
+    }
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D40776DF2CB07BB300713AE0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D40776DE2CB07BB300713AE0 /* Kingfisher */; };
+		D40777062CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D40777052CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf */; };
 		D41344142C92ED4D003400B9 /* ModeLinkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41344132C92ED4D003400B9 /* ModeLinkApp.swift */; };
 		D41344162C92ED4D003400B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41344152C92ED4D003400B9 /* ContentView.swift */; };
 		D41344182C92ED4E003400B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D41344172C92ED4E003400B9 /* Assets.xcassets */; };
@@ -42,7 +44,6 @@
 		D4A2BB9F2C9735F9000B9745 /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BB9E2C9735F9000B9745 /* PostView.swift */; };
 		D4A2BBA12C97BD25000B9745 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A2BBA02C97BD25000B9745 /* ImagePicker.swift */; };
 		D4A2BBAA2C97EC84000B9745 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4A2BBA92C97EC84000B9745 /* GoogleService-Info.plist */; };
-		D4A2BBC42C97FC47000B9745 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D4A2BBC32C97FC47000B9745 /* Kingfisher */; };
 		D4B14A512C9A7C6E00FD12E7 /* ModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A502C9A7C6E00FD12E7 /* ModelListView.swift */; };
 		D4B14A572C9A7E0800FD12E7 /* SavedModelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A562C9A7E0800FD12E7 /* SavedModelPreviewView.swift */; };
 		D4B14A5D2C9D248700FD12E7 /* IntroToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5C2C9D248700FD12E7 /* IntroToolView.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D40777052CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LexendDeca-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		D41344102C92ED4D003400B9 /* ModeLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModeLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D41344132C92ED4D003400B9 /* ModeLinkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeLinkApp.swift; sourceTree = "<group>"; };
 		D41344152C92ED4D003400B9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,8 +89,8 @@
 				D41B464E2CA166810067D894 /* FirebaseDatabase in Frameworks */,
 				D41B46482CA166810067D894 /* FirebaseAppDistribution-Beta in Frameworks */,
 				D41B464C2CA166810067D894 /* FirebaseAuthCombine-Community in Frameworks */,
-				D4A2BBC42C97FC47000B9745 /* Kingfisher in Frameworks */,
 				D41B465C2CA166810067D894 /* FirebaseRemoteConfig in Frameworks */,
+				D40776DF2CB07BB300713AE0 /* Kingfisher in Frameworks */,
 				D4F585B02CAA441A004362EE /* IQKeyboardManagerSwift in Frameworks */,
 				D41B46442CA166810067D894 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				D41B46602CA166810067D894 /* FirebaseStorageCombine-Community in Frameworks */,
@@ -110,6 +112,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D40776FE2CB2312E00713AE0 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				D40777052CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
 		D41344072C92ED4D003400B9 = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +139,7 @@
 		D41344122C92ED4D003400B9 /* ModeLink */ = {
 			isa = PBXGroup;
 			children = (
+				D40776FE2CB2312E00713AE0 /* Font */,
 				D458F0882CA50AF800216CB4 /* ModeLink.entitlements */,
 				D4A2BBA22C97BE47000B9745 /* Info.plist */,
 				D41344132C92ED4D003400B9 /* ModeLinkApp.swift */,
@@ -183,7 +194,6 @@
 			);
 			name = ModeLink;
 			packageProductDependencies = (
-				D4A2BBC32C97FC47000B9745 /* Kingfisher */,
 				D41B463C2CA12A850067D894 /* YouTubePlayerKit */,
 				D41B463F2CA166810067D894 /* FirebaseAnalytics */,
 				D41B46412CA166810067D894 /* FirebaseAnalyticsOnDeviceConversion */,
@@ -203,6 +213,7 @@
 				D41B465D2CA166810067D894 /* FirebaseStorage */,
 				D41B465F2CA166810067D894 /* FirebaseStorageCombine-Community */,
 				D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */,
+				D40776DE2CB07BB300713AE0 /* Kingfisher */,
 			);
 			productName = ModeLink;
 			productReference = D41344102C92ED4D003400B9 /* ModeLink.app */;
@@ -233,10 +244,10 @@
 			);
 			mainGroup = D41344072C92ED4D003400B9;
 			packageReferences = (
-				D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */,
 				D41B463E2CA166810067D894 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				D40776DD2CB07BB300713AE0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = D41344112C92ED4D003400B9 /* Products */;
 			projectDirPath = "";
@@ -252,6 +263,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D40777062CB2339000713AE0 /* LexendDeca-VariableFont_wght.ttf in Resources */,
 				D413441B2C92ED4E003400B9 /* Preview Assets.xcassets in Resources */,
 				D41344182C92ED4E003400B9 /* Assets.xcassets in Resources */,
 				D4A2BBAA2C97EC84000B9745 /* GoogleService-Info.plist in Resources */,
@@ -521,6 +533,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D40776DD2CB07BB300713AE0 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.3;
+			};
+		};
 		D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SvenTiigi/YouTubePlayerKit";
@@ -537,14 +557,6 @@
 				minimumVersion = 11.2.0;
 			};
 		};
-		D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.12.0;
-			};
-		};
 		D4F585AE2CAA441A004362EE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -556,6 +568,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D40776DE2CB07BB300713AE0 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D40776DD2CB07BB300713AE0 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		D41B463C2CA12A850067D894 /* YouTubePlayerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D41B463B2CA12A850067D894 /* XCRemoteSwiftPackageReference "YouTubePlayerKit" */;
@@ -645,11 +662,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D41B463E2CA166810067D894 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
-		};
-		D4A2BBC32C97FC47000B9745 /* Kingfisher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D4A2BBC22C97FC47000B9745 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
 		};
 		D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;

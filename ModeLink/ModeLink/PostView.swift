@@ -12,6 +12,9 @@ import FirebaseStorage
 import PhotosUI
 import FirebaseAuth
 
+import IQKeyboardManagerSwift
+import Combine
+
 struct PostView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var userName: String = "" // 用於儲存用戶名稱
@@ -21,82 +24,79 @@ struct PostView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var selectedItem: PhotosPickerItem? = nil // 用於存儲選擇的圖片
     @State private var isImagePickerPresented = false
+    
+    @ObservedObject private var keyboardResponder = KeyboardResponder() // 使用 KeyboardResponder
+    
     var canSubmit: Bool {
         // 當所有欄位都有填寫時返回 true，否則返回 false
-        return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
+        return !title.isEmpty && !content.isEmpty && !county.isEmpty
+        //return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
     }
-
+    
     var body: some View {
         //  swiftlint:disable trailing_whitespace
-        ScrollView(showsIndicators: false) {
-            
-            VStack {
-                if let selectedImage = selectedImage {  // 顯示選擇的圖片
-                    Image(uiImage: selectedImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(height: 300)
-                        .clipped()
-                        .padding([.horizontal],15)
-                        .padding(.top, 15)
-                } else {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(height: 300)
-                        .overlay(
-                            VStack {
-                                Image(systemName: "photo")
-                                    .font(.system(size: 50))
-                                    .foregroundColor(.gray)
-                                Text("尚未選擇圖片")
-                                    .foregroundColor(.gray)
-                            }
-                        )
-                        .padding([.horizontal],15)
-                        .padding(.top, 15)
-   
-                }
+        
+        ZStack {
+            ScrollView(showsIndicators: false) {
                 
-                TextField("標題", text: $title)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal,15)
-                    .padding(.top, 10)
-                
-                TextField("縣市", text: $county)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal,15)
-                    .padding(.bottom, 10)
-                
-                VStack(alignment:.leading) {
-                    Text("請輸入內文:")
-                        .foregroundColor(Color(.systemGray))
-                    TextEditor(text: $content)
-                        .frame(height: 150)
-                        .background(Color.white) // 設置背景色，確保與 TextField 保持一致
-                        .cornerRadius(8) // 設置圓角
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color(.systemGray4), lineWidth: 0.5) // 設置外框的顏色和寬度
-                        )
-                        .padding(.top, 5)
-                }.padding(.horizontal, 15) // 確保整個 VStack 具有左右縮排
-                
-                // 使用 PhotosPicker 來選擇圖片
-                HStack {
+                VStack {
+//                    if let selectedImage = selectedImage {  // 顯示選擇的圖片
+//                        Image(uiImage: selectedImage)
+//                            .resizable()
+//                            .scaledToFill()
+//                            .frame(height: 300)
+//                            .clipped()
+//                            .padding([.horizontal],15)
+//                            .padding(.top, 15)
+//                    } else {
+//                        Rectangle()
+//                            .fill(Color.gray.opacity(0.2))
+//                            .frame(height: 300)
+//                            .overlay(
+//                                VStack {
+//                                    Image(systemName: "photo")
+//                                        .font(.system(size: 50))
+//                                        .foregroundColor(.gray)
+//                                    Text("尚未選擇圖片")
+//                                        .foregroundColor(.gray)
+//                                }
+//                            )
+//                            .padding([.horizontal],15)
+//                            .padding(.top, 15)
+//                        
+//                    }
+                    // 用於顯示選擇的圖片或按鈕
                     PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
-                        Image(systemName: "photo")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-                            .padding([.horizontal,.vertical],10)
-                            .background(.blue)
-                            .cornerRadius(10)
-                    }
-                    .onChange(of: selectedItem) { newItem in
+                        if let selectedImage = selectedImage {
+                            Image(uiImage: selectedImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 300)
+                                .clipped()
+                                .padding([.horizontal], 15)
+                                .padding(.top, 15)
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .frame(height: 300)
+                                .overlay(
+                                    VStack {
+                                        Image(systemName: "photo")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(.gray)
+                                        Text("點擊選擇圖片")
+                                            .foregroundColor(.gray)
+                                    }
+                                )
+                                .padding([.horizontal], 15)
+                                .padding(.top, 15)
+                        }
+                    }.onChange(of: selectedItem) { newItem in
                         if let newItem = newItem {
                             Task {
                                 // 當選擇項變更時，將圖片加載為 UIImage
                                 if let data = try? await newItem.loadTransferable(type: Data.self),
-                                    // 圖片加載為 Data 格式 再轉乘 UIImage
+                                   // 圖片加載為 Data 格式 再轉乘 UIImage
                                    let uiImage = UIImage(data: data) {
                                     selectedImage = uiImage
                                 }
@@ -104,62 +104,145 @@ struct PostView: View {
                         }
                     }
                     
-                    // 重置按鈕
-                    Button(action: {
-                        selectedImage = nil // 清空已選擇的圖片
-                        selectedItem = nil  // 清空 PhotosPicker 的選擇
-                        title = ""
-                        content = ""
-                        county = ""
-                    }) {
-                        Image(systemName: "arrow.counterclockwise")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical,8)
-                            .background(.red)
-                            .cornerRadius(10)
+                    
+                    TextField("標題", text: $title)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal,15)
+                        .padding(.top, 10)
+                    
+                    TextField("縣市", text: $county)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal,15)
+                        .padding(.bottom, 10)
+                    
+                    VStack(alignment:.leading) {
+                        Text("請輸入內文:")
+                            .foregroundColor(Color(.systemGray))
+                        TextEditor(text: $content)
+                            .frame(height: 150)
+                            .background(Color.white) // 設置背景色，確保與 TextField 保持一致
+                            .cornerRadius(8) // 設置圓角
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(.systemGray4), lineWidth: 0.5) // 設置外框的顏色和寬度
+                            )
+                            .padding(.top, 5)
+                    }.padding(.horizontal, 15) // 確保整個 VStack 具有左右縮排
+                    
+                    // 使用 PhotosPicker 來選擇圖片
+                    HStack {
+//                        PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
+//                            Image(systemName: "photo")
+//                                .font(.system(size: 20))
+//                                .foregroundColor(.white)
+//                                .padding([.horizontal,.vertical],10)
+//                                .background(.blue)
+//                                .cornerRadius(10)
+//                        }
+//                        .onChange(of: selectedItem) { newItem in
+//                            if let newItem = newItem {
+//                                Task {
+//                                    // 當選擇項變更時，將圖片加載為 UIImage
+//                                    if let data = try? await newItem.loadTransferable(type: Data.self),
+//                                       // 圖片加載為 Data 格式 再轉乘 UIImage
+//                                       let uiImage = UIImage(data: data) {
+//                                        selectedImage = uiImage
+//                                    }
+//                                }
+//                            }
+//                        }
+                        Spacer()
+                        Button(action: {
+                            uploadPost(title: title, content: content, county: county, image: selectedImage)
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Text("發文")
+                                .font(.headline)
+                                .foregroundColor(canSubmit ? Color.white : Color.gray)
+                                .padding([.horizontal,.vertical],10)
+                                .background(canSubmit ? Color.blue : Color(.systemGray5)) // 根據狀態變色
+                                .cornerRadius(10)
+                        }
+                        .disabled(!canSubmit)
+                        .padding(.trailing,14)
+                        //Spacer()
+                        // 重置按鈕
+//                        Button(action: {
+//                            selectedImage = nil // 清空已選擇的圖片
+//                            selectedItem = nil  // 清空 PhotosPicker 的選擇
+//                            title = ""
+//                            content = ""
+//                            county = ""
+//                        }) {
+//                            Text("Reset")
+//                                .font(.system(size: 20))
+//                                .foregroundColor(.white)
+//                                .padding(.horizontal, 10)
+//                                .padding(.vertical,8)
+//                                .background(.red)
+//                                .cornerRadius(10)
+//                        }.padding(.trailing, 12)
+                        
+                        //.padding()
+                        //Spacer()
                     }
+                    .padding(.leading)
+                    .padding(.bottom, 10)
+                    //Spacer(minLength: 80)
+                }
+                
+                .onAppear() {
+                    fetchUserName()
+                    
+                }
+                .padding(.bottom, keyboardResponder.currentHeight) // 調整底部間距
+                
+                
+            }
+            
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
+            .frame(height: 620)
+            .padding(.horizontal)
+            //            .navigationTitle("新貼文")
+//            .navigationBarBackButtonHidden(true)
+//            .navigationBarItems(leading: Button(action: {
+//                presentationMode.wrappedValue.dismiss()
+//            }) {
+//                HStack {
+//                    Image(systemName: "chevron.backward").foregroundColor(.black)
+//                    Text("")
+//                }
+//            })
+            .toolbar {
+                // 自訂返回按鈕
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        uploadPost(title: title, content: content, county: county, image: selectedImage)
                         presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text("發文")
-                            .font(.headline)
-                            .foregroundColor(canSubmit ? Color.white : Color.gray)
-                            .padding([.horizontal,.vertical],10)
-                            .background(canSubmit ? Color.blue : Color(.systemGray5)) // 根據狀態變色
-                            .cornerRadius(10)
+                        HStack {
+                            Image(systemName: "chevron.backward")
+                                .foregroundColor(.white) // 設定返回按鈕的顏色
+                            
+                        }
                     }
-                    .disabled(!canSubmit)
-                    //.padding()
-                    Spacer()
                 }
-                .padding(.leading)
-                .padding(.bottom, 10)
-                //Spacer(minLength: 80)
+                
+                // 自訂標題
+                ToolbarItem(placement: .principal) {
+                    Text("New Post")
+                        .font(.custom("LexendDeca-SemiBold", size: 20))
+                        .foregroundColor(.white.opacity(1)) // 設定標題的顏色
+                }
             }
-            .onAppear() {
-                fetchUserName()
-            }
+        
+            .navigationBarBackButtonHidden(true)
+            .navigationViewStyle(StackNavigationViewStyle())
+            .toolbarBackground(Color(.theme), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
-        .frame(height: 600)
-        .navigationTitle("新貼文")
-        .padding()
-        .navigationBarBackButtonHidden(true) // 隱藏默認的返回按鈕
-        .navigationBarItems(leading: Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }) {
-            HStack {
-                Image(systemName: "chevron.backward")
-                Text("")
-            }
-        })
     }
-    
     // 獲取用戶名稱的方法
     func fetchUserName() {
         guard let userId = Auth.auth().currentUser?.uid else {
@@ -219,12 +302,13 @@ struct PostView: View {
             // 如果沒有圖片，僅上傳文章數據
             let postData: [String: Any] = [
                 "user_id": userId,
-                "name": userName,
+                "user_name": userName,
                 "title": title,
                 "content": content,
                 "County": county,
                 "timestamp": Timestamp(date: Date()),
-                "likes": 0
+                "likes": 0,
+                "likedBy": []
             ]
             db.collection("articles").addDocument(data: postData) { error in
                 if let error = error {
@@ -264,4 +348,29 @@ struct PostView: View {
 }
 #Preview {
     PostView()
+}
+
+final class KeyboardResponder: ObservableObject {
+    @Published var currentHeight: CGFloat = 0
+    private var _center: NotificationCenter
+    
+    init(center: NotificationCenter = .default) {
+        _center = center
+        _center.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        _center.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func keyboardWillShow(notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            withAnimation {
+                currentHeight = keyboardFrame.height
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: Notification) {
+        withAnimation {
+            currentHeight = 0
+        }
+    }
 }

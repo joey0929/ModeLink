@@ -32,52 +32,196 @@ struct IntroSkillView: View {
         _player = State(initialValue: YouTubePlayer(source: .url(skill.ytUrl)))
         self.skill = skill
     }
+//    var body: some View {
+//        ScrollView {
+//            VStack(alignment: .leading, spacing: 30) {
+//                // 根據 showYouTubePlayer 來決定是否顯示 YouTube 播放器
+//                if showYouTubePlayer {
+//                    YouTubePlayerView(player)
+//                        .frame(height: 400)
+//                        .padding(.horizontal,2)
+//                        //.transition(.opacity) // 使用過渡動畫
+//                } else {
+//                    //Text("Turn off the ytView.!!!!")
+//                    Image(systemName: "photo").frame(height: 400)
+//                }
+//                
+////                Text(skill.name)
+////                    .font(.title)
+////                    .foregroundColor(Color(UIColor.darkGray))
+////                    .bold()
+////                    .padding(.horizontal)
+//                ZStack {
+//                    RoundedRectangle(cornerRadius: 20)
+//                        .fill(Color.white)
+//                        .shadow(radius: 5) // 添加陰影以突出效果
+//                    VStack(alignment: .leading) {
+//                        Text(skill.name)
+//                            .font(.title)
+//                            .foregroundColor(Color(UIColor.darkGray))
+//                            .bold()
+//                            //.padding(.horizontal)
+//                            .padding(.bottom,10)
+//                        Text("技巧說明：")
+//                            .font(.title2)
+//                            .foregroundColor(Color(.systemGray))
+//                            .bold()
+//                            //.padding(.horizontal)
+//                            .padding(.bottom, 10)
+//                        Text(skill.description)
+//                            .foregroundColor(Color(.systemGray))
+//                            //.padding(.horizontal)
+////                            .padding(.bottom,300)
+//                    }.padding(.leading)
+//                    
+//                }
+//                //.background(Color.blue)
+//                Spacer()
+//            }
+//            .background(Color(.theme))
+//            .frame(height: 400)
+//        }
+//        .safeAreaInset(edge: .top) { Color.clear.frame(height: 80)}
+//        .background(Color(.theme))
+//        .toolbarBackground(Color(.white), for: .navigationBar)
+//        .toolbarBackground(.visible, for: .navigationBar)
+//        .navigationBarBackButtonHidden(true)
+//        .navigationBarItems(leading: Button(action: {
+//            presentationMode2.wrappedValue.dismiss()
+//        }) {
+//            HStack {
+//                Image(systemName: "chevron.backward").foregroundColor(.black)
+//                Text("")
+//            }
+//        })
+//        
+//        .onAppear {
+//            fetchRemoteConfig()
+//        }
+//    }
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+        //ScrollView(showsIndicators: false) {
+        ZStack {
+            VStack(alignment: .leading, spacing: 0) {
                 // 根據 showYouTubePlayer 來決定是否顯示 YouTube 播放器
                 if showYouTubePlayer {
                     YouTubePlayerView(player)
-                        .frame(height: 500)
-                        .transition(.opacity) // 使用過渡動畫
+                        .frame(height: 400)
+                        .padding(.horizontal, 0)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .shadow(radius: 10) // 添加陰影
+                        .padding(.top, 25)
                 } else {
-                    Text("Turn off the ytView.!!!!")
+                    //                    Image(systemName: "photo")
+                    //                        .resizable()
+                    //                        .scaledToFit()
+                    //                        .frame(height: 400)
+                    //                        .padding(.horizontal, 16)
+                    //                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                    //                        .shadow(radius: 10) // 添加陰影
+                    //                        .padding(.top, 16)
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(height: 400)
+                        .overlay(
+                            VStack {
+                                Image(systemName: "photo")
+                                    .font(.system(size: 50))
+                                    .foregroundColor(.gray)
+                                Text("尚未選擇圖片")
+                                    .foregroundColor(Color(.gray))
+                            }
+                        )
+                        .padding([.horizontal],15)
+                        .padding(.top, 25)
                 }
-
-                Text(skill.name)
-                    .font(.title)
-                    .foregroundColor(Color(UIColor.darkGray))
-                    .bold()
-                    .padding(.horizontal)
-                VStack(alignment: .leading) {
-                    Text("技巧說明：")
-                        .font(.title2)
-                        .foregroundColor(Color(.systemGray))
-                        .bold()
-                        .padding(.horizontal)
-                        .padding(.bottom, 10)
-                    Text(skill.description)
-                        .foregroundColor(Color(.systemGray))
-                        .padding(.horizontal)
-                }
+                
+                // 白色圓角背景
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color(.clear))
+                        .shadow(radius: 5) // 添加陰影以突出效果
+                        .padding(.horizontal, 8)
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(skill.name)
+                            .font(.custom("LexendDeca-Medium", size: 22))
+                            .foregroundColor(Color(.white))
+                            .bold()
+                            .padding(.horizontal)
+                            .padding(.top, 16)
+                        Divider()
+                        
+                            .overlay(Color.white).padding(.horizontal,15)
+                            .padding(.bottom, 15)
+                        
+                        Text("技巧說明：")
+                            .font(.custom("LexendDeca-Medium", size: 18))
+                            .foregroundColor(.white)
+                            .padding(.horizontal)
+                            .padding(.bottom, 0)
+                        ScrollView {
+                            Text(skill.description)
+                                .font(.custom("LexendDeca-Medium", size: 16))
+                                .lineLimit(nil)
+                                .foregroundColor(.white)
+                                .padding(.horizontal)
+                                .padding(.bottom, 10)
+                                .lineSpacing(10)
+                        }
+                        Spacer()
+                    }
+                }.frame(height: 250)
+                
+                //.padding(.horizontal, 16) // 控制圓角背景與螢幕邊緣的距離
+                //.padding(.top, 16)
+                
                 Spacer()
-            }.background(Color(.systemGray6))
-        }
-        .background(Color(.systemGray6))
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            presentationMode2.wrappedValue.dismiss()
-        }) {
-            HStack {
-                Image(systemName: "chevron.backward").foregroundColor(.black)
-                Text("")
             }
-        })
-        
-        .onAppear {
-            fetchRemoteConfig()
+            .background(
+                //                LinearGradient(
+                //                    gradient: Gradient(colors: [Color(.theme), Color(.white)]),
+                //                    startPoint: .top,
+                //                    endPoint: .bottom
+                //                )
+                Color.theme
+            )
+            .frame(minHeight: UIScreen.main.bounds.height - 150)
+            //.padding(.top, 16) // 給 ScrollView 添加頂部間距
+            .padding(.top, 95)
+            //}
+            //.padding(.top, 70)
+            
+            .edgesIgnoringSafeArea(.top)
+            //.safeAreaInset(edge: .top) { Color.clear.frame(height: 80) }
+            .toolbarBackground(Color(.theme).opacity(0.5), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: Button(action: {
+                presentationMode2.wrappedValue.dismiss()
+            }) {
+                HStack {
+                    Image(systemName: "chevron.backward").foregroundColor(.black)
+                }
+            })
+            .onAppear {
+                fetchRemoteConfig()
+            }
+            
+            ZStack{
+                VStack{
+                    Spacer()
+                    //Rectangle().background(.clear).frame(height: 100)
+                }
+                Color.white.frame(height: 125).padding(.top,800)
+            }
+            
+            
+            
+            
         }
     }
+
     // 從 Firebase Remote Config 取回參數
     func fetchRemoteConfig() {
         // 設定最短取回間隔為 0 秒（開發期間使用）

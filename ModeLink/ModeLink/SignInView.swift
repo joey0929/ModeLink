@@ -18,17 +18,20 @@ struct SignInView: View {
     var body: some View {
         VStack {
             Spacer()
-            Text("Welcome to ModeLink")
-                .font(.largeTitle)
+            Text("Welcome to ModeLink!")
+//                .font(.largeTitle)
+                .font(.custom("LexendDeca-SemiBold", size: 51))
+                //.foregroundColor(.black.opacity(0.8))
+                .foregroundStyle(Color(.black).opacity(0.8))
                 .bold()
                 .padding(.top, 60)
             Spacer()
             // 登入說明
             Text("Please sign in with your Apple ID:")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(.bottom, 20)
-            Text("Please sign in with apple Id:")
+                .font(.custom("LexendDeca-Bold", size: 16))
+                .foregroundColor(.theme)
+                .padding(.bottom, 0)
+            //Text("Please sign in with apple Id:")
             if !isLoggedIn {
                 SignInWithAppleButton(
                     .signIn,
@@ -46,11 +49,21 @@ struct SignInView: View {
                 .cornerRadius(10) // 圓角按鈕
                 .shadow(radius: 5) // 陰影效果
                 .padding()
+                .padding(.top, -15)
             } else {
                 // 顯示登入成功後的主頁面
                 ContentView()
             }
         }
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color.theme, Color(.white)]), // 設定漸層顏色
+                startPoint: .topLeading, // 漸層起點
+                endPoint: .bottomTrailing // 漸層終點
+            )
+            
+            
+        )
     }
     // 處理 Apple 登入的函數
     private func handleSignInWithApple(result: Result<ASAuthorization, Error>) {
@@ -114,7 +127,8 @@ struct SignInView: View {
                     "displayName": displayName,
                     "email": email,
                     "createdAt": Timestamp(date: Date()),
-                    "blockedUsers": [] // 初始化空的封鎖列表
+                    "blockedUsers": [], // 初始化空的封鎖列表
+                    "isDelete" : false
                 ]
                 
                 userRef.setData(userData) { error in
