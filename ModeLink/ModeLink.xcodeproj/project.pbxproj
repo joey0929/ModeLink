@@ -454,6 +454,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ModeLink/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ModeLink;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Need to use camera to scan the 3D models.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need to use user's location to find nearly model shop.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to use user photo to publish article.";
@@ -491,6 +492,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ModeLink/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ModeLink;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Need to use camera to scan the 3D models.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need to use user's location to find nearly model shop.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to use user photo to publish article.";

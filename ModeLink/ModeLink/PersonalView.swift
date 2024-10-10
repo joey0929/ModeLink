@@ -62,7 +62,7 @@ struct PersonalView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color.blue.opacity(0.9))
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }
@@ -101,7 +101,7 @@ struct PersonalView: View {
                         }.font(.headline)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.red)
+                                .background(Color.red.opacity(0.9))
                                 .foregroundColor(.white)
                                 .cornerRadius(12)
                        
