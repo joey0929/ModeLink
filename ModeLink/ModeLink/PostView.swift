@@ -26,6 +26,10 @@ struct PostView: View {
     @State private var isImagePickerPresented = false
     
     @ObservedObject private var keyboardResponder = KeyboardResponder() // 使用 KeyboardResponder
+    // 設定縣市
+    let counties = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市", "基隆市", "新竹市", "嘉義市", "新竹縣", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "嘉義縣", "屏東縣", "宜蘭縣", "花蓮縣", "台東縣", "澎湖縣", "金門縣", "連江縣"]
+
+    
     
     var canSubmit: Bool {
         // 當所有欄位都有填寫時返回 true，否則返回 false
@@ -40,31 +44,6 @@ struct PostView: View {
             ScrollView(showsIndicators: false) {
                 
                 VStack {
-//                    if let selectedImage = selectedImage {  // 顯示選擇的圖片
-//                        Image(uiImage: selectedImage)
-//                            .resizable()
-//                            .scaledToFill()
-//                            .frame(height: 300)
-//                            .clipped()
-//                            .padding([.horizontal],15)
-//                            .padding(.top, 15)
-//                    } else {
-//                        Rectangle()
-//                            .fill(Color.gray.opacity(0.2))
-//                            .frame(height: 300)
-//                            .overlay(
-//                                VStack {
-//                                    Image(systemName: "photo")
-//                                        .font(.system(size: 50))
-//                                        .foregroundColor(.gray)
-//                                    Text("尚未選擇圖片")
-//                                        .foregroundColor(.gray)
-//                                }
-//                            )
-//                            .padding([.horizontal],15)
-//                            .padding(.top, 15)
-//                        
-//                    }
                     // 用於顯示選擇的圖片或按鈕
                     PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
                         if let selectedImage = selectedImage {
@@ -110,11 +89,59 @@ struct PostView: View {
                         .padding(.horizontal,15)
                         .padding(.top, 10)
                     
-                    TextField("縣市", text: $county)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal,15)
-                        .padding(.bottom, 10)
-                    
+//                    TextField("縣市", text: $county)
+//                        .textFieldStyle(RoundedBorderTextFieldStyle())
+//                        .padding(.horizontal,15)
+//                        .padding(.bottom, 10)
+                    // 縣市選單
+                    HStack {
+                        Text("選擇縣市:")
+                            .foregroundColor(Color(.systemGray))
+                        Spacer()
+                        Picker("請選擇縣市", selection: $county) {
+                            ForEach(counties, id: \.self) { county in
+                                Text(county)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle()) // 使用下拉選單樣式
+                        .frame(width: 100)
+                        //.padding()
+                        .background(Color.white)
+                        .foregroundColor(.black)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(.systemGray4), lineWidth: 0.5)
+                        )
+                    }
+                    .padding(.horizontal,15)
+                    .padding(.bottom, 10)
+//                    Menu {
+//                        ForEach(counties, id: \.self) { county in
+//                            Button(action: {
+//                                self.county = county
+//                            }) {
+//                                Text(county)
+//                                    .foregroundColor(.blue) // 修改顯示文字的顏色
+//                            }
+//                        }
+//                    } label: {
+//                        HStack {
+//                            Text(county.isEmpty ? "請選擇縣市" : county)
+//                                .foregroundColor(.black)
+//                            Spacer()
+//                            Image(systemName: "chevron.down")
+//                                .foregroundColor(.gray)
+//                        }
+//                        .padding()
+//                        .background(Color.white)
+//                        .cornerRadius(8)
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 8)
+//                                .stroke(Color(.systemGray4), lineWidth: 0.5)
+//                        )
+//                        .padding(.horizontal)
+//                    }
                     VStack(alignment:.leading) {
                         Text("請輸入內文:")
                             .foregroundColor(Color(.systemGray))
@@ -131,26 +158,6 @@ struct PostView: View {
                     
                     // 使用 PhotosPicker 來選擇圖片
                     HStack {
-//                        PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
-//                            Image(systemName: "photo")
-//                                .font(.system(size: 20))
-//                                .foregroundColor(.white)
-//                                .padding([.horizontal,.vertical],10)
-//                                .background(.blue)
-//                                .cornerRadius(10)
-//                        }
-//                        .onChange(of: selectedItem) { newItem in
-//                            if let newItem = newItem {
-//                                Task {
-//                                    // 當選擇項變更時，將圖片加載為 UIImage
-//                                    if let data = try? await newItem.loadTransferable(type: Data.self),
-//                                       // 圖片加載為 Data 格式 再轉乘 UIImage
-//                                       let uiImage = UIImage(data: data) {
-//                                        selectedImage = uiImage
-//                                    }
-//                                }
-//                            }
-//                        }
                         Spacer()
                         Button(action: {
                             uploadPost(title: title, content: content, county: county, image: selectedImage)
