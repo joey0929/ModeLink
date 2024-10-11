@@ -50,6 +50,7 @@
 		D4B14A5F2C9D24C700FD12E7 /* IntroSkillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A5E2C9D24C700FD12E7 /* IntroSkillView.swift */; };
 		D4B14A632C9D704D00FD12E7 /* UploadDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B14A622C9D704D00FD12E7 /* UploadDataView.swift */; };
 		D4F585B02CAA441A004362EE /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D4F585AF2CAA441A004362EE /* IQKeyboardManagerSwift */; };
+		D4FE31D62CB8B34400B899CD /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FE31D52CB8B34400B899CD /* SelectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,7 @@
 		D4B14A5C2C9D248700FD12E7 /* IntroToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroToolView.swift; sourceTree = "<group>"; };
 		D4B14A5E2C9D24C700FD12E7 /* IntroSkillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroSkillView.swift; sourceTree = "<group>"; };
 		D4B14A622C9D704D00FD12E7 /* UploadDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDataView.swift; sourceTree = "<group>"; };
+		D4FE31D52CB8B34400B899CD /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				D41344252C93EA10003400B9 /* ArticleView.swift */,
 				D4A2BB9E2C9735F9000B9745 /* PostView.swift */,
 				D4A2BBA02C97BD25000B9745 /* ImagePicker.swift */,
+				D4FE31D52CB8B34400B899CD /* SelectionView.swift */,
 				D41344232C92EFEB003400B9 /* ARview.swift */,
 				D4A2BB982C967234000B9745 /* CreateButton.swift */,
 				D4A2BB9A2C967277000B9745 /* ARQuickLookView.swift */,
@@ -316,6 +319,7 @@
 				D4A2BBA12C97BD25000B9745 /* ImagePicker.swift in Sources */,
 				D41344282C93EAF4003400B9 /* IntroView.swift in Sources */,
 				D4A2BB9F2C9735F9000B9745 /* PostView.swift in Sources */,
+				D4FE31D62CB8B34400B899CD /* SelectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
