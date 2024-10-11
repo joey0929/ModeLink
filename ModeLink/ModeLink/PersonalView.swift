@@ -190,29 +190,56 @@ struct PersonalView: View {
                 .padding(.horizontal)
                 
                 // 顯示封鎖列表按鈕
-                Button(action: {
-                    fetchBlockedUsers() // 獲取封鎖的用戶
-                    showBlockedList.toggle() // 切換顯示封鎖列表
-                }) {
-                    Text(showBlockedList ? "關閉封鎖列表" : "顯示封鎖列表")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.clear)
-                        .foregroundColor(.black)
-                        .cornerRadius(12)
-                    
+//                VStack(alignment: .leading) {
+//                    Button(action: {
+//                        fetchBlockedUsers() // 獲取封鎖的用戶
+//                        showBlockedList.toggle() // 切換顯示封鎖列表
+//                    }) {
+//                        Text(showBlockedList ? "關閉封鎖列表" : "顯示封鎖列表")
+//                            .font(.headline)
+//                            .frame(maxWidth: .infinity)
+//                            .padding()
+//                            .background(Color.clear)
+//                            .foregroundColor(.black)
+//                            .cornerRadius(12)
+//                        
+//                    }
+//                   .padding(.leading, -250)
+//                    
+//                    
+//                    // Divider 作為分隔線
+//                    Divider()
+//                        //.background(Color.gray) // 設定分隔線顏色
+//                        .frame(width: 100)
+//                        //.padding(.leading, -175)
+//                        //.padding(.top, -30)
+//                    //.padding(.horizontal)
+//                }
+                VStack(alignment: .leading) {
+                    // 顯示封鎖列表按鈕
+                    Button(action: {
+                        fetchBlockedUsers() // 獲取封鎖的用戶
+                        showBlockedList.toggle() // 切換顯示封鎖列表
+                    }) {
+                        Text(showBlockedList ? "關閉封鎖列表" : "顯示封鎖列表")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading) // 按鈕文字靠左對齊
+                            .padding()
+                            .background(Color.clear)
+                            .foregroundColor(.black)
+                            .cornerRadius(12)
+                    }
+                    .padding(.leading, 15) // 調整按鈕的縮排
+
+                    // Divider 作為分隔線
+                    Divider()
+                        .frame(width: 100) // 設定寬度，確保線條較短
+                        .frame(alignment: .leading) // 使線條靠左對齊
+                        .background(Color.gray) // 設定分隔線顏色
+                        .padding(.leading, 30) // 與按鈕保持一致的縮排
+                        .padding(.top, -18)
                 }
-                .padding(.leading, -250)
                 
-                
-                // Divider 作為分隔線
-                Divider()
-                    .background(Color.gray) // 設定分隔線顏色
-                    .frame(width: 100)
-                    .padding(.leading, -175)
-                    .padding(.top, -30)
-                //.padding(.horizontal)
                 // 封鎖列表區域，始終保持固定高度
                 VStack {
                     if showBlockedList {
@@ -231,10 +258,10 @@ struct PersonalView: View {
                                 }
                                 
                             }
-                            .listStyle(PlainListStyle()) // 使用 PlainListStyle 使列表背景更容易設置
+                            .listStyle(PlainListStyle())
                             .cornerRadius(10)
                         }
-                        .background(Color.white.opacity(0.4)) // 設置列表的背景顏色
+                        //.background(Color.white.opacity(0.4)) // 設置列表的背景顏色
                         .cornerRadius(10)
                         .padding(.horizontal,5)
                         .padding(.top,-30)
@@ -260,7 +287,6 @@ struct PersonalView: View {
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
-//                        .background(Color(red: 0.85, green: 0.85, blue: 0.85))
                         .background(Color(red: 0.28, green: 0.28, blue: 0.28))
                         .foregroundColor(.white)
                         .cornerRadius(12)
@@ -274,7 +300,6 @@ struct PersonalView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color(red: 0.85, green: 0.85, blue: 0.85))
-//                            .background(Color(red: 0.28, green: 0.28, blue: 0.28))
                             .foregroundColor(.black)
                             .cornerRadius(12)
                     }.padding(.top , -5)
