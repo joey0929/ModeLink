@@ -13,166 +13,87 @@ import CoreLocationUI
 struct MapView: View {
     @StateObject private var viewModel = MapViewModel()
     @State private var selectedLocationID: String? // 用於存儲當前選中的地點 ID
-    
     @State private var isShowingToyStores = false // 用於控制是否顯示公仔店家的標記
-       
-       var body: some View {
-           ZStack(alignment: .bottom) {
-               Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.locations + (isShowingToyStores ? viewModel.toyStoreLocations : [])) { location in
-                   MapAnnotation(coordinate: location.coordinate) {
-                       VStack {
-                           // 根據標記類型顯示不同的圖標
-                           if viewModel.toyStoreLocations.contains(where: { $0.id == location.id }) {
-                               Image(systemName: "star.circle.fill")
-                                   .resizable()
-                                   .frame(width: 30, height: 30)
-                                   .foregroundColor(.yellow)
-                           } else {
-                               Image(systemName: "mappin.and.ellipse")
-                                   .resizable()
-                                   .frame(width: 30, height: 30)
-                                   .foregroundColor(.red)
-                           }
-                           
-                           if selectedLocationID == location.id {
-                               Text(location.id)
-                                   .font(.caption)
-                                   .foregroundColor(.black)
-                                   .padding(5)
-                                   .background(Color.white.opacity(0.7))
-                                   .cornerRadius(8)
-                                   .shadow(radius: 5)
-                           }
-                       }
-                   }
-               }
-//               Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.locations) { location in
-//                   MapAnnotation(coordinate: location.coordinate) {
-//                       VStack {
-//                           Button(action: {
-//                               if selectedLocationID == location.id {
-//                                   // 如果再次點擊相同的標記，取消選中
-//                                   selectedLocationID = nil
-//                               } else {
-//                                   // 設置為選中的標記 ID
-//                                   selectedLocationID = location.id
-//                               }
-//                           }) {
-//                               Image(systemName: "mappin.and.ellipse")
-//                                   .resizable()
-//                                   .frame(width: 40, height: 40)
-//                                   .foregroundColor(.red)
-//                           }
-//
-//                           // 當選中的地點 ID 與當前標記匹配時顯示名稱
-//                           if selectedLocationID == location.id {
-//                               Text(location.id)
-//                                   .font(.caption)
-//                                   .foregroundColor(.black)
-//                                   //.padding(5)
-//                                   .background(Color.white.opacity(0.7))
-//                                   .cornerRadius(3)
-//                                   .shadow(radius: 5)
-//                           }
-//                       }
-//                   }
-//               }
-//               .ignoresSafeArea()
-//               .tint(.pink)
-               
-//               LocationButton(.currentLocation) {
-//                   viewModel.requestAllowOnceLocationPermission()
-//               }
-//               .foregroundColor(.white)
-//               .cornerRadius(8)
-//               .labelStyle(.iconOnly)
-//               .symbolVariant(.fill)
-//               .tint(.pink)
-//               .padding(.bottom, 100)
-               // 顯示 "當前位置" 和 "公仔店家" 的按鈕
-               HStack {
-                   LocationButton(.currentLocation) {
-                       viewModel.requestAllowOnceLocationPermission()
-                   }
-                   .foregroundColor(.white)
-                   .cornerRadius(8)
-                   .labelStyle(.iconOnly)
-                   .symbolVariant(.fill)
-                   .tint(.pink)
-                   
-                   // 顯示/隱藏公仔店家按鈕
-                   Button(action: {
-                       isShowingToyStores.toggle()
-                   }) {
-                       Label("公仔店家", systemImage: isShowingToyStores ? "building.2.fill" : "building.2")
-                           .foregroundColor(.white)
-                           .padding(10)
-                           .background(isShowingToyStores ? Color.green : Color.blue)
-                           .cornerRadius(8)
-                   }
-               }
-               .padding(.bottom, 100)
-               
-   
-               ZStack {
-                   VStack {
-                       Spacer()
-                   }
-                   Color.white.frame(height: 90).padding(.top, 800)
-               }
-           }
-           .onAppear {
-               viewModel.fetchLocationsFromFirebase()
-               viewModel.fetchToyStoreLocations2()
-           }
-       }
-    //    var body: some View {
-//        ZStack(alignment: .bottom) {
-//            Map(coordinateRegion: $viewModel.region,showsUserLocation: true, annotationItems: viewModel.locations) { location in
-//               // MapMarker(coordinate: location.coordinate, tint: .blue)
-//                MapAnnotation(coordinate: location.coordinate) {
-//                    VStack {
-//                        // 使用自定義圖示，這裡可以是任何 SwiftUI 視圖
-//                        Image(systemName: "mappin.and.ellipse")
-//                            .resizable()
-//                            .frame(width: 30, height: 50)
-//                            .foregroundColor(.red)
-//                        // 也可以顯示文字或其他視覺元素
-//                        Text(location.id)
-//                            .font(.caption)
-//                            .foregroundColor(.black)
-//                            .padding(5)
-//                            .background(Color.white.opacity(0.3))
-//                            .cornerRadius(8)
-//                    }
-//                }
-//            }.ignoresSafeArea()
-////            .ignoresSafeArea()
-//            .tint(.pink)
-//            LocationButton(.currentLocation) {
-//                viewModel.requestAllowOnceLocationPermission()
-//            }
-//            .foregroundColor(.white)
-//            .cornerRadius(8)
-//            .labelStyle(.titleAndIcon)
-//            .symbolVariant(.fill)
-//            .tint(.pink)
-//            .padding(.bottom, 100)
-//            
-//            ZStack{
-//                VStack{
-//                    Spacer()
-//                    //Rectangle().background(.clear).frame(height: 100)
-//                }
-//                Color.white.frame(height: 90).padding(.top,800)
-//            }
-//            
-//            
-//        }
-//        .onAppear {
-//            viewModel.fetchLocationsFromFirebase()
-//        }
-//    }
+    var body: some View {
+            ZStack(alignment: .bottom) {
+                Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.locations + (isShowingToyStores ? viewModel.toyStoreLocations : [])) { location in
+                    MapAnnotation(coordinate: location.coordinate) {
+                        VStack {
+                            Button(action: {
+                                // 點擊標記，切換選中狀態
+                                if selectedLocationID == location.id {
+                                    // 如果再次點擊相同的標記，取消選中
+                                    selectedLocationID = nil
+                                } else {
+                                    // 設置為選中的標記 ID
+                                    selectedLocationID = location.id
+                                }
+                            }) {
+                                // 根據標記類型顯示不同的圖標
+                                if viewModel.toyStoreLocations.contains(where: { $0.id == location.id }) {
+                                    Image(systemName: "teddybear.fill")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.yellow)
+                                } else {
+                                    Image(systemName: "mappin.and.ellipse")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.red)
+                                }
+                            }
+                            
+                            // 當選中的地點 ID 與當前標記匹配時顯示名稱
+                            if selectedLocationID == location.id {
+                                Text(location.id)
+                                    .font(.caption)
+                                    .foregroundColor(.black)
+                                    .padding(5)
+                                    .background(Color.white.opacity(0.7))
+                                    .cornerRadius(8)
+                                    .shadow(radius: 5)
+                            }
+                        }
+                    }
+                }
+                .ignoresSafeArea()
+                
+                // 顯示 "當前位置" 和 "公仔店家" 的按鈕
+                HStack {
+                    LocationButton(.currentLocation) {
+                        viewModel.requestAllowOnceLocationPermission()
+                    }
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    .labelStyle(.iconOnly)
+                    .symbolVariant(.fill)
+                    .tint(.pink)
+
+                    // 顯示/隱藏公仔店家按鈕
+                    Button(action: {
+                        isShowingToyStores.toggle()
+                    }) {
+                        Label("公仔店家", systemImage: isShowingToyStores ? "building.2.fill" : "building.2")
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(isShowingToyStores ? Color.green : Color.blue)
+                            .cornerRadius(8)
+                    }
+                }
+                .padding(.bottom, 100)
+
+                ZStack {
+                    VStack {
+                        Spacer()
+                    }
+                    Color.white.frame(height: 90).padding(.top, 800)
+                }
+            }
+            .onAppear {
+                viewModel.fetchLocationsFromFirebase()
+                viewModel.fetchToyStoreLocations2()
+            }
+        }
 }
 #Preview {
     MapView()

@@ -10,17 +10,11 @@ import SwiftUI
 struct TaBarView: View {
     @State private var selectedTab = 1 // record the selected tab item
     @State private var isShowingARSelection = true // 用於控制是否顯示 ARView 的選擇畫面
-    
     var body: some View {
-        
         TabView(selection: $selectedTab) {
             ArticleView().tabItem {
                 Label("article", systemImage : "house")
             }.tag(1)
-//            ARview().tabItem {
-//                Label("scanner", systemImage : "camera.viewfinder")
-//            }.tag(2).background(.clear)
-            
             // AR Scanner 頁面
             NavigationView {
                 if isShowingARSelection {
@@ -52,38 +46,6 @@ struct TaBarView: View {
                 // 當切換到其他 tab 時，隱藏 AR 選擇畫面
                 isShowingARSelection = false
             }
-        }
-        //.background(selectedTab == 2 ? .white : .white)
-//        .onAppear {
-//            //customizeTabBarAppearance() // 自定義 TabBar 外觀
-//           // updateTabBarAppearance()
-//        }
-//        .onChange(of: selectedTab) { _ in
-//            updateTabBarAppearance()
-//        }
-    }
-    // 自定義 TabBar 外觀
-    func customizeTabBarAppearance() {
-        // 修改背景色
-//        UITabBar.appearance().barTintColor = UIColor.white
-        // 設定未選中項目的顏色
-        UITabBar.appearance().backgroundColor = UIColor.white
-       // UITabBar.appearance().unselectedItemTintColor = UIColor.gray
-        // 禁用透明效果
-        //UITabBar.appearance().isTranslucent = false
-        // 修改未選中項目的顏色
-
-    }
-    
-    func updateTabBarAppearance() {
-        if selectedTab == 2 {
-            // 如果選中 ARView，將 TabBar 設為透明
-            UITabBar.appearance().backgroundColor = UIColor.clear
-            UITabBar.appearance().isTranslucent = true
-        } else {
-            // 否則設為白色
-            UITabBar.appearance().backgroundColor = UIColor.white
-           // UITabBar.appearance().isTranslucent = false
         }
     }
 }

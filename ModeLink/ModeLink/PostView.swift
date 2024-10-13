@@ -11,7 +11,6 @@ import FirebaseFirestore
 import FirebaseStorage
 import PhotosUI
 import FirebaseAuth
-
 import IQKeyboardManagerSwift
 import Combine
 
@@ -29,17 +28,13 @@ struct PostView: View {
     // 設定縣市
     let counties = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市", "基隆市", "新竹市", "嘉義市", "新竹縣", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "嘉義縣", "屏東縣", "宜蘭縣", "花蓮縣", "台東縣", "澎湖縣", "金門縣", "連江縣"]
 
-    
-    
     var canSubmit: Bool {
         // 當所有欄位都有填寫時返回 true，否則返回 false
         return !title.isEmpty && !content.isEmpty && !county.isEmpty
         //return !title.isEmpty && !content.isEmpty && !county.isEmpty && selectedImage != nil
     }
-    
     var body: some View {
         //  swiftlint:disable trailing_whitespace
-        
         ZStack {
             ScrollView(showsIndicators: false) {
                 
@@ -82,17 +77,10 @@ struct PostView: View {
                             }
                         }
                     }
-                    
-                    
                     TextField("標題", text: $title)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal,15)
                         .padding(.top, 10)
-                    
-//                    TextField("縣市", text: $county)
-//                        .textFieldStyle(RoundedBorderTextFieldStyle())
-//                        .padding(.horizontal,15)
-//                        .padding(.bottom, 10)
                     // 縣市選單
                     HStack {
                         Text("選擇縣市:")
@@ -116,32 +104,6 @@ struct PostView: View {
                     }
                     .padding(.horizontal,15)
                     .padding(.bottom, 10)
-//                    Menu {
-//                        ForEach(counties, id: \.self) { county in
-//                            Button(action: {
-//                                self.county = county
-//                            }) {
-//                                Text(county)
-//                                    .foregroundColor(.blue) // 修改顯示文字的顏色
-//                            }
-//                        }
-//                    } label: {
-//                        HStack {
-//                            Text(county.isEmpty ? "請選擇縣市" : county)
-//                                .foregroundColor(.black)
-//                            Spacer()
-//                            Image(systemName: "chevron.down")
-//                                .foregroundColor(.gray)
-//                        }
-//                        .padding()
-//                        .background(Color.white)
-//                        .cornerRadius(8)
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 8)
-//                                .stroke(Color(.systemGray4), lineWidth: 0.5)
-//                        )
-//                        .padding(.horizontal)
-//                    }
                     VStack(alignment:.leading) {
                         Text("請輸入內文:")
                             .foregroundColor(Color(.systemGray))
@@ -155,7 +117,6 @@ struct PostView: View {
                             )
                             .padding(.top, 5)
                     }.padding(.horizontal, 15) // 確保整個 VStack 具有左右縮排
-                    
                     // 使用 PhotosPicker 來選擇圖片
                     HStack {
                         Spacer()
@@ -172,56 +133,21 @@ struct PostView: View {
                         }
                         .disabled(!canSubmit)
                         .padding(.trailing,14)
-                        //Spacer()
-                        // 重置按鈕
-//                        Button(action: {
-//                            selectedImage = nil // 清空已選擇的圖片
-//                            selectedItem = nil  // 清空 PhotosPicker 的選擇
-//                            title = ""
-//                            content = ""
-//                            county = ""
-//                        }) {
-//                            Text("Reset")
-//                                .font(.system(size: 20))
-//                                .foregroundColor(.white)
-//                                .padding(.horizontal, 10)
-//                                .padding(.vertical,8)
-//                                .background(.red)
-//                                .cornerRadius(10)
-//                        }.padding(.trailing, 12)
-                        
-                        //.padding()
-                        //Spacer()
                     }
                     .padding(.leading)
                     .padding(.bottom, 10)
                     //Spacer(minLength: 80)
                 }
-                
                 .onAppear() {
                     fetchUserName()
-                    
                 }
                 .padding(.bottom, keyboardResponder.currentHeight) // 調整底部間距
-                
-                
             }
-            
             .background(Color.white)
             .cornerRadius(10)
             .shadow(color: .gray.opacity(0.8), radius: 5, x: 0, y: 5)
             .frame(height: 620)
             .padding(.horizontal)
-            //            .navigationTitle("新貼文")
-//            .navigationBarBackButtonHidden(true)
-//            .navigationBarItems(leading: Button(action: {
-//                presentationMode.wrappedValue.dismiss()
-//            }) {
-//                HStack {
-//                    Image(systemName: "chevron.backward").foregroundColor(.black)
-//                    Text("")
-//                }
-//            })
             .toolbar {
                 // 自訂返回按鈕
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -231,7 +157,6 @@ struct PostView: View {
                         HStack {
                             Image(systemName: "chevron.backward")
                                 .foregroundColor(.white) // 設定返回按鈕的顏色
-                            
                         }
                     }
                 }
@@ -326,7 +251,7 @@ struct PostView: View {
             }
         }
     }
-    
+
     // 上傳圖片到 Firebase Storage 並獲取下載 URL
     func uploadImage(_ image: UIImage, completion: @escaping (URL?) -> Void) {
         let storageRef = Storage.storage().reference().child("images/\(UUID().uuidString).jpg")
@@ -366,7 +291,6 @@ final class KeyboardResponder: ObservableObject {
         _center.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         _center.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
     @objc private func keyboardWillShow(notification: Notification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             withAnimation {
