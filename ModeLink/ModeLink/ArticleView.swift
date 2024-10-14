@@ -37,18 +37,13 @@ struct Post2: Identifiable {
 struct ArticleView: View {
     @State private var posts: [Post2] = []
     @State private var showAlert = false
-    
     @State private var isImagePreviewPresented = false
     @State private var selectedImageURL: String? = nil
-
     @State private var showMenuSheet = false // 控制選單的顯示
     @State private var selectedPostID: String? = nil // 用於儲存當前選中的貼文 ID
-    
-    
     @State private var isLoadingPreview: Bool = false
     @State private var showErrorAlert: Bool = false
     @State private var errorMessage: String = ""
-    
     
     let columns: [GridItem] = [GridItem(.fixed(370))]
     var body: some View {
@@ -85,7 +80,6 @@ struct ArticleView: View {
                                             .foregroundColor(.black)
                                             .frame(width: 30, height: 30)
                                     })
-                                    
                                 }
 
                                 Text(post.title)
@@ -99,9 +93,6 @@ struct ArticleView: View {
                                     .lineLimit(nil)
                                     .fixedSize(horizontal: false, vertical: true)
                                     .allowsHitTesting(false)
-                                
-                                
-                                
                                 if let imageURL = post.imageURL {
                                     KFImage(URL(string: imageURL))
                                         .resizable()
@@ -161,12 +152,9 @@ struct ArticleView: View {
                         )
                     )
                 }
-//                .refreshable {
-////                    startListeningForPosts() // 刷新操作重新載入貼文
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // 延遲 2 秒
-//                        startListeningForPosts() // 重新載入貼文
-//                    }
-//                }
+                .refreshable {
+                    startListeningForPosts() // 刷新操作重新載入貼文
+                }
                 .background(
                     LinearGradient(
                         gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
@@ -466,7 +454,6 @@ struct ImagePreviewView: View {
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            
             if imageLoader.isLoading {
                 ProgressView("載入中...")
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
