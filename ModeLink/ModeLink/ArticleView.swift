@@ -142,7 +142,6 @@ struct ArticleView: View {
 //                                        }
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
-                                    // 檢舉按鈕
                                     Spacer()
                                 }
                                 .padding(.top, 10)
@@ -154,7 +153,6 @@ struct ArticleView: View {
                         }
                     }
                     .padding()
-//                    .background(Color(.theme))
                     .background(
                         LinearGradient(
                             gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
@@ -163,7 +161,12 @@ struct ArticleView: View {
                         )
                     )
                 }
-                //.background(Color(.theme))
+//                .refreshable {
+////                    startListeningForPosts() // 刷新操作重新載入貼文
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // 延遲 2 秒
+//                        startListeningForPosts() // 重新載入貼文
+//                    }
+//                }
                 .background(
                     LinearGradient(
                         gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
@@ -454,39 +457,6 @@ struct ArticleView: View {
 #Preview{
     ArticleView()
 }
-//struct ImagePreviewView: View {
-//    let imageURL: String?
-//    @Binding var isPresented: Bool
-//
-//    var body: some View {
-//        ZStack {
-//            Color.black.ignoresSafeArea()
-//            
-//            if let imageURL = imageURL {
-//                KFImage(URL(string: imageURL))
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fit)
-//                    .padding()
-//            }
-//
-//            VStack {
-//                Spacer()
-//                Button(action: {
-//                    isPresented = false
-//                }) {
-//                    Text("關閉")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.gray.opacity(0.7))
-//                        .cornerRadius(10)
-//                }
-//                .padding()
-//            }
-//        }
-//    }
-//}
-
 struct ImagePreviewView: View {
     let imageURL: String?
     @Binding var isPresented: Bool
@@ -565,18 +535,6 @@ struct ImagePreviewView: View {
                     }.padding()
                 }
                 Spacer()
-//                Button(action: {
-//                    isPresented = false
-//                }) {
-//                    Text("關閉")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.gray.opacity(0.7))
-//                        .cornerRadius(10)
-//                        .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
-//                }
-//                .padding()
             }
         }
         .onAppear {

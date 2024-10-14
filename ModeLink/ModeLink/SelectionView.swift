@@ -61,6 +61,23 @@ struct SelectionView: View {
                     .cornerRadius(12)
             }
             .padding(.horizontal, 30)
+            
+            
+            // 按鈕3: 進入 TestCrashView
+            NavigationLink(destination: TestCrashView()) {
+                Text("進入 TestCrashView")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.orange)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal, 30)
+            
+            
+            
+            
             Spacer()
         }
         .background(
