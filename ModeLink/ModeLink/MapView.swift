@@ -57,7 +57,6 @@ struct MapView: View {
                     }
                 }
                 .ignoresSafeArea()
-                
                 // 顯示 "當前位置" 和 "公仔店家" 的按鈕
                 HStack {
                     LocationButton(.currentLocation) {

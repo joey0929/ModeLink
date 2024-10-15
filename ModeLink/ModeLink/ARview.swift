@@ -10,6 +10,7 @@ import RealityKit
 import Firebase
 import FirebaseStorage
 import PhotosUI
+import ARKit
 
 struct ARview: View {
     @State private var session: ObjectCaptureSession?  // 控制圖像捕捉
@@ -33,68 +34,89 @@ struct ARview: View {
     var modelPath: URL? {
         return modelFolderPath?.appending(path: "model.usdz")
     }
+    
+    var isLiDARAvailable: Bool {
+        return ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
+    }
+    
     var body: some View {
-        ZStack(alignment: .bottom) {
-            if let session {
-                ObjectCaptureView(session: session)   // AR 相機介面
-                VStack(spacing: 16) {
-                    if session.state == .ready || session.state == .detecting {
-                        CreateButton(session: session) // 偵測和捕捉按鈕
-                    }
-                    HStack {
-                        Text(session.state.label)
-                            .bold()
-                            .foregroundStyle(.yellow)
-                            .padding(.bottom)
-                    }
-                }
-                
-            }
-            if isProgressing {
-                Color.black.opacity(0.2) // 背景變得更亮
-                    .edgesIgnoringSafeArea(.all)  // 確保背景覆蓋整個螢幕
-                    .overlay {
-                        VStack(spacing: 20) {  // 增加內部元素間距
-                            // 自定義的圓角卡片
-                            VStack(spacing: 16) {
-                                ProgressView()  // 進度條
-                                    .scaleEffect(1.5)  // 讓進度條更大些
-                                    .padding(.top, 20)
-                                Text("生成模型中，請耐心等候...")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)  // 讓文字更清晰
-                                Text("並請不要切換頁面！！！！！")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                Text("根據掃描次數，等待時間會有所不同")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)  // 輔助文本
-                            }
-                            .frame(width: 300)  // 控制卡片寬度
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.white)  // 使用白色背景
-                                    .shadow(color: .gray.opacity(0.4), radius: 10, x: 0, y: 5)  // 添加陰影
-                            )
-                        }
-                    }
-            }
-//            ZStack{
-//                VStack{
-//                    Spacer()
-//                    //Rectangle().background(.clear).frame(height: 100)
-//                }
-//                Color.gray.opacity(0.8).frame(height: 50).padding(.top,800)
-//            }
-            Rectangle()
-                .fill(Color.white.opacity(0.4))
-                .frame(height: 80)  // 設定高度以覆蓋 TabBar 的位置
-                .edgesIgnoringSafeArea(.bottom)  // 確保覆蓋整個底部
-                .padding(.bottom, -100)
-        }
         
+        Group {
+            if isLiDARAvailable {
+                ZStack(alignment: .bottom) {
+                    if let session {
+                        ObjectCaptureView(session: session)   // AR 相機介面
+                        VStack(spacing: 16) {
+                            if session.state == .ready || session.state == .detecting {
+                                CreateButton(session: session) // 偵測和捕捉按鈕
+                            }
+                            HStack {
+                                Text(session.state.label)
+                                    .bold()
+                                    .foregroundStyle(.yellow)
+                                    .padding(.bottom)
+                            }
+                        }
+                        
+                    }
+                    if isProgressing {
+                        Color.black.opacity(0.2) // 背景變得更亮
+                            .edgesIgnoringSafeArea(.all)  // 確保背景覆蓋整個螢幕
+                            .overlay {
+                                VStack(spacing: 20) {  // 增加內部元素間距
+                                    // 自定義的圓角卡片
+                                    VStack(spacing: 16) {
+                                        ProgressView()  // 進度條
+                                            .scaleEffect(1.5)  // 讓進度條更大些
+                                            .padding(.top, 20)
+                                        Text("生成模型中，請耐心等候...")
+                                            .font(.headline)
+                                            .foregroundColor(.primary)  // 讓文字更清晰
+                                        Text("並請不要切換頁面！！！！！")
+                                            .font(.headline)
+                                            .foregroundColor(.primary)
+                                        Text("根據掃描次數，等待時間會有所不同")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)  // 輔助文本
+                                    }
+                                    .frame(width: 300)  // 控制卡片寬度
+                                    .padding()
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .fill(Color.white)  // 使用白色背景
+                                            .shadow(color: .gray.opacity(0.4), radius: 10, x: 0, y: 5)  // 添加陰影
+                                    )
+                                }
+                            }
+                    }
+                    //            ZStack{
+                    //                VStack{
+                    //                    Spacer()
+                    //                    //Rectangle().background(.clear).frame(height: 100)
+                    //                }
+                    //                Color.gray.opacity(0.8).frame(height: 50).padding(.top,800)
+                    //            }
+                    Rectangle()
+                        .fill(Color.white.opacity(0.4))
+                        .frame(height: 80)  // 設定高度以覆蓋 TabBar 的位置
+                        .edgesIgnoringSafeArea(.bottom)  // 確保覆蓋整個底部
+                        .padding(.bottom, -100)
+                }
+            }
+            //        .task {
+            //            guard let directory = createNewScanDirectory() else { return }
+            //            session = ObjectCaptureSession()
+            //            modelFolderPath = directory.appending(path: "Models/")
+            //            imageFolderPath = directory.appending(path: "Images/")
+            //            guard let imageFolderPath else { return }
+            //            session?.start(imagesDirectory: imageFolderPath)
+            //        }
+        }
         .task {
+            guard isLiDARAvailable else {
+                print("不支援AR掃描")
+                return
+            }
             guard let directory = createNewScanDirectory() else { return }
             session = ObjectCaptureSession()
             modelFolderPath = directory.appending(path: "Models/")
@@ -102,6 +124,7 @@ struct ARview: View {
             guard let imageFolderPath else { return }
             session?.start(imagesDirectory: imageFolderPath)
         }
+     
         .onChange(of: session?.userCompletedScanPass) { _, newValue in
             if let newValue, newValue {
                 scanPassCount += 1  // 每次完成掃描後增加計數
