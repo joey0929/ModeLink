@@ -152,9 +152,10 @@ struct SelectionView: View {
                     .background(isProUser ? Color.blue : Color.gray) // 根據用戶選擇決定按鈕顏色
                     .foregroundColor(.white)
                     .cornerRadius(12)
-                    .disabled(!isProUser || !isLiDARAvailable) // 如果不是 Pro 系列，則禁用按鈕
+                    //.disabled(!isProUser || !isLiDARAvailable) // 如果不是 Pro 系列，則禁用按鈕
                     
             }
+            .disabled(!isProUser || !isLiDARAvailable) // 如果不是 Pro 系列，則禁用按鈕`    
             .padding(.horizontal, 30)
 
             // 按鈕2: 其他操作
