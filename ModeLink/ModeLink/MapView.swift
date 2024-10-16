@@ -36,11 +36,12 @@ struct MapView: View {
                                 Image(systemName: "teddybear.fill")
                                     .resizable()
                                     .frame(width: 30, height: 30)
-                                    .foregroundColor(.yellow)
+                                    .foregroundColor(.blue)
                             } else {
                                 Image(systemName: "mappin.and.ellipse")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
+                                    //.resizable()
+                                    .font(.system(size: 30))
+                                    .frame(width: 30)
                                     .foregroundColor(.red)
                             }
                         }
@@ -89,7 +90,7 @@ struct MapView: View {
                         .foregroundColor(.white)
                         .font(.headline)
                         .padding(10)
-                        .background(isShowingToyStores ? Color.theme : Color.yellow)
+                        .background(isShowingToyStores ? Color.theme : Color.blue)
                         .cornerRadius(8)
                 }
             }
