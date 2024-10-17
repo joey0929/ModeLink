@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import Kingfisher
 
 class ArticleViewModel: ObservableObject {
     @Published var posts: [Post2] = []
@@ -133,5 +134,29 @@ class ArticleViewModel: ObservableObject {
             }
         }
     }
+    
+    func handleImageTap(imageURL: String) {
+        selectedImageURL = imageURL
+        isLoadingPreview = true
+        
+        // 使用 Kingfisher 來下載圖片
+        guard let url = URL(string: imageURL) else {
+            errorMessage = "無效的圖片連結"
+            showErrorAlert = true
+            isLoadingPreview = false
+            return
+        }
+        KingfisherManager.shared.retrieveImage(with: url) { result in
+            DispatchQueue.main.async {
+                self.isLoadingPreview = false
+                switch result {
+                case .success:
+                    self.isImagePreviewPresented = true
+                case .failure(let error):
+                    self.errorMessage = "無法載入圖片: \(error.localizedDescription)"
+                    self.showErrorAlert = true
+                }
+            }
+        }
+    }
 }
-
