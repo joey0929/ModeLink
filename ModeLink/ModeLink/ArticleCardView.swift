@@ -10,9 +10,7 @@ import Kingfisher
 
 struct ArticleCardView: View {
     let post: Post2
-    let onImageTap: (String) -> Void
-    let onLikeTap: () -> Void
-    let onMenuTap: () -> Void
+    @ObservedObject var viewModel: ArticleViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -30,7 +28,10 @@ struct ArticleCardView: View {
                 }
                 Spacer()
                 Text(post.county).font(.headline)
-                Button(action: onMenuTap) {
+                Button(action: {
+                    viewModel.selectedPostID = post.userId
+                    viewModel.showMenuSheet = true
+                }) {
                     Image(systemName: "ellipsis")
                         .foregroundColor(.black)
                         .frame(width: 30, height: 30)
@@ -55,13 +56,16 @@ struct ArticleCardView: View {
                     .cornerRadius(10)
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        onImageTap(imageURL)
+                        viewModel.handleImageTap(imageURL: imageURL)
                     }
             }
             HStack {
-                Button(action: onLikeTap) {
+                Button(action: {
+                    viewModel.toggleLike(for: post)
+                }) {
                     HStack {
-                        Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup").padding(.leading,5)
+                        Image(systemName: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                            .padding(.leading, 5)
                         Text("\(post.likes)")
                     }
                 }
@@ -76,8 +80,7 @@ struct ArticleCardView: View {
         .cornerRadius(10)
         .shadow(radius: 5)
     }
-
-    // 日期格式化方法
+    // MARK: - Trans TimeStamp to y/m/d/h-min
     func basicFormattedDate(from date: Date) -> String {
         let calendar = Calendar.current
         let year = calendar.component(.year, from: date)
@@ -88,7 +91,3 @@ struct ArticleCardView: View {
         return "\(year)-\(month)-\(day) \(hour):\(minute)"
     }
 }
-//
-//#Preview {
-//    ArticleCardView()
-//}

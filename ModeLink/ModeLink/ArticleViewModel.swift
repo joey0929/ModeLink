@@ -22,8 +22,7 @@ class ArticleViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     
     private let db = Firestore.firestore()
-    
-    // 開始監聽貼文
+    // 監聽貼文
     func startListeningForPosts() {
         guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
         
