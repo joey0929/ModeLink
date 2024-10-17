@@ -60,6 +60,7 @@
 		D4FE32082CBCC74200B899CD /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = D4FE32072CBCC74200B899CD /* FirebaseStorageCombine-Community */; };
 		D4FE320A2CBCC74200B899CD /* FirebaseVertexAI-Preview in Frameworks */ = {isa = PBXBuildFile; productRef = D4FE32092CBCC74200B899CD /* FirebaseVertexAI-Preview */; };
 		D4FE320F2CC0D78800B899CD /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FE320E2CC0D78800B899CD /* SignInViewModel.swift */; };
+		D4FE32112CC0DFBA00B899CD /* PersonalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FE32102CC0DFBA00B899CD /* PersonalViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +93,7 @@
 		D4FE31D52CB8B34400B899CD /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		D4FE31D82CBCC43E00B899CD /* TestCrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCrashView.swift; sourceTree = "<group>"; };
 		D4FE320E2CC0D78800B899CD /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		D4FE32102CC0DFBA00B899CD /* PersonalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +170,7 @@
 				D458F0892CA50B6A00216CB4 /* SignInView.swift */,
 				D4FE320E2CC0D78800B899CD /* SignInViewModel.swift */,
 				D41B46612CA24C2E0067D894 /* PersonalView.swift */,
+				D4FE32102CC0DFBA00B899CD /* PersonalViewModel.swift */,
 				D41344252C93EA10003400B9 /* ArticleView.swift */,
 				D4A2BB9E2C9735F9000B9745 /* PostView.swift */,
 				D4A2BBA02C97BD25000B9745 /* ImagePicker.swift */,
@@ -367,6 +370,7 @@
 				D41344142C92ED4D003400B9 /* ModeLinkApp.swift in Sources */,
 				D4A2BBA12C97BD25000B9745 /* ImagePicker.swift in Sources */,
 				D41344282C93EAF4003400B9 /* IntroView.swift in Sources */,
+				D4FE32112CC0DFBA00B899CD /* PersonalViewModel.swift in Sources */,
 				D4A2BB9F2C9735F9000B9745 /* PostView.swift in Sources */,
 				D4FE31D62CB8B34400B899CD /* SelectionView.swift in Sources */,
 			);

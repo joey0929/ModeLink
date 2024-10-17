@@ -13,7 +13,6 @@ import CryptoKit
 
 class SignInViewModel: ObservableObject {
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-//    @Published var isLoggedIn: Bool = false
     private var currentNonce: String?
     func handleSignInWithApple(result: Result<ASAuthorization, Error>) {
         switch result {
