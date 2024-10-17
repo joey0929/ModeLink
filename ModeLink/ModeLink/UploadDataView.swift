@@ -16,8 +16,12 @@ struct LocationItem2: Identifiable {
 struct UploadDataView: View {
     @State var imageURL2: URL? = nil
     var locations: [LocationItem] = [
-        LocationItem(id: "玩具e哥(板橋新埔店)", coordinate: CLLocationCoordinate2D(latitude: 25.023378, longitude: 121.468812)),
-        LocationItem(id: "玩具e哥（家福重新店）", coordinate: CLLocationCoordinate2D(latitude: 25.043240, longitude: 121.467328))
+        LocationItem(id: "樂園project", coordinate: CLLocationCoordinate2D(latitude: 25.012920, longitude: 121.535524)),
+        LocationItem(id: "星宇文創", coordinate: CLLocationCoordinate2D(latitude: 25.050567, longitude: 121.514309)),
+        LocationItem(id: "宅神爺玩具", coordinate: CLLocationCoordinate2D(latitude: 25.049861, longitude: 121.514690)),
+        LocationItem(id: "托比玩具 Tobe Toy", coordinate: CLLocationCoordinate2D(latitude: 25.050947, longitude: 121.514285)),
+        LocationItem(id: "夏本舖", coordinate: CLLocationCoordinate2D(latitude: 25.089560, longitude: 121.523233)),
+        LocationItem(id: "台北天母句商店", coordinate: CLLocationCoordinate2D(latitude: 25.117348, longitude: 121.534086))
     ]
     var body: some View {
         VStack {
@@ -35,8 +39,9 @@ struct UploadDataView: View {
                 //uploadDataToFirestore2()
             }
             Spacer()
-            Button("Upload to locations") {
+            Button("Upload to locations2") {
                 //uploadLocationsToFirebase()
+                uploadLocationsToFirebase2()
             }
             Spacer()
             Button("Upload to tools2") {
@@ -67,6 +72,27 @@ struct UploadDataView: View {
             }
         }
     }
+    func uploadLocationsToFirebase2() {
+        let db = Firestore.firestore()
+        for location in locations {
+            let data: [String: Any] = [
+                "id": location.id,
+                "latitude": location.coordinate.latitude,
+                "longitude": location.coordinate.longitude
+            ]
+            // 上傳每個位置資料到 Firestore 的 "locations" collection
+            db.collection("toyStores").addDocument(data: data) { error in
+                if let error = error {
+                    print("Error uploading location: \(error.localizedDescription)")
+                } else {
+                    print("Location uploaded successfully!")
+                }
+            }
+        }
+    }
+    
+    
+    
     // 從 Firebase Storage 取得圖片的下載 URL
     func loadImageFromFirebase() {
         let storageRef = Storage.storage().reference(withPath: "infoImages/IMG_0345.jpg")

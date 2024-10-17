@@ -37,18 +37,13 @@ struct Post2: Identifiable {
 struct ArticleView: View {
     @State private var posts: [Post2] = []
     @State private var showAlert = false
-    
     @State private var isImagePreviewPresented = false
     @State private var selectedImageURL: String? = nil
-
     @State private var showMenuSheet = false // 控制選單的顯示
     @State private var selectedPostID: String? = nil // 用於儲存當前選中的貼文 ID
-    
-    
     @State private var isLoadingPreview: Bool = false
     @State private var showErrorAlert: Bool = false
     @State private var errorMessage: String = ""
-    
     
     let columns: [GridItem] = [GridItem(.fixed(370))]
     var body: some View {
@@ -85,7 +80,6 @@ struct ArticleView: View {
                                             .foregroundColor(.black)
                                             .frame(width: 30, height: 30)
                                     })
-                                    
                                 }
 
                                 Text(post.title)
@@ -99,9 +93,6 @@ struct ArticleView: View {
                                     .lineLimit(nil)
                                     .fixedSize(horizontal: false, vertical: true)
                                     .allowsHitTesting(false)
-                                
-                                
-                                
                                 if let imageURL = post.imageURL {
                                     KFImage(URL(string: imageURL))
                                         .resizable()
@@ -142,7 +133,6 @@ struct ArticleView: View {
 //                                        }
 //                                    }
 //                                    .buttonStyle(BorderlessButtonStyle())
-                                    // 檢舉按鈕
                                     Spacer()
                                 }
                                 .padding(.top, 10)
@@ -154,7 +144,6 @@ struct ArticleView: View {
                         }
                     }
                     .padding()
-//                    .background(Color(.theme))
                     .background(
                         LinearGradient(
                             gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
@@ -163,7 +152,9 @@ struct ArticleView: View {
                         )
                     )
                 }
-                //.background(Color(.theme))
+                .refreshable {
+                    startListeningForPosts() // 刷新操作重新載入貼文
+                }
                 .background(
                     LinearGradient(
                         gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
@@ -454,39 +445,6 @@ struct ArticleView: View {
 #Preview{
     ArticleView()
 }
-//struct ImagePreviewView: View {
-//    let imageURL: String?
-//    @Binding var isPresented: Bool
-//
-//    var body: some View {
-//        ZStack {
-//            Color.black.ignoresSafeArea()
-//            
-//            if let imageURL = imageURL {
-//                KFImage(URL(string: imageURL))
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fit)
-//                    .padding()
-//            }
-//
-//            VStack {
-//                Spacer()
-//                Button(action: {
-//                    isPresented = false
-//                }) {
-//                    Text("關閉")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.gray.opacity(0.7))
-//                        .cornerRadius(10)
-//                }
-//                .padding()
-//            }
-//        }
-//    }
-//}
-
 struct ImagePreviewView: View {
     let imageURL: String?
     @Binding var isPresented: Bool
@@ -496,7 +454,6 @@ struct ImagePreviewView: View {
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            
             if imageLoader.isLoading {
                 ProgressView("載入中...")
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
@@ -565,18 +522,6 @@ struct ImagePreviewView: View {
                     }.padding()
                 }
                 Spacer()
-//                Button(action: {
-//                    isPresented = false
-//                }) {
-//                    Text("關閉")
-//                        .font(.headline)
-//                        .foregroundColor(.white)
-//                        .padding()
-//                        .background(Color.gray.opacity(0.7))
-//                        .cornerRadius(10)
-//                        .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
-//                }
-//                .padding()
             }
         }
         .onAppear {
