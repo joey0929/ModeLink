@@ -8,7 +8,7 @@
 # ModeLink : Enjoy Building Model!!!
 
 ModeLink 是一個專為模型愛好者所製作的app，可以在這與其他玩家交流，分享自己做過或想與別人分享的模型，掃描後可以將它掃描後上傳至模型庫，並可在這認識模型的工具與製作模型的相關技巧，一同享受模型的樂趣！
-
+(如需測試這個專案，請信告知，會提供您所需的plist)
 
 [![](https://i.imgur.com/NKyvGNy.png)](https://apps.apple.com/tw/app/modelink/id6692631536)
 
