@@ -37,7 +37,7 @@ struct TaBarView: View {
             }.tag(5)
         }
         
-        .accentColor(selectedTab == 2 ? .red : .blue) // 根據當前選中的頁面設置選中項目顏色
+        //.accentColor(selectedTab == 2 ? .red : .blue) // 根據當前選中的頁面設置選中項目顏色
         .onChange(of: selectedTab) { newTab in
             if newTab == 2 {
                 // 當再次選中 AR tab 時，重置顯示狀態為選擇畫面
