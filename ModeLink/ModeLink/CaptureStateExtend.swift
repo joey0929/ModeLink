@@ -9,7 +9,6 @@ import SwiftUI
 import RealityKit
 
 extension ObjectCaptureSession.CaptureState {
-    
     var label: String {
         switch self {
         case .initializing:
@@ -31,4 +30,3 @@ extension ObjectCaptureSession.CaptureState {
         }
     }
 }
-

@@ -18,13 +18,11 @@ struct SignInView: View {
                 .foregroundStyle(Color(.black).opacity(0.8))
                 .bold()
                 .padding(.top, 60)
-            
             Spacer()
             Text("Please sign in with your Apple ID:")
                 .font(.custom("LexendDeca-Bold", size: 16))
                 .foregroundColor(.theme)
                 .padding(.bottom, 0)
-            
             if !viewModel.isLoggedIn {
                 SignInWithAppleButton(
                     .signIn,
@@ -40,7 +38,6 @@ struct SignInView: View {
                 .shadow(radius: 5)
                 .padding()
                 .padding(.top, -15)
-                
             } else {
                 ContentView()
             }

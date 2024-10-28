@@ -5,93 +5,15 @@
 //  Created by 池昀哲 on 2024/9/18.
 //
 
-//import SwiftUI
-//import Firebase
-//struct ModelListView: View {
-//    @State private var models = [Model]()
-//    var body: some View {
-//        NavigationView {
-//            List(models) { model in
-//                NavigationLink(destination: SavedModelPreviewView(modelURL: model.url)) {
-//                    Text(model.name)
-//                }
-//            }
-//            .navigationTitle("儲存的模型")
-//            .onAppear {
-//                fetchModelsFromFirestore() // 將資料庫中的modelURL都load 進來
-//            }
-//        }
-//    }
-//    func fetchModelsFromFirestore2() {
-//        let db = Firestore.firestore()
-//        db.collection("3DModels").getDocuments { snapshot, error in
-//            if let error = error {
-//                print("Error fetching models: \(error.localizedDescription)")
-//                return
-//            }
-//            self.models = snapshot?.documents.compactMap { doc -> Model? in
-//                guard let name = doc.data()["name"] as? String,
-//                      let urlString = doc.data()["modelURL"] as? String,
-//                      let url = URL(string: urlString) else { return nil }
-//                return Model(name: name, url: url)
-//            } ?? []
-//            print(models)
-//        }
-//    }
-//    func fetchModelsFromFirestore() {
-//        let db = Firestore.firestore()
-//        // 使用實時監聽器來監聽集合的變化
-//        db.collection("3DModels")
-//            .order(by: "timestamp", descending: true)
-//            .addSnapshotListener { snapshot, error in
-//            if let error = error {
-//                print("Error fetching models: \(error.localizedDescription)")
-//                return
-//            }
-//            // 更新 models
-//            self.models = snapshot?.documents.compactMap { doc -> Model? in
-//                guard let name = doc.data()["name"] as? String,
-//                      let urlString = doc.data()["modelURL"] as? String,
-//                      let url = URL(string: urlString) else { return nil }
-//                return Model(name: name, url: url)
-//            } ?? []
-//            print("Models updated: \(models)")
-//        }
-//    }
-//}
-//
-//struct Model: Identifiable {
-//    let id = UUID()
-//    let name: String
-//    let url: URL
-//}
 import SwiftUI
 import Firebase
 import Kingfisher
 
-
-
-
-
 struct ModelListView: View {
     @State private var models = [Model]()
-    
     @State private var selectedCategory: String = "全部" // 預設為全部
     @State private var showCategoryPicker = false // 控制顯示選單
-//    @State private var models = [
-//           Model(name: "模型一", url: URL(string: "https://example.com/model1.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
-//           Model(name: "模型二", url: URL(string: "https://example.com/model2.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
-//           Model(name: "模型三", url: URL(string: "https://example.com/model3.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
-//           Model(name: "模型四", url: URL(string: "https://example.com/model4.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
-//           Model(name: "模型五", url: URL(string: "https://example.com/model5.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
-//           Model(name: "模型六", url: URL(string: "https://example.com/model6.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
-//           Model(name: "模型七", url: URL(string: "https://example.com/model7.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150")),
-//           Model(name: "模型八", url: URL(string: "https://example.com/model8.usdz")!, imageURL: URL(string: "https://via.placeholder.com/150"))
-//       ]
-    
-     
     let columns = [GridItem(.flexible())] //
-
     var body: some View {
         NavigationView {
             ScrollView(showsIndicators: false) {
@@ -113,8 +35,6 @@ struct ModelListView: View {
                                         .frame(height: 150)
                                         .cornerRadius(10)
                                 }
-
-                                // 添加一個半透明背景層以確保文字清晰
                                 Rectangle()
                                     .fill(Color.black.opacity(0.2))
                                     .cornerRadius(10)
@@ -124,21 +44,13 @@ struct ModelListView: View {
                                         Spacer()
                                         Text(model.name)
                                             .font(.custom("LexendDeca-ExtraBold", size: 20))
-                                            .foregroundColor(.white) // 設置文字顏色為白色
+                                            .foregroundColor(.white)
                                             .padding()
                                             .lineLimit(1)
-                                           // .frame(maxWidth: .infinity) // 確保名稱佔滿整個卡片寬度
                                     }
                                 }
-                                // 顯示模型名稱
-//                                Text(model.name)
-//                                    .font(.headline)
-//                                    .foregroundColor(.white) // 設置文字顏色為白色
-//                                    .padding()
-//                                    .lineLimit(1)
-//                                    .frame(maxWidth: .infinity) // 確保名稱佔滿整個卡片寬度
                             }
-                            .frame(height: 150) // 設置卡片高度
+                            .frame(height: 150)
                             .cornerRadius(10)
                             .shadow(radius: 5)
                             .padding(.vertical, 2)
@@ -149,22 +61,21 @@ struct ModelListView: View {
             }
             .background(
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
-                    startPoint: .top, // 漸層起點
-                    endPoint: .bottom // 漸層終點
+                    gradient: Gradient(colors: [Color.theme, Color.white]),
+                    startPoint: .top,
+                    endPoint: .bottom
                 )
             )
-//            .navigationTitle("模型庫")
             .toolbar {
-                ToolbarItem(placement: .principal) { // 自訂標題
+                ToolbarItem(placement: .principal) {
                     HStack {
                         Text("模型庫")
-                            .font(.custom("LexendDeca-SemiBold", size: 30)) // 自訂字體
-                            .foregroundColor(.white) // 自訂顏色
+                            .font(.custom("LexendDeca-SemiBold", size: 30))
+                            .foregroundColor(.white)
                             .bold()
                         Spacer()
                         Button(action: {
-                            showCategoryPicker = true // 顯示選單
+                            showCategoryPicker = true
                         }) {
                             Image(systemName: "list.bullet")
                                 //.font(.title)
@@ -180,7 +91,6 @@ struct ModelListView: View {
             .onAppear {
                 fetchModelsFromFirestore() // 加載數據
             }
-            // 彈出選單供用戶選擇種類
             .actionSheet(isPresented: $showCategoryPicker) {
                 ActionSheet(title: Text("選擇分類"), buttons: [
                     .default(Text("全部")) { selectedCategory = "全部" },
@@ -200,10 +110,6 @@ struct ModelListView: View {
             return models.filter { $0.category == selectedCategory }
         }
     }
-    
-    
-    
-
     func fetchModelsFromFirestore() {
         let db = Firestore.firestore()
         db.collection("3DModels")
@@ -230,7 +136,7 @@ struct Model: Identifiable {
     let id = UUID()
     let name: String
     let url: URL
-    let imageURL: URL? // 圖片 URL
+    let imageURL: URL?
     let category: String
 }
 struct ModelListView_Previews: PreviewProvider {

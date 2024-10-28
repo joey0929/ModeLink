@@ -55,18 +55,15 @@ class SignInViewModel: ObservableObject {
             print("Authorization failed: \(error.localizedDescription)")
         }
     }
-    
     func prepareAppleRequest(request: ASAuthorizationAppleIDRequest) {
         let nonce = randomNonceString()
         currentNonce = nonce
         request.requestedScopes = [.fullName, .email]
         request.nonce = sha256(nonce)
     }
-    
     private func saveUserToFirestore(uid: String, displayName: String, email: String) {
         let db = Firestore.firestore()
         let userRef = db.collection("users").document(uid)
-        
         userRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 print("User already exists in Firestore.")
@@ -89,7 +86,6 @@ class SignInViewModel: ObservableObject {
             }
         }
     }
-    
     private func randomNonceString(length: Int = 32) -> String {
         let charset: Array<Character> = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         var result = ""
@@ -104,7 +100,6 @@ class SignInViewModel: ObservableObject {
                 }
                 return random
             }
-            
             randoms.forEach { random in
                 if remainingLength == 0 { return }
                 if random < charset.count {

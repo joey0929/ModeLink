@@ -25,7 +25,6 @@ struct PersonalView: View {
                         .frame(width: 80, height: 80)
                         .foregroundColor(.gray)
                         .padding(.bottom, 10)
-                    
                     Text("Hello, \(viewModel.userName)")
                         .font(.title2)
                         .bold()
@@ -33,7 +32,6 @@ struct PersonalView: View {
                 }
                 .padding(.top, 170)
                 .padding(.horizontal)
-                
                 VStack(alignment: .leading) {
                     Button(action: {
                         viewModel.fetchBlockedUsers()
@@ -56,7 +54,6 @@ struct PersonalView: View {
                         .padding(.leading, 30)
                         .padding(.top, -18)
                 }
-                
                 // 這裡的封鎖列表
                 VStack {
                     if viewModel.showBlockedList {
@@ -86,7 +83,6 @@ struct PersonalView: View {
                 }
                 .frame(height: 200)
                 .padding(.horizontal)
-                
                 VStack(spacing: 15) {
                     Button(action: {
                         viewModel.logout()
@@ -102,7 +98,6 @@ struct PersonalView: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
                     }
-                    
                     Button(action: {
                         viewModel.deleteAccount()
                     }) {
@@ -118,7 +113,6 @@ struct PersonalView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 20)
-                
                 Spacer()
             }
             

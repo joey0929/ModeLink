@@ -18,157 +18,13 @@ let sampleTool = Tool(
             imageUrl: "https://via.placeholder.com/400", // 假的圖片 URL
             position: 1, careful: "小心對準零件後再下刀"
         )
-
-
-//struct IntroToolView: View {
-//    let tool: Tool
-//    
-//    
-//    var body: some View {
-//        ScrollView(showsIndicators: false) { // 使用 ScrollView 以防資料過多無法顯示完整
-//            VStack(alignment: .leading, spacing: 20) {
-//                // 使用 Kingfisher 加載圖片
-//                KFImage(URL(string: tool.imageUrl))
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fill) // 保持圖片比例
-//                    .frame(height: 400) // 調整圖片高度
-//                    .clipped()
-//                    //.padding(.top)
-//                    .frame(maxWidth: .infinity) // 寬度撐滿
-//                
-//                
-//                // 品名
-//                Text(tool.name)
-//                    .font(.largeTitle)
-//                    .bold()
-//                    .padding(.horizontal)
-//                // 用途部分
-//                VStack(alignment: .leading) {
-//                    Text("用途：")
-//                        .font(.title3)
-//                        .bold()
-//                        .padding(.horizontal)
-//                    Text(tool.description)
-//                        .padding(.horizontal)
-//                }
-//                // 價位部分
-//                VStack(alignment: .leading, spacing: 10) {
-//                    Text("價位：")
-//                        .font(.title3)
-//                        .bold()
-//                        .padding(.horizontal)
-//                    Text(tool.price)
-//                        .padding(.horizontal)
-//                    Text("推薦品牌：")
-//                        .font(.title3)
-//                        .bold()
-//                        .padding(.horizontal)
-//                    Text(tool.recommend)
-//                        .padding(.horizontal)
-//                }
-//                Spacer() // 將內容往上推，留出下方空間
-//            }
-//            .navigationTitle("工具詳情")
-//            .background(Color(.systemGray6))
-//            .ignoresSafeArea()
-//        }
-//        .background(Color(.systemGray5))
-//    }
-//}
-//struct IntroToolView: View {
-//    
-//    @Environment(\.presentationMode) var presentationMode
-//    let tool: Tool
-//
-//    var body: some View {
-//        ScrollView(showsIndicators: false) { // 使用 ScrollView 以防資料過多無法顯示完整
-//            VStack(alignment: .leading, spacing: 5) {
-//                // 使用 Kingfisher 加載圖片
-//                KFImage(URL(string: tool.imageUrl))
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fill) // 保持圖片比例
-//                    .frame(height: 420) // 調整圖片高度
-//                    .clipped()
-//                    .frame(maxWidth: .infinity) // 寬度撐滿
-//                
-//                // 品名
-//                Text(tool.name)
-//                    .font(.title)
-//                    .bold()
-//                    .foregroundColor(Color(UIColor.darkGray)) // 使用主題色
-//                    .padding(.horizontal)
-//                    .padding(.bottom, 30)
-//                    .padding(.top, 10)
-//                // 用途部分
-//                VStack(alignment: .leading, spacing: 10) {
-//                    Text("用途：")
-//                        .font(.title3)
-//                        .bold()
-//                        //.foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
-//                        .foregroundColor(Color(UIColor.darkGray))
-//                        .padding(.horizontal)
-//                        .padding(.bottom, 10)
-//                    Text(tool.description)
-//                        .font(.body)
-//                        .foregroundColor(.secondary) // 使用次要顏色，降低文本的視覺優先級
-//                        .padding(.horizontal)
-//                        .padding(.bottom, 10)
-//                    Text("價位：")
-//                        .font(.title3)
-//                        .bold()
-//                       //.foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
-//                        .foregroundColor(Color(UIColor.darkGray))
-//                        .padding(.horizontal)
-//                        .padding(.bottom, 10)
-//                    Text(tool.price)
-//                        .font(.body)
-//                        .foregroundColor(.secondary) // 使用次要顏色
-//                        .padding(.horizontal)
-//                        .padding(.bottom, 10)
-//                    Text("推薦品牌：")
-//                        .font(.title3)
-//                        .bold()
-////                        .foregroundColor(Color(.systemGray)) // 使用主題色來突出標題
-//                        .foregroundColor(Color(UIColor.darkGray))
-//                        .padding(.horizontal)
-//                        .padding(.bottom, 10)
-//                    Text(tool.recommend)
-//                        .font(.body)
-//                        .foregroundColor(.secondary) // 使用次要顏色
-//                        .padding(.horizontal)
-//                }
-//                Spacer() // 將內容往上推，留出下方空間
-//            }
-//            //.padding() // 整體增加內邊距
-//            .background(Color.white) // 添加白色背景
-//            .cornerRadius(10) // 添加圓角
-//            //.shadow(radius: 5) // 添加陰影以提高視覺層次
-//            .navigationTitle("工具詳情")
-//            .background(Color(.systemGray6))
-//            .ignoresSafeArea()
-//        }
-//        .background(Color(.systemGray5))
-//        .navigationBarBackButtonHidden(true) 
-//        .navigationBarItems(leading: Button(action: {
-//            presentationMode.wrappedValue.dismiss()
-//        }) {
-//            HStack {
-//                Image(systemName: "chevron.backward").foregroundColor(.black)
-//                Text("")
-//            }
-//        })
-//    }
-//}
 struct IntroToolView: View {
-    
     @Environment(\.presentationMode) var presentationMode
     let tool: Tool
 
     var body: some View {
         ZStack {
-//            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    // 頂部圖片
                     ZStack(alignment: .topLeading) {
                         KFImage(URL(string: tool.imageUrl))
                             .resizable()
@@ -176,7 +32,6 @@ struct IntroToolView: View {
                             .frame(height: 350) // 調整圖片高度
                             .clipped()
                             .ignoresSafeArea(edges: .top) // 忽略安全區域，讓圖片超出狀態欄
-                        
                         // 返回按鈕
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
@@ -191,7 +46,6 @@ struct IntroToolView: View {
                         .padding(.top, 60) // 調整返回按鈕距離
                         .padding(.leading, 20)
                     }
-                    
                     // 下方藍色區塊
                     VStack(alignment: .leading, spacing: 16) {
                         Text(tool.name)
@@ -202,50 +56,10 @@ struct IntroToolView: View {
                             .padding(.top, 40)
                             .padding(.leading,15)
                             .padding(.bottom,-28)
-                        // 增加頂部間距
-                        
-                        // 價位和推薦品牌部分 - 模仿白色小框樣式
-//                        HStack(spacing: 40) {
-//                            VStack {
-//                                Text("價位")
-//                                    .font(.headline)
-//                                    .foregroundColor(.gray)
-//                                Divider().padding(.horizontal, 20)
-//                                Text("$\(tool.price)")
-//                                    .font(.system(size: 15))
-//                                    .bold()
-//                            }
-//                            .frame(width: 150, height: 100)
-//                            .background(Color.white)
-//                            .cornerRadius(15)
-//                            .shadow(radius: 5)
-//                            
-//                            VStack {
-//                                Text("推薦品牌")
-//                                    .font(.headline)
-//                                    .foregroundColor(.gray)
-//                                Divider().padding(.horizontal, 20)
-//                                Text(tool.recommend)
-//                                    .font(.system(size: 15))
-//                                    .multilineTextAlignment(.center)
-//                                    .bold()
-//                            }
-//                            .frame(width: 150, height: 100)
-//                            .background(Color.white)
-//                            .cornerRadius(15)
-//                            .shadow(radius: 5)
-//                        }
-//                        .padding(.horizontal)
                         VStack {
                             HStack {
                                 VStack {
-//                                    Text("價位:")
-//                                        .font(.headline)
-//                                        .foregroundColor(.white)
-//                                        .padding(.leading,-50)
-//                                        .padding(.bottom, 5)
                                     Text("$\(tool.price)")
-                                        //.font(.system(size: 15))
                                         .font(.custom("LexendDeca-Medium", size: 16))
                                         .foregroundColor(Color(.systemGray3))
                                         .bold()
@@ -254,107 +68,63 @@ struct IntroToolView: View {
                                 Spacer()
                             }
                             .frame(width: 380, height: 50)
-                            //.background(Color.white)
-                            //.cornerRadius(15)
                             .shadow(radius: 5)
-                            //.padding(.horizontal)
                             HStack {
                                 VStack {
-//                                    Text("推薦品牌:")
-//                                        //.font(.headline)
-//                                        .font(.custom("LexendDeca-Medium", size: 18))
-//                                        .foregroundColor(.white)
-//                                        .padding(.leading,-122)
-//                                        .padding(.bottom, 5)
                                     Text(tool.recommend)
                                         .font(.custom("LexendDeca-Medium", size: 16))
-//                                        .font(.system(size: 15))
-                                        
                                         .foregroundColor(Color(red: 1.0, green: 0.8745098039215686, blue: 0.43137254901960786))
                                         .bold().padding(.leading,15)
                                 }
                                 Spacer()
                             }
                             .frame(width: 380, height: 50)
-                            //.background(Color.white)
-//                            .cornerRadius(15)
                             .shadow(radius: 5)
                             .padding(.horizontal)
                         }
-                        
                         // 用途部分
                         VStack(alignment: .leading, spacing: 8) {
                             Text("用途：")
-//                                .font(.headline)
                                 .font(.custom("LexendDeca-Medium", size: 18))
                                 .foregroundColor(.white)
-                               // .padding(.horizontal,30)
                                 .padding(.bottom, 5)
                                 .padding(.top, 10)
-                            
                             Text(tool.description)
-                                //.font(.body)
                                 .font(.custom("LexendDeca-Medium", size: 16))
                                 .foregroundColor(.white)
-                                //.foregroundColor(.secondary)
-                                //.padding(.horizontal,30)
                                 .padding(.bottom, 20)
                                 .lineSpacing(10)
-                            
                             Text("注意事項：")
-//                                .font(.headline)
                                 .font(.custom("LexendDeca-Medium", size: 18))
                                 .foregroundColor(.white)
-                                //.padding(.horizontal,30)
                                 .padding(.bottom, 5)
                             ScrollView {
                                 Text(tool.careful)
-                                //.font(.body)
                                     .font(.custom("LexendDeca-Medium", size: 16))
                                     .foregroundColor(.white)
-                                // .foregroundColor(.secondary)
-                                    //.padding(.horizontal,30)
                                     .lineSpacing(10)
                             }
                         }
                         .padding(.top, 10)
                         .padding(.horizontal,30)
-                        
                         Spacer() // 添加一個 Spacer 來填充空間
                     }
                     .frame(maxWidth: .infinity) // 讓內容寬度自適應螢幕
                     .frame(height: 550)
                     .background(Color.theme) // 設置藍色背景
-//                    .background(
-//                        LinearGradient(
-//                            gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
-//                            startPoint: .top, // 漸層起點
-//                            endPoint: .bottom // 漸層終點
-//                        )
-//                    )
                     .cornerRadius(50) // 只設置上方圓角
                     .padding(.top, -30) // 使卡片稍微往上與圖片疊加
-                    
-                    
-                    
                 }.padding(.horizontal)
-//            }
-//            .background(Color(UIColor.darkGray).opacity(0.9)) // 設置背景顏色
-//            .ignoresSafeArea()
             ZStack{
                 VStack{
                     Spacer()
-                    //Rectangle().background(.clear).frame(height: 100)
                 }
                 Color.white.frame(height: 90).padding(.top,800)
             }
-            
         }
         .navigationBarHidden(true) // 隱藏默認導航欄
     }
 }
-
-
 #Preview {
     IntroToolView(tool: sampleTool)
 }

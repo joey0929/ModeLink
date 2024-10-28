@@ -12,7 +12,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 struct Post: Identifiable {
-    var id: String // Firestore 中的 document ID
+    var id: String
     var userId: String
     var title: String
     var content: String
@@ -30,10 +30,9 @@ struct Post2: Identifiable {
     var county: String
     var imageURL: String?
     var timestamp: Date
-    var likes: Int // 新增：儲存讚數量
-    var isLiked: Bool // 新增：用來表示當前用戶是否已經點讚
+    var likes: Int // 儲存讚數量
+    var isLiked: Bool // 用來表示當前用戶是否已經點讚
 }
-
 struct ArticleView: View {
     @StateObject private var viewModel = ArticleViewModel()
     let columns: [GridItem] = [GridItem(.fixed(370))]
@@ -50,13 +49,13 @@ struct ArticleView: View {
                     .background(LinearGradient(gradient: Gradient(colors: [Color.theme, Color.white]), startPoint: .top, endPoint: .bottom))
                 }
                 .refreshable {
-                    viewModel.startListeningForPosts() // 刷新操作重新載入貼文
+                    viewModel.startListeningForPosts()
                 }
                 .background(
                     LinearGradient(
-                        gradient: Gradient(colors: [Color.theme, Color.white]), // 設定漸層顏色
-                        startPoint: .top, // 漸層起點
-                        endPoint: .bottom // 漸層終點
+                        gradient: Gradient(colors: [Color.theme, Color.white]),
+                        startPoint: .top,
+                        endPoint: .bottom
                     )
                 )
                 .onAppear {
@@ -66,9 +65,9 @@ struct ArticleView: View {
                     ImagePreviewView(imageURL: viewModel.selectedImageURL, isPresented: $viewModel.isImagePreviewPresented)
                 }
                 .sheet(isPresented: $viewModel.showMenuSheet) {
-                    HStack(spacing: 30) { // 調整按鈕間的間距
+                    HStack(spacing: 30) {
                         Button(action: {
-                            viewModel.showMenuSheet = false // 關閉選單
+                            viewModel.showMenuSheet = false
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                 viewModel.showAlert = true
                             }
@@ -77,23 +76,21 @@ struct ArticleView: View {
                                 Image(systemName: "flag.fill")
                                 Text("檢舉")
                             }
-                            .foregroundColor(.black) // 設置顏色為黑色
+                            .foregroundColor(.black)
                         }
                         .padding()
                         
                         Button(action: {
-                            // 假設 blockAuthor 是你的封鎖方法
                             if let postID = viewModel.selectedPostID {
-                                viewModel.blockAuthor(postID) // 使用選中的貼文 ID 進行封鎖
+                                viewModel.blockAuthor(postID)
                             }
-                            //blockAuthor(selectedPostID ?? "")
-                            viewModel.showMenuSheet = false // 關閉選單
+                            viewModel.showMenuSheet = false
                         }) {
                             VStack {
                                 Image(systemName: "nosign")
                                 Text("封鎖")
                             }
-                            .foregroundColor(.black) // 設置顏色為黑色
+                            .foregroundColor(.black)
                         }
                         .padding()
                         
@@ -104,17 +101,16 @@ struct ArticleView: View {
                                 Image(systemName: "xmark")
                                 Text("取消")
                             }
-                            .foregroundColor(.black) // 設置取消按鈕
+                            .foregroundColor(.black)
                         }
                         .padding()
                     }
-                    .padding() // 增加外層內邊距
-                    .presentationDetents([.fraction(0.1)]) // 控制選單高度
+                    .padding()
+                    .presentationDetents([.fraction(0.1)])
                 }
                 .alert(isPresented: $viewModel.showAlert) {
                     Alert(title: Text("檢舉成功"), message: Text("已成功檢舉該內容。"), dismissButton: .default(Text("確定")))
                 }
-                // 右下角的 + 按鈕 (頂層)
                 VStack {
                     Spacer()
                     HStack {
@@ -134,7 +130,6 @@ struct ArticleView: View {
                 .toolbar {
                             ToolbarItem(placement: .principal) {
                                 Text("ModeLink")
-                                    //.font(.title)
                                     .font(.custom("LexendDeca-Medium", size: 30))
                                     .foregroundColor(.white.opacity(0.9))
                                     .bold()
@@ -147,11 +142,9 @@ struct ArticleView: View {
                                 }
                             }
                         }
-                .navigationBarTitleDisplayMode(.inline) // 可選，調整標題顯示方式
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbarBackground(Color(.theme), for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
-                
-                // 載入指示器覆蓋層
                 if viewModel.isLoadingPreview {
                     ZStack {
                         Color.black.opacity(0.4).ignoresSafeArea()

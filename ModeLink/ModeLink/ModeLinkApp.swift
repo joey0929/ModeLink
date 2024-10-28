@@ -22,17 +22,14 @@ struct ModeLinkApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     init() {
         IQKeyboardManager.shared.enable = true
-        //IQKeyboardManager.shared.layoutIfNeededOnUpdate = false
     }
     var body: some Scene {
         WindowGroup {
-            //ContentView()
             if isLoggedIn {
                 ContentView()  // 登入後進入的主頁面
             } else {
                 SignInView()   // 登入頁面
             }
-            
         }
     }
 }

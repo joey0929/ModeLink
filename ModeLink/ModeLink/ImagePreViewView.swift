@@ -13,7 +13,6 @@ struct ImagePreviewView: View {
     @Binding var isPresented: Bool
     @StateObject private var imageLoader = ImageLoader()
     @GestureState private var dragOffset = CGSize.zero
-    
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -56,7 +55,6 @@ struct ImagePreviewView: View {
                             }
                     )
             } else {
-                // 當 imageURL 為 nil 或無效時顯示錯誤訊息
                 VStack {
                     Image(systemName: "exclamationmark.triangle")
                         .resizable()
@@ -68,7 +66,6 @@ struct ImagePreviewView: View {
                         .padding(.top, 8)
                 }
             }
-            
             VStack {
                 HStack {
                     Spacer()
@@ -80,7 +77,6 @@ struct ImagePreviewView: View {
                             .foregroundColor(.white)
                             .padding()
                             .background(Color.gray.opacity(0.8))
-                            //.cornerRadius(10)
                             .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
                     }.padding()
                 }
@@ -101,11 +97,9 @@ class ImageLoader: ObservableObject {
     @Published var image: UIImage? = nil
     @Published var isLoading: Bool = false
     @Published var loadFailed: Bool = false
-    
     func loadImage(from url: URL) {
         isLoading = true
         loadFailed = false
-        
         KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false

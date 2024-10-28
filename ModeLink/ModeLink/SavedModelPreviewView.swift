@@ -21,7 +21,6 @@ struct SavedModelPreviewView: View {
                        .progressViewStyle(CircularProgressViewStyle())
                    Text("請稍候...")
                } else if let downloadError {
-                   // 顯示錯誤信息
                    Text("下載錯誤: \(downloadError)")
                        .foregroundColor(.red)
                        .padding()
@@ -75,27 +74,22 @@ struct ARModelViewContainer: UIViewControllerRepresentable {
         controller.previewController.delegate = context.coordinator
         return controller
     }
-    // 更新 UIViewController (這裡不需要額外更新)
     func updateUIViewController(_ uiViewController: QLPreviewControllerWrapper, context: Context) {}
     // Coordinator 負責處理 QuickLook 的數據源和行為
     func makeCoordinator() -> Coordinator {
         return Coordinator(parent: self)
     }
-    // Coordinator 負責處理 QuickLook 相關的行為
     class Coordinator: NSObject, QLPreviewControllerDelegate, QLPreviewControllerDataSource {
         let parent: ARModelViewContainer
         init(parent: ARModelViewContainer) {
             self.parent = parent
         }
-        // 返回顯示的 3D 模型數量 (這裡只顯示一個模型)
         func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
             return 1
         }
-        // 返回要顯示的 3D 模型的 URL
         func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
             return parent.modelURL as QLPreviewItem
         }
-        // 當 QuickLook 頁面關閉時調用回調
         func previewControllerWillDismiss(_ controller: QLPreviewController) {
             parent.endCaptureCallback()
         }

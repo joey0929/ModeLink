@@ -14,9 +14,7 @@ class PersonalViewModel: ObservableObject {
     @Published var blockedUsers: [BlockedUser] = []
     @Published var showBlockedList: Bool = false
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = true
-    
     private let db = Firestore.firestore()
-    
     func logout() {
         do {
             try Auth.auth().signOut()
@@ -26,16 +24,12 @@ class PersonalViewModel: ObservableObject {
             print("Error signing out: \(signOutError.localizedDescription)")
         }
     }
-    
     func deleteAccount() {
         guard let userId = Auth.auth().currentUser?.uid else {
             print("User not logged in")
             return
         }
-        
         let userRef = db.collection("users").document(userId)
-        
-        // 更新 isDelete 狀態
         userRef.updateData([
             "isDelete": true
         ]) { error in
@@ -47,13 +41,11 @@ class PersonalViewModel: ObservableObject {
             }
         }
     }
-    
     func fetchUserName() {
         guard let userId = Auth.auth().currentUser?.uid else {
             print("User not logged in")
             return
         }
-        
         let userRef = db.collection("users").document(userId)
         userRef.getDocument { document, error in
             if let document = document, document.exists {
@@ -64,22 +56,17 @@ class PersonalViewModel: ObservableObject {
             }
         }
     }
-    
     func fetchBlockedUsers() {
         guard let userId = Auth.auth().currentUser?.uid else {
             print("User not logged in")
             return
         }
-        
         let userRef = db.collection("users").document(userId)
-        
         userRef.getDocument { document, error in
             if let document = document, document.exists {
                 let data = document.data()
                 let blockedUserIDs = data?["blockedUsers"] as? [String] ?? []
-                
                 self.blockedUsers.removeAll()
-                
                 for blockedUserID in blockedUserIDs {
                     let blockedUserRef = self.db.collection("users").document(blockedUserID)
                     blockedUserRef.getDocument { blockedUserDoc, error in
@@ -96,15 +83,12 @@ class PersonalViewModel: ObservableObject {
             }
         }
     }
-    
     func unblockUser(userId: String) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             print("無法取得當前使用者 ID")
             return
         }
-        
         let userRef = db.collection("users").document(currentUserID)
-        
         userRef.updateData([
             "blockedUsers": FieldValue.arrayRemove([userId])
         ]) { error in
