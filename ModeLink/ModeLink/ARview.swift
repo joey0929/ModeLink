@@ -17,30 +17,26 @@ struct ARview: View {
     @State private var imageFolderPath : URL?           //保存捕捉過程中的圖像
     @State private var modelFolderPath : URL?           // 保存生成的3D模型
     @State private var photogrammetrySession : PhotogrammetrySession?  //處理圖像和生成3D模型
-    @State private var isProgressing = false  //控制捕捉時的預覽圖
+    @State private var isProgressing = false
     @State private var quickLookIsPresented = false
-    @State private var scanPassCount = 0  // 控制掃描次數
+    @State private var scanPassCount = 0
     @State private var showContinueScanAlert = false  // 是否繼續掃描提示
     @State private var showNameInputSheet = false  // 控制是否顯示名稱輸入的 sheet
-    @State private var inputModelName = ""  // 儲存用戶輸入的模型名稱
+    @State private var inputModelName = ""
     
-    @State private var selectedCategory = "模型"  // 新增種類屬性
-    let categories = ["模型", "公仔", "其他"]  // 三個選項
+    @State private var selectedCategory = "模型"
+    let categories = ["模型", "公仔", "其他"]
     
     //增加選取上傳照片
     @State private var selectedImage: UIImage? = nil // 選取的圖片
     @State private var selectedItem: PhotosPickerItem? = nil // PhotosPicker 選取的項目
-    
     var modelPath: URL? {
         return modelFolderPath?.appending(path: "model.usdz")
     }
-    
     var isLiDARAvailable: Bool {
         return ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
     }
-    
     var body: some View {
-        
         Group {
             if isLiDARAvailable {
                 ZStack(alignment: .bottom) {
@@ -60,42 +56,35 @@ struct ARview: View {
                         
                     }
                     if isProgressing {
-                        Color.black.opacity(0.2) // 背景變得更亮
-                            .edgesIgnoringSafeArea(.all)  // 確保背景覆蓋整個螢幕
+                        Color.black.opacity(0.2)
+                            .edgesIgnoringSafeArea(.all)
                             .overlay {
-                                VStack(spacing: 20) {  // 增加內部元素間距
+                                VStack(spacing: 20) {
                                     // 自定義的圓角卡片
                                     VStack(spacing: 16) {
-                                        ProgressView()  // 進度條
-                                            .scaleEffect(1.5)  // 讓進度條更大些
+                                        ProgressView()
+                                            .scaleEffect(1.5)
                                             .padding(.top, 20)
                                         Text("生成模型中，請耐心等候...")
                                             .font(.headline)
-                                            .foregroundColor(.primary)  // 讓文字更清晰
+                                            .foregroundColor(.primary)
                                         Text("並請不要切換頁面！！！！！")
                                             .font(.headline)
                                             .foregroundColor(.primary)
                                         Text("根據掃描次數，等待時間會有所不同")
                                             .font(.subheadline)
-                                            .foregroundColor(.secondary)  // 輔助文本
+                                            .foregroundColor(.secondary)
                                     }
-                                    .frame(width: 300)  // 控制卡片寬度
+                                    .frame(width: 300)
                                     .padding()
                                     .background(
                                         RoundedRectangle(cornerRadius: 20)
-                                            .fill(Color.white)  // 使用白色背景
-                                            .shadow(color: .gray.opacity(0.4), radius: 10, x: 0, y: 5)  // 添加陰影
+                                            .fill(Color.white)
+                                            .shadow(color: .gray.opacity(0.4), radius: 10, x: 0, y: 5)
                                     )
                                 }
                             }
                     }
-                    //            ZStack{
-                    //                VStack{
-                    //                    Spacer()
-                    //                    //Rectangle().background(.clear).frame(height: 100)
-                    //                }
-                    //                Color.gray.opacity(0.8).frame(height: 50).padding(.top,800)
-                    //            }
                     Rectangle()
                         .fill(Color.white.opacity(0.4))
                         .frame(height: 80)  // 設定高度以覆蓋 TabBar 的位置
@@ -103,14 +92,6 @@ struct ARview: View {
                         .padding(.bottom, -100)
                 }
             }
-            //        .task {
-            //            guard let directory = createNewScanDirectory() else { return }
-            //            session = ObjectCaptureSession()
-            //            modelFolderPath = directory.appending(path: "Models/")
-            //            imageFolderPath = directory.appending(path: "Images/")
-            //            guard let imageFolderPath else { return }
-            //            session?.start(imagesDirectory: imageFolderPath)
-            //        }
         }
         .task {
             guard isLiDARAvailable else {
@@ -154,8 +135,6 @@ struct ARview: View {
                 TextField("輸入名稱", text: $inputModelName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                
-                // Picker 選擇種類
                 Picker("選擇種類", selection: $selectedCategory) {
                     ForEach(categories, id: \.self) {
                         Text($0)
@@ -163,10 +142,6 @@ struct ARview: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
-                
-                
-                
-                // 添加 HStack 包含照片選擇器和預覽圖片
                 HStack {
                     PhotosPicker(selection: $selectedItem, matching: .images) { // 添加 PhotosPicker
                         Text("選擇圖片")
@@ -184,13 +159,12 @@ struct ARview: View {
                             }
                         }
                     }
-                    // 顯示選擇的圖片的預覽
                     if let selectedImage = selectedImage {
                         Image(uiImage: selectedImage)
                             .resizable()
                             .scaledToFill()
-                            .frame(width: 50, height: 50) // 設定預覽圖片的大小
-                            .clipShape(RoundedRectangle(cornerRadius: 8)) // 圓角圖片
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                             .padding(.leading)
                     }
                 }
@@ -198,15 +172,13 @@ struct ARview: View {
                     guard !inputModelName.isEmpty else { return }
                     showNameInputSheet = false  // 關閉輸入框
                     print("==Model name entered: \(inputModelName)")
-                    // 使用 DispatchQueue 確保上傳操作不會阻塞 UI
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { }
                     // 上傳文件並在完成後清空輸入框
                     uploadModelToFirebase {
                         scanPassCount = 0
                         inputModelName = ""
                         // test
-                        selectedImage = nil // 清空剛剛選擇的圖片
-                        selectedItem = nil // 清空剛剛選擇的 PhotosPickerItem
+                        selectedImage = nil
+                        selectedItem = nil
                         restartObjectCapture()  // 確保在上傳成功後再重新開始捕捉
                     }
                     print("==== Already upload the usdz File!!!!======")
@@ -215,7 +187,7 @@ struct ARview: View {
                 .padding()
 
                 Button("取消") {
-                    showNameInputSheet = false  // 關閉輸入框
+                    showNameInputSheet = false
                     scanPassCount = 0
                     inputModelName = ""
                     restartObjectCapture()  // 確保在上傳成功後再重新開始捕捉
@@ -313,37 +285,27 @@ extension ARview {
         // 檢查模型文件是否存在並且可以讀取
         do {
             let modelData = try Data(contentsOf: modelPath)
-            print("Model data size: \(modelData.count) bytes")  // 打印模型文件大小
+            print("Model data size: \(modelData.count) bytes")
             // 使用 UUID 生成 Storage 路徑和模型名稱
             let uniqueID = UUID().uuidString
             let storageRef = Storage.storage().reference().child("3DModels/\(uniqueID).usdz")
             print("Starting upload to Firebase Storage...")
-            // 上傳模型文件到 Firebase Storage
             let uploadTask = storageRef.putData(modelData, metadata: nil) { metadata, error in
                 if let error = error {
                     print("Error uploading model: \(error.localizedDescription)")
                     return
                 }
                 print("Model uploaded to Firebase Storage, fetching download URL...")
-                // 獲取下載 URL
                 storageRef.downloadURL { url, error in
                     if let error = error {
                         print("Error getting download URL: \(error.localizedDescription)")
                     } else if let downloadURL = url {
                         print("Model uploaded successfully to Firebase Storage: \(downloadURL.absoluteString)")
-                        // 使用用戶輸入的名稱來保存到 Firestore
-//                        saveDownloadURLToFirestore(downloadURL, name: inputModelName)
-//                        // 在成功上傳後執行閉包
-//                        completion()
-                        
                         uploadImageToFirebase { imageURL in
-                            // 使用用戶輸入的名稱來保存到 Firestore
                             saveDownloadURLToFirestore(modelURL: downloadURL, imageURL: imageURL, name: inputModelName, category: selectedCategory)
                             
-                            // 在成功上傳後執行閉包
                             completion()
                         }
-      
                     }
                 }
             }
@@ -355,32 +317,12 @@ extension ARview {
             print("Error reading model data: \(error.localizedDescription)")
         }
     }
-    // 將下載 URL 儲存到 Firestore
-//    func saveDownloadURLToFirestore(_ downloadURL: URL,name: String) {
-//        let db = Firestore.firestore()
-//        let modelData: [String: Any] = [
-//            "modelURL": downloadURL.absoluteString,
-//            "name": name,  // 使用與 Storage 同樣的 UUID 作為名稱
-//            "timestamp": Timestamp(date: Date())
-//        ]
-//        db.collection("3DModels").addDocument(data: modelData) { error in
-//            if let error = error {
-//                print("Error saving model URL to Firestore: \(error.localizedDescription)")
-//            } else {
-//                print("Model URL saved to Firestore!")
-//            }
-//        }
-//    }
-    
-    // 上傳圖片到 Firebase Storage
     func uploadImageToFirebase(completion: @escaping (URL?) -> Void) {
         guard let selectedImage = selectedImage, let imageData = selectedImage.jpegData(compressionQuality: 0.8) else {
             print("Error: No image selected.")
             completion(nil)
             return
         }
-
-       // let uniqueID = UUID().uuidString
         let storageRef = Storage.storage().reference().child("images/\(UUID().uuidString).jpg")
         
         storageRef.putData(imageData, metadata: nil) { metadata, error in
@@ -401,8 +343,6 @@ extension ARview {
             }
         }
     }
-
-    // 將模型和圖片的下載 URL 儲存到 Firestore
     func saveDownloadURLToFirestore(modelURL: URL, imageURL: URL?, name: String,category: String) {
         let db = Firestore.firestore()
         let modelData: [String: Any] = [
@@ -420,5 +360,4 @@ extension ARview {
             }
         }
     }
-    
 }

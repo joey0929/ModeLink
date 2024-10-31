@@ -28,7 +28,6 @@ struct UploadDataView: View {
             if let url = imageURL2 {
                 Text("圖片已取得")
                 Button("上傳資料到 Firestore") {
-                    //uploadDataToFirestore(imageURL: url)
                     print(imageURL2)
                 }
             } else {
@@ -36,16 +35,13 @@ struct UploadDataView: View {
             }
             Spacer()
             Button("Upload to skill") {
-                //uploadDataToFirestore2()
             }
             Spacer()
             Button("Upload to locations2") {
-                //uploadLocationsToFirebase()
                 uploadLocationsToFirebase2()
             }
             Spacer()
             Button("Upload to tools2") {
-                //uploadDataToFirestore3()
             }
             Spacer()
         }
@@ -90,9 +86,6 @@ struct UploadDataView: View {
             }
         }
     }
-    
-    
-    
     // 從 Firebase Storage 取得圖片的下載 URL
     func loadImageFromFirebase() {
         let storageRef = Storage.storage().reference(withPath: "infoImages/IMG_0345.jpg")
@@ -103,7 +96,7 @@ struct UploadDataView: View {
                 return
             }
             if let url = url {
-                self.imageURL2 = url  // 成功獲取 URL，設置為狀態變量
+                self.imageURL2 = url
             }
         }
     }
@@ -153,7 +146,7 @@ struct UploadDataView: View {
     }
     func uploadDataToFirestore2() {
         let db = Firestore.firestore()
-        let skillData: [String: Any] = [  // 上傳的資料
+        let skillData: [String: Any] = [  
             "name": "打磨",
             "description": "對剪下來的零件的湯口進行打磨處理，通常會從低號數往高號數磨。",
             "image_url": "https://firebasestorage.googleapis.com/v0/b/modelink-298ca.appspot.com/o/infoImages%2Fsk2.jpg?alt=media&token=4096ff73-1ffc-4214-ba73-cbf96f4796b7",

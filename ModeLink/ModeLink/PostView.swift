@@ -16,16 +16,14 @@ import Combine
 
 struct PostView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var userName: String = "" // 用於儲存用戶名稱
+    @State private var userName: String = ""
     @State private var title = ""
     @State private var content = ""
-    @State private var county = "" // 所在縣市
+    @State private var county = ""
     @State private var selectedImage: UIImage? = nil
-    @State private var selectedItem: PhotosPickerItem? = nil // 用於存儲選擇的圖片
+    @State private var selectedItem: PhotosPickerItem? = nil
     @State private var isImagePickerPresented = false
-    
-    @ObservedObject private var keyboardResponder = KeyboardResponder() // 使用 KeyboardResponder
-    // 設定縣市
+    @ObservedObject private var keyboardResponder = KeyboardResponder()
     let counties = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市", "基隆市", "新竹市", "嘉義市", "新竹縣", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "嘉義縣", "屏東縣", "宜蘭縣", "花蓮縣", "台東縣", "澎湖縣", "金門縣", "連江縣"]
 
     var canSubmit: Bool {
@@ -39,7 +37,6 @@ struct PostView: View {
             ScrollView(showsIndicators: false) {
                 
                 VStack {
-                    // 用於顯示選擇的圖片或按鈕
                     PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
                         if let selectedImage = selectedImage {
                             Image(uiImage: selectedImage)
@@ -68,9 +65,7 @@ struct PostView: View {
                     }.onChange(of: selectedItem) { newItem in
                         if let newItem = newItem {
                             Task {
-                                // 當選擇項變更時，將圖片加載為 UIImage
                                 if let data = try? await newItem.loadTransferable(type: Data.self),
-                                   // 圖片加載為 Data 格式 再轉乘 UIImage
                                    let uiImage = UIImage(data: data) {
                                     selectedImage = uiImage
                                 }
@@ -81,7 +76,6 @@ struct PostView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal,15)
                         .padding(.top, 10)
-                    // 縣市選單
                     HStack {
                         Text("選擇縣市:")
                             .foregroundColor(Color(.systemGray))
@@ -91,7 +85,7 @@ struct PostView: View {
                                 Text(county)
                             }
                         }
-                        .pickerStyle(MenuPickerStyle()) // 使用下拉選單樣式
+                        .pickerStyle(MenuPickerStyle())
                         .frame(width: 100)
                         //.padding()
                         .background(Color.white)
@@ -109,15 +103,14 @@ struct PostView: View {
                             .foregroundColor(Color(.systemGray))
                         TextEditor(text: $content)
                             .frame(height: 150)
-                            .background(Color.white) // 設置背景色，確保與 TextField 保持一致
-                            .cornerRadius(8) // 設置圓角
+                            .background(Color.white)
+                            .cornerRadius(8)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color(.systemGray4), lineWidth: 0.5) // 設置外框的顏色和寬度
+                                    .stroke(Color(.systemGray4), lineWidth: 0.5)
                             )
                             .padding(.top, 5)
-                    }.padding(.horizontal, 15) // 確保整個 VStack 具有左右縮排
-                    // 使用 PhotosPicker 來選擇圖片
+                    }.padding(.horizontal, 15)
                     HStack {
                         Spacer()
                         Button(action: {
@@ -136,12 +129,11 @@ struct PostView: View {
                     }
                     .padding(.leading)
                     .padding(.bottom, 10)
-                    //Spacer(minLength: 80)
                 }
                 .onAppear() {
                     fetchUserName()
                 }
-                .padding(.bottom, keyboardResponder.currentHeight) // 調整底部間距
+                .padding(.bottom, keyboardResponder.currentHeight)
             }
             .background(Color.white)
             .cornerRadius(10)
@@ -160,7 +152,6 @@ struct PostView: View {
                         }
                     }
                 }
-                
                 // 自訂標題
                 ToolbarItem(placement: .principal) {
                     Text("New Post")
@@ -168,7 +159,6 @@ struct PostView: View {
                         .foregroundColor(.white.opacity(1)) // 設定標題的顏色
                 }
             }
-        
             .navigationBarBackButtonHidden(true)
             .navigationViewStyle(StackNavigationViewStyle())
             .toolbarBackground(Color(.theme), for: .navigationBar)
@@ -181,10 +171,8 @@ struct PostView: View {
             print("User not logged in")
             return
         }
-        
         let db = Firestore.firestore()
         let userRef = db.collection("users").document(userId)
-        
         userRef.getDocument { document, error in
             if let document = document, document.exists {
                 let data = document.data()
@@ -194,29 +182,25 @@ struct PostView: View {
             }
         }
     }
-
-    // 上傳貼文到 Firestore 的邏輯
     func uploadPost(title: String, content: String, county: String, image: UIImage?) {
         guard let userId = Auth.auth().currentUser?.uid else {
             print("User not logged in")
             return
         }
         let db = Firestore.firestore()
-        // 如果有選擇圖片，先上傳圖片到 Firebase Storage
         if let image = image {
             uploadImage(image) { imageURL in
                 if let imageURL = imageURL {
-                    // 將文章與圖片 URL 一起上傳到 Firestore
                     let postData: [String: Any] = [
-                        "user_id": userId,  // 登入後真正id 可用
+                        "user_id": userId,
                         "user_name": userName,
                         "title": title,
                         "content": content,
                         "County": county,
-                        "imageURL": imageURL.absoluteString, // 圖片的下載 URL
+                        "imageURL": imageURL.absoluteString,
                         "timestamp": Timestamp(date: Date()),
                         "likes": 0,
-                        "likedBy": [] // 新增的字段，用於存儲按讚使用者的 UID 列表
+                        "likedBy": []
                         
                     ]
                     db.collection("articles").addDocument(data: postData) { error in
@@ -231,7 +215,6 @@ struct PostView: View {
                 }
             }
         } else {
-            // 如果沒有圖片，僅上傳文章數據
             let postData: [String: Any] = [
                 "user_id": userId,
                 "user_name": userName,
@@ -251,8 +234,6 @@ struct PostView: View {
             }
         }
     }
-
-    // 上傳圖片到 Firebase Storage 並獲取下載 URL
     func uploadImage(_ image: UIImage, completion: @escaping (URL?) -> Void) {
         let storageRef = Storage.storage().reference().child("images/\(UUID().uuidString).jpg")
         
@@ -263,25 +244,23 @@ struct PostView: View {
                     completion(nil)
                     return
                 }
-                // 獲取圖片的下載 URL
                 storageRef.downloadURL { url, error in
                     if let error = error {
                         print("Error getting download URL: \(error.localizedDescription)")
                         completion(nil)
                     } else {
-                        completion(url) // 成功獲取圖片 URL
+                        completion(url)
                     }
                 }
             }
         } else {
-            completion(nil) // 如果圖片轉換失敗
+            completion(nil)
         }
     }    
 }
 #Preview {
     PostView()
 }
-
 final class KeyboardResponder: ObservableObject {
     @Published var currentHeight: CGFloat = 0
     private var _center: NotificationCenter

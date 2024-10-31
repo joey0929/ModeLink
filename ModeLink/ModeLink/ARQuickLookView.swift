@@ -48,6 +48,3 @@ extension ARQuickLookView {
         }
     }
 }
-//#Preview {
-//    ARQuickLookView()
-//}
